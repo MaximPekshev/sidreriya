@@ -1,0 +1,109 @@
+{% extends 'baseapp/index.html' %}
+
+
+{% block content %}
+<div class="main-container left-sidebar">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_catalog' %}">Каталог</a>
+			{{ good.name }}
+		</nav>
+		<div class="row">
+			<div class="col-sm-12 col-md-12 main-content">
+				<div class="single-product">
+					<div class="row">
+						<div class="col-sm-12 col-md-5">
+							<div class="images kt-images-zoom">
+								<div class="kt-easyzoom easyzoom easyzoom--with-thumbnails">
+									<a href="{{ main_pictures.images.url }}">
+										<img src="{{ main_pictures.images.url }}" alt=""/>
+									</a>
+								</div>
+								<ul class="kt-zoom-thumbnails owl-carousel" data-loop="true" data-nav="true" data-dots="false" data-margin="10" data-responsive='{"0":{"items":"2"},"768":{"items":"3"},"992":{"items":"3"}}'>
+									{% for picture in pictures %}
+									<li>
+										<a href="{{ picture.images.url }}" data-standard="{{ picture.images.url }}">
+											<img src="{{ picture.images.url }}" alt="{{ picture.images.title }}" />
+										</a>
+									</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-7">
+							<div class="summary">
+								<h1 class="product_title entry-title">{{ good.name }} / {{ good.name_en }}</h1>
+								<span class="price">&#8381 {{ good.price }}</span>
+								<p class="stock out-of-stock"><label>На баре:</label> {% if good.quantity > 0 %}<i class="fa fa-check"></i> В наличии </p> {% else %}<i class="fa fa-check"></i> Ожидаем </p> {% endif %}
+								<div class="short-descript">
+									<p>{{ good.description|linebreaksbr }}...</p>
+								</div>
+								<div class="variation_form_section">
+									<table class="variations-table">
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="product-tabs">
+						<ul class="nav-tab">
+				            <li class="active"><a data-toggle="tab" href="#tab-1">Описание</a></li>
+				            <li><a data-toggle="tab" href="#tab-2">Product Tags</a></li>
+				        </ul>
+				        <div class="tab-container">
+				        	<div id="tab-1" class="tab-panel active">
+				        		<p>{{ good.description|linebreaksbr }}</p>
+				        	</div>
+				        	<div id="tab-2" class="tab-panel">
+				        		<div class="tagcloud">
+		                            <a href="#">Cotton</a>
+		                            <a href="#">Leggings</a>
+		                            <a href="#">Men</a>
+		                            <a href="#">Shirt</a>
+		                            <a href="#">T-shirt</a>
+		                            <a href="#">COSMETIC</a>
+		                            <a href="#">SOFT WEAR</a>
+		                            <a href="#">ACCESSORIES</a>
+		                            <a href="#">LIFE STYLE</a>
+		                        </div>
+				        	</div>
+				        </div>
+					</div> -->
+				</div> 
+			</div>
+			<!-- <div class="col-sm-4 col-md-3 sidebar">
+				<div class="widget widget_product_categories">
+					<h2 class="widget-title">BY CATEGORIES</h2>
+					<ul class="product-categories">
+						<li><a href="#">Furniture</a><span class="count">(12)</span></li>
+						<li class="current-cat"><a href="#">Lighting</a><span class="count">(56)</span></li>
+						<li><a href="#">Kitchen & Dining</a><span class="count">(32)</span></li>
+						<li><a href="#">Bath</a><span class="count">(17)</span></li>
+						<li><a href="#">Home Decor</a><span class="count">(34)</span></li>
+						<li><a href="#">Bedroom</a><span class="count">(28)</span></li>
+						<li><a href="#">Outdoor</a><span class="count">(11)</span></li>
+						<li><a href="#">Home Improvement</a><span class="count">(82)</span></li>
+					</ul>
+				</div>
+				<div class="widget widget_product_tag_cloud">
+                    <h2 class="widget-title">POPULAR TAGS</h2>
+                    <div class="tagcloud">
+                        <a href="#">Cotton</a>
+                        <a href="#">Leggings</a>
+                        <a href="#">Men</a>
+                        <a href="#">Shirt</a>
+                        <a href="#">T-shirt</a>
+                        <a href="#">COSMETIC</a>
+                        <a href="#">SOFT WEAR</a>
+                        <a href="#">ACCESSORIES</a>
+                        <a href="#">LIFE STYLE</a>
+                    </div>
+                </div>
+			</div> -->
+		</div>
+	</div>
+</div>
+{% endblock %}

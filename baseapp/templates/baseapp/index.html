@@ -1,0 +1,115 @@
+{% extends 'baseapp/base.html' %}
+
+{% load static %}
+
+{% block header %}
+
+<div id="header" class="header">
+	<div class="top-bar">
+		<div class="container">
+			<div class="top-bar-left">
+				<div class="logo">
+					<a href="{% url 'show_index' %}"><img src="{% static 'images/logos/1.png' %}" alt=""></a>
+				</div>
+
+			</div>
+
+			<div class="top-bar-right">
+				<ul class="kt-nav top-bar-menu">
+					<li class="menu-item-has-children">
+						<a href="#"><span>Регистрация/Войти</span></a>
+					</li>
+					<li class="menu-item-has-children box-setting">
+						<a href="#">
+							<span class="menu-icon icon flaticon-heart295"></span>
+						</a>
+					</li>
+					<li class="menu-item-has-children mini-cart">
+						<a class="cart-link" href="#">
+							<span class="menu-icon  icon flaticon-shopping-cart6"></span>
+							<span class="count">0</span>
+							<span class="text">шт.</span>
+							<span class="kak">-</span>
+							<span class="subtotal">$0.00</span>
+						</a>
+						<div class="sub-menu mini-cart-content">
+							<div class="content-inner">
+								<h3 class="box-title">You have <span class="count">1 item(s)</span> in your cart.</h3>
+								<ul class="list-item-cart">
+									<li class="item-cart">
+										<div class="thumb">
+											<a href="#"><img src="{% static 'images/products/1.png' %}" alt=""></a>
+										</div>
+										<div class="product-info">
+											<h4 class="product-name"><a href="#">Stockholm Chair high Mosta gruancy</a></h4>
+											<span class="price">1 x $75.00</span>
+											<a class="remove-item" href="#"><i class="fa fa-close"></i></a>
+										</div>
+									</li>
+									<li class="item-cart">
+										<div class="thumb">
+											<a href="#"><img src="{% static 'images/products/1.png' %}" alt=""></a>
+										</div>
+										<div class="product-info">
+											<h4 class="product-name"><a href="#">Stockholm Chair high Mosta gruancy</a></h4>
+											<span class="price">1 x $75.00</span>
+											<a class="remove-item" href="#"><i class="fa fa-close"></i></a>
+										</div>
+									</li>
+								</ul>
+								<div class="subtotal">
+									Subtotal: <span class="amout">$75.00</span>
+								</div>
+								<a href="#" class="button">SHOPPING CART</a>
+								<a href="#" class="button primary">CHECK OUT</a>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="main-header">
+		<div class="container">
+			<div class="main-menu-wapper">
+				<a class="mobile-navigation" href="#">
+					<span class="icon">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+					
+				</a>
+				<ul class="kt-nav main-menu clone-main-menu">
+					<li>
+						<a href="{% url 'show_index' %}">На главную</a>
+					</li>
+					<li>
+						<a href="#">Доставка</a>
+					</li>
+					<li>
+						<a href="{% url 'show_catalog' %}">Сидр</a>
+					</li>
+					<li>
+						<a href="{% url 'show_catalog' %}">Еда</a>
+					</li>
+					<li>
+						<a href="#">Атмосфера</a>
+					</li>
+					<li>
+						<a href="#">О нас</a>
+					</li>
+					<li>
+						<a href="#">Контакты</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
