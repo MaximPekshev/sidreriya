@@ -80,3 +80,64 @@ class Picture(models.Model):
 		
 		verbose_name = 'Картинка'
 		verbose_name_plural = 'Картинки'
+
+class Properties(models.Model):
+
+	title 					= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
+	slug 					= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+
+	def __str__(self):
+		
+		return self.title
+
+	def save(self, *args, **kwargs):
+		
+		if self.slug == "":
+			self.slug = get_uuid()
+
+		super(Properties, self).save(*args, **kwargs)
+
+
+	class Meta:
+		
+		verbose_name = 'Свойство'
+		verbose_name_plural = 'Свойства'
+
+
+class Property_value(models.Model):
+
+	title 					= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
+	slug 					= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+	_property				= models.ForeignKey('Properties', verbose_name='Свойства', on_delete=models.CASCADE)
+
+	def __str__(self):
+		
+		return self.title
+
+	def save(self, *args, **kwargs):
+		
+		if self.slug == "":
+			self.slug = get_uuid()
+
+		super(Property_value, self).save(*args, **kwargs)
+
+
+	class Meta:
+		
+		verbose_name = 'Значение свойства'
+		verbose_name_plural = 'Значения свойства'
+
+
+class Object_property_values(models.Model):
+
+	good					= models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+	_property 				= models.ForeignKey('Properties', verbose_name='Свойство', on_delete=models.CASCADE)
+	property_value 			= models.ForeignKey('Property_value', verbose_name='Значение', on_delete=models.CASCADE, blank=True, null=True)
+	
+
+	class Meta:
+		
+		verbose_name = 'Значение свойств объекта'
+		verbose_name_plural = 'Значения свойств объекта'
+
+		unique_together = (('good', '_property'),)
