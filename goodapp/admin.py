@@ -4,6 +4,7 @@ from django import forms
 from .models import Good, Picture, Properties, Property_value
 from .models import Properties, Property_value
 from .models import Object_property_values
+from .models import Manufacturer, Category
 
 
 class Object_property_valuesInlineForm(forms.ModelForm):
@@ -40,11 +41,23 @@ class GoodAdmin(admin.ModelAdmin):
 					'price',
 					'quantity',
 					'is_active',
+					'category',
+					'manufacturer',
 					)
 	
 	inlines 	 = [PictureInline, Object_property_valuesInline, ]
 
 	exclude = ('slug',)
+
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+
+		if db_field.name == "manufacturer":
+			kwargs["queryset"] = Manufacturer.objects.all()
+			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+		if db_field.name == "category":
+			kwargs["queryset"] = Category.objects.all()
+			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)	
 
 admin.site.register(Good, GoodAdmin)
 
@@ -60,18 +73,20 @@ class PropertiesAdmin(admin.ModelAdmin):
 
 admin.site.register(Properties, PropertiesAdmin)
 
-
-class Object_property_valuesAdmin(admin.ModelAdmin):
-	form = Object_property_valuesInlineForm
-
+class ManufacturerAdmin(admin.ModelAdmin):
 	list_display = (
-					'good',
-					'_property',
-					'property_value',
+					'name',
 					)
 	
-	list_filter = 	(
-					'good',
-					)
+	exclude = ('slug',)
 
-admin.site.register(Object_property_values, Object_property_valuesAdmin)
+admin.site.register(Manufacturer, ManufacturerAdmin)
+
+class CategoryAdmin(admin.ModelAdmin):
+	list_display = (
+					'name',
+					)
+	
+	exclude = ('slug',)
+
+admin.site.register(Category, CategoryAdmin)

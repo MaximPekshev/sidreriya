@@ -13,7 +13,7 @@ def get_uuid():
 class Good(models.Model):
 
 	name 				= models.CharField(max_length = 150, verbose_name='Наименование')
-	name_en				= models.CharField(max_length = 150, verbose_name='Наименование на английском')
+	name_en				= models.CharField(max_length = 150, verbose_name='Наименование на английском', blank=True,)
 	description 		= models.TextField(max_length=1024, verbose_name='Описание', blank=True)
 
 	meta_name 			= models.CharField(max_length=150, verbose_name='meta name', blank=True, null=True)
@@ -25,10 +25,13 @@ class Good(models.Model):
 	is_active			= models.BooleanField(verbose_name='Активен', default=False)
 
 	quantity			= models.DecimalField(verbose_name='Остаток', max_digits=15, decimal_places=0, blank=True, null=True)
-
 	
 	good_uid 			= models.CharField(max_length=36, verbose_name='Код', blank=True, null=True)
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+
+	manufacturer 		= models.ForeignKey('Manufacturer', verbose_name='Производитель', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
+
+	category 			= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
 
 	def __str__(self):
 
@@ -46,6 +49,56 @@ class Good(models.Model):
 		verbose_name = 'Товар'
 		verbose_name_plural = 'Товары'
 
+
+class Manufacturer(models.Model):
+
+	name 				= models.CharField(max_length = 150, verbose_name='Наименование')
+	name_en				= models.CharField(max_length = 150, verbose_name='Наименование на английском', blank=True,)
+	description 		= models.TextField(max_length=1024, verbose_name='Описание', blank=True)
+
+	meta_name 			= models.CharField(max_length=150, verbose_name='meta name', blank=True, null=True)
+	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
+
+	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+		
+	def __str__(self):
+
+		return self.name
+
+	def save(self, *args, **kwargs):
+
+		if self.slug == "":
+			self.slug = get_uuid()	
+
+		super(Manufacturer, self).save(*args, **kwargs)
+
+	class Meta:
+		verbose_name = 'Производитель'
+		verbose_name_plural = 'Производители'
+
+
+class Category(models.Model):
+
+	name 				= models.CharField(max_length = 150, verbose_name='Наименование')
+	meta_name 			= models.CharField(max_length=150, verbose_name='meta name', blank=True, null=True)
+	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
+
+	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+		
+	def __str__(self):
+
+		return self.name
+
+	def save(self, *args, **kwargs):
+
+		if self.slug == "":
+			self.slug = get_uuid()	
+
+		super(Category, self).save(*args, **kwargs)
+
+	class Meta:
+		verbose_name = 'Категория'
+		verbose_name_plural = 'Категории'		
 
 
 def get_image_name(instance, filename):

@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'authapp',
     'cartapp',
     'wishlistapp',
+    'categoryapp',
+    'manufacturerapp',
+
 ]
 
 MIDDLEWARE = [

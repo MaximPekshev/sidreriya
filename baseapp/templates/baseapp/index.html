@@ -32,38 +32,6 @@
 							<span class="kak">-</span>
 							<span class="subtotal">$0.00</span>
 						</a>
-						<div class="sub-menu mini-cart-content">
-							<div class="content-inner">
-								<h3 class="box-title">You have <span class="count">1 item(s)</span> in your cart.</h3>
-								<ul class="list-item-cart">
-									<li class="item-cart">
-										<div class="thumb">
-											<a href="#"><img src="{% static 'images/products/1.png' %}" alt=""></a>
-										</div>
-										<div class="product-info">
-											<h4 class="product-name"><a href="#">Stockholm Chair high Mosta gruancy</a></h4>
-											<span class="price">1 x $75.00</span>
-											<a class="remove-item" href="#"><i class="fa fa-close"></i></a>
-										</div>
-									</li>
-									<li class="item-cart">
-										<div class="thumb">
-											<a href="#"><img src="{% static 'images/products/1.png' %}" alt=""></a>
-										</div>
-										<div class="product-info">
-											<h4 class="product-name"><a href="#">Stockholm Chair high Mosta gruancy</a></h4>
-											<span class="price">1 x $75.00</span>
-											<a class="remove-item" href="#"><i class="fa fa-close"></i></a>
-										</div>
-									</li>
-								</ul>
-								<div class="subtotal">
-									Subtotal: <span class="amout">$75.00</span>
-								</div>
-								<a href="#" class="button">SHOPPING CART</a>
-								<a href="#" class="button primary">CHECK OUT</a>
-							</div>
-						</div>
 					</li>
 				</ul>
 			</div>
@@ -87,12 +55,12 @@
 					<li>
 						<a href="#">Доставка</a>
 					</li>
+					{% for cat in categories %}
 					<li>
-						<a href="{% url 'show_catalog' %}">Сидр</a>
+						<a href="{% url 'show_category' slug=cat.slug %}">{{ cat.name }}</a>
 					</li>
-					<li>
-						<a href="{% url 'show_catalog' %}">Еда</a>
-					</li>
+					{% endfor %}
+
 					<li>
 						<a href="#">Атмосфера</a>
 					</li>
