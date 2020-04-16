@@ -13,7 +13,7 @@ def show_catalog(request):
 
 	goods_count=12
 
-	goods = Good.objects.all()
+	goods = Good.objects.filter(is_active=True)
 	
 	table = []
 	for good in goods:
@@ -71,43 +71,44 @@ def show_good(request, slug):
 
 	opv = Object_property_values.objects.filter(good=good)
 
-	country = opv.filter(_property=Properties.objects.filter(title='Страна').first()).first()
+	# Страна
+	country = opv.filter(_property=Properties.objects.filter(slug='728193372').first()).first()
 	if country:
 		country = country.property_value
 	else:
 		country = ''
-
-	strength = opv.filter(_property=Properties.objects.filter(title='Крепость').first()).first()
+	# Крепость
+	strength = opv.filter(_property=Properties.objects.filter(slug='202312845').first()).first()
 	if strength:
 		strength = strength.property_value
 	else:
 		strength = ''
-
-	sugar = opv.filter(_property=Properties.objects.filter(title='Сахар').first()).first()
+	# Сахар
+	sugar = opv.filter(_property=Properties.objects.filter(slug='2193900133').first()).first()
 	if sugar:
 		sugar = sugar.property_value
 	else:
 		sugar = ''
-
-	volume = opv.filter(_property=Properties.objects.filter(title='Объем').first()).first()
+	# Объем
+	volume = opv.filter(_property=Properties.objects.filter(slug='3824689493').first()).first()
 	if volume:
 		volume = volume.property_value
 	else:
 		volume = ''
-
-	gas = opv.filter(_property=Properties.objects.filter(title='Газация').first()).first()
+	# Газация
+	gas = opv.filter(_property=Properties.objects.filter(slug='1240764269').first()).first()
 	if gas:
 		gas = gas.property_value
 	else:
 		gas = ''
-
-	pasteuriz = opv.filter(_property=Properties.objects.filter(title='Пастеризация').first()).first()
+	# Пастеризация
+	pasteuriz = opv.filter(_property=Properties.objects.filter(slug='2448919171').first()).first()
 	if pasteuriz:
 		pasteuriz = pasteuriz.property_value
 	else:
 		pasteuriz = ''
-
-	filtration = opv.filter(_property=Properties.objects.filter(title='Фильтрация').first()).first()
+	# Фильтрация
+	filtration = opv.filter(_property=Properties.objects.filter(slug='1716778945').first()).first()
 	if filtration:
 		filtration = filtration.property_value
 	else:
@@ -141,7 +142,7 @@ def show_category(request, slug):
 	except:
 		category = None
 	
-	goods = Good.objects.filter(category=category)
+	goods = Good.objects.filter(category=category, is_active=True)
 	
 	table = []
 	for good in goods:
@@ -197,7 +198,7 @@ def show_manufacturer(request, slug):
 	except:
 		manufacturer = None
 	
-	goods = Good.objects.filter(manufacturer=manufacturer)
+	goods = Good.objects.filter(manufacturer=manufacturer, is_active=True)
 	
 	table = []
 	for good in goods:

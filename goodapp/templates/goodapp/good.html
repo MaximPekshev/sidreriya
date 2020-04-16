@@ -27,6 +27,7 @@
 									</a>
 									{% endif %}
 								</div>
+								{% if pictures.count > 1 %}
 								<ul class="kt-zoom-thumbnails owl-carousel" data-loop="true" data-nav="true" data-dots="false" data-margin="10" data-responsive='{"0":{"items":"2"},"768":{"items":"3"},"992":{"items":"3"}}'>
 									{% for picture in pictures %}
 									<li>
@@ -36,6 +37,7 @@
 									</li>
 									{% endfor %}
 								</ul>
+								{% endif %}
 							</div>
 						</div>
 						<div class="col-sm-12 col-md-7">
@@ -64,7 +66,7 @@
 											</div>
 											<div>
 												<label>Крепость:</label>
-												<a>{% if country %}{{ strength }}{% endif %}</a>
+												<a>{% if country %}{{ strength }}{% endif %} %</a>
 											</div>
 											<div>
 												<label>Сахар:</label>
@@ -75,7 +77,7 @@
 										<div class="col-sm-6 col-md-6">
 											<div>
 												<label>Объем:</label>
-												<a>{% if country %}{{ volume }}{% endif %}</a>
+												<a>{% if country %}{{ volume }}{% endif %} L</a>
 											</div>
 											<div>
 												<label>Газация:</label>

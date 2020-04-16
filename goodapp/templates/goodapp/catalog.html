@@ -15,6 +15,7 @@
 						<a href="{% url 'show_category' slug=category.slug %}">{{ category.name }}</a>
 						{% endif %}
 						{% if manufacturer %}
+						<a>Производители</a>
 						<a href="{% url 'show_manufacturer' slug=manufacturer.slug %}">{{ manufacturer.name }}</a>
 						{% endif %}
 					</nav>
