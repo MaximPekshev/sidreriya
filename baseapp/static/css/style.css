@@ -779,7 +779,7 @@ HEADER
 .top-bar-left .logo,
 .top-bar-left .form-search-wapper{
     display: table-cell;
-    padding: 47px 0;
+    padding: 37px 0;
     border-left-width:1px;
     border-left-style: solid;
     border-left-color: rgba(56,56,56,0.6);
@@ -8307,14 +8307,17 @@ HOME SLIDER
 }
 .slide-home2 .content-slide .subtitle{
     margin: 0;
-    font-size: 16px;
+    font-size: 30px;
 }
 .slide-home2 .content-slide .title{
-    font-size: 21px;
-    font-weight: 700;
+    font-family: 'Bebas';
+    font-size: 90px;
+    font-weight: 900;
     margin-bottom: 30px;
 }
 .slide-home2 .content-slide .link{
+    font-family: 'Bebas';
+    font-size: 30px;
     letter-spacing: 2px;
     text-decoration: underline;
     color: #aaa;
@@ -9493,10 +9496,15 @@ RESPONSIVE
        right: 15px;
     }
     .slide-home2 .content-slide .subtitle{
-        font-size: 14px;
+        font-size: 18px;
     }
     .slide-home2 .content-slide .title{
-        font-size: 16px;
+        font-family: 'Bebas';
+        font-size: 30px;
+    }    
+
+    .slide-home2 .content-slide .link{
+        font-size: 15px;    
     }
     .footer .coppyright{
         text-align: center;

@@ -1,0 +1,66 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_delivery' %}">Доставка</a>
+		</nav>
+		<div class="row">
+			<div class="col-sm-2 col-md-2" >	
+			</div>
+			<div class="col-sm-7 col-md-8 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-thumb">
+							<img src="{% static 'images/banners/delivery2.jpg' %}" alt="">
+						</div>
+						<div class="post-info">
+							<h3 class="post-title"><a>Вы спрашивали про нашу доставку – мы отвечаем!</a></h3>
+							<div class="blog-content">
+								<p>- От какой суммы доставляете?</p>
+								<blockquote>- Мы доставляем заказы на любую сумму</blockquote>
+								<p>- Сколько стоит доставка?</p>
+								<blockquote>- В черте города доставка бесплатная при заказе на сумму от 900 рублей. При заказе на меньшую сумму, стоимость доставки 150 рублей.</blockquote>
+								<p>- В Дубовое привезете? Сколько стоит?</p>
+								<blockquote>- Дубовое для нас приравнено к черте города, тарифы такие же.</blockquote>
+								<p>- А в Северный? Разумное? Новосадовый?</p>
+								<blockquote>- Привезем в любую точку - стоимость рассчитаем индивидуально в зависимости от вашего адреса.</blockquote>
+								<p>- Как можно оформить заказ</p>
+								<blockquote>- Ваши заявки принимаем с 11:00 до 22:00 по телефону 412-416 или через наш <a href="https://www.instagram.com/sidreriya_bel/">Инстаграм</a>.</blockquote>
+							</div>
+						</div>
+						<div class="comments-area">
+							<h4 class="comment-list-title">Наши текущие акции:</h4>
+							<ol class="comment-list">
+								<li class="comment">
+									<div class="comment-item">
+										<div class="comment-author">
+											<span class="author" style="font-family: 'Bebas'; font-size: 36px">- 25 % на весь сидр</span>
+										</div>
+										<div class="comment-author" style="padding-top: 20px">
+											<span class="author" style="font-family: 'Bebas'; font-size: 36px">- 20 % на еду при самовывозе</span>
+										</div>
+										<div class="comment-content" style="padding-top: 20px">
+											<p>* На доставке работают только наши сотрудники, поэтому ваш заказ привезут максимально заботливо и душевно.</p>
+										</div>
+									</div>
+								</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>			
+	</div>	
+</div>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_contact_us' %}">Избранное</a>
+		</nav>
+	</div>	
+</div>
+
+<div class="main-container no-sidebar" style="padding-top: 0px ">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12" >
+				<div class="text-center">
+					<h2 class="title">Cкоро здесь вы сможете отмечать своих любимчиков из нашей коллекции сидров</h2>
+				</div>
+				<div class="text-center" style="padding-top: 30px ">
+					<a class="button primary" href="{% url 'show_index' %}">На главную</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

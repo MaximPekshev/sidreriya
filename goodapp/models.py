@@ -78,6 +78,11 @@ class Manufacturer(models.Model):
 		verbose_name_plural = 'Производители'
 
 
+def get_image_name(instance, filename):
+	
+	new_name = ('%s' + '.' + filename.split('.')[-1]) % instance.slug
+	return new_name
+
 class Category(models.Model):
 
 	name 				= models.CharField(max_length = 150, verbose_name='Наименование')
@@ -85,7 +90,10 @@ class Category(models.Model):
 	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
 
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
-		
+	parent_category 	= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
+	picture				= models.ImageField(upload_to=get_image_name, verbose_name='Изображение 370x334', default=None, null=True, blank=True)
+
+
 	def __str__(self):
 
 		return self.name
@@ -100,12 +108,7 @@ class Category(models.Model):
 	class Meta:
 		verbose_name = 'Категория'
 		verbose_name_plural = 'Категории'		
-
-
-def get_image_name(instance, filename):
 	
-	new_name = ('%s' + '.' + filename.split('.')[-1]) % instance.slug
-	return new_name	
 
 
 class Picture(models.Model):
