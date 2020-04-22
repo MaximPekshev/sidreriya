@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import Good, Picture, Properties, Property_value
+from .models import Good, Picture
 from .models import Properties, Property_value
 from .models import Object_property_values
 from .models import Manufacturer, Category

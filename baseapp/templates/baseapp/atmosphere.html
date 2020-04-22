@@ -14,7 +14,62 @@
 			<a href="{% url 'show_index' %}">На главную</a>
 			<a href="{% url 'show_atmosphere' %}">Атмосфера</a>
 		</nav>
+		<div class="row">
+			<div class="col-sm-2 col-md-2" >	
+			</div>
+			<div class="col-sm-8 col-md-8 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-info">
+							<h3 class="post-title" align="center"><a>Сидрерия – это место для любителей и ценителей сидра и не только.</a></h3>
+							<div class="blog-content" align="center">
+								<p>Создавая наше пространство мы хотели, чтобы вы чувствовали себя в Сидрерии как дома.</p>
+								<p>Чтобы вам было уютно здесь встретиться и с вашей половинкой, и собраться шумной компанией друзей, <br> и отметить важные для вас праздники.</p>
+								<p>И нам кажется, что у нас это получилось.</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 col-md-12">
+								<div class="col-sm-12 col-md-12" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo1.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo2.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo3.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo4.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo7.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-12 col-md-12" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo9.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo8.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo11.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo5.jpg' %}" alt="" class="img-fluid">
+								</div>
+								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
+									<img src="{% static 'images/atmo/atmo6.jpg' %}" alt="" class="img-fluid">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>	
 </div>
 
+{% endblock %}
+
+{% block magnific_popup %}
 {% endblock %}

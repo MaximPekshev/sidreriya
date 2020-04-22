@@ -522,19 +522,19 @@
     /* ---------------------------------------------
      Init popup
      --------------------------------------------- */
-    function init_popup(){
-        if($(window).width() + kt_get_scrollbar_width() >= 768){
-            if($('body').hasClass('home')){
-                //Open directly via API
-                $.magnificPopup.open({
-                  items: {
-                    src: '<div class="white-popup"><div class="kt-popup-newsletter"><div class="popup-title"><h3>Luckyshop</h3><p class="notice">enter your email and get  <span class="text-primary">25% off</span> YOUR first purchase!</p></div><form class="form-subscribe"><input class="input" placeholder="Your email here" type="text" /><button class="button">NO THANKS!</button><button class="button primary">Enter</button></form><div class="checkbox"><label><input type="checkbox" value="">Dont show this popup again!</label></div></div></div>',  //can be a HTML string, jQuery object, or CSS selector
-                    type: 'inline'
-                  }
-                });
-            }
-        }
-    }
+    // function init_popup(){
+    //     if($(window).width() + kt_get_scrollbar_width() >= 100){
+    //         if($('body').hasClass('home')){
+    //             //Open directly via API
+    //             $.magnificPopup.open({
+    //               items: {
+    //                 src: '<div class="white-popup"><div class="kt-popup-newsletter"><div class="popup-title"><h3>Сидрерия</h3><p class="notice">Для доступа необходимо подтвердить совершеннолетний возраст</p></div><form"><button class="button primary">Мне уже 18!</button></form></div></div>',  //can be a HTML string, jQuery object, or CSS selector
+    //                 type: 'inline'
+    //               }
+    //             });
+    //         }
+    //     }
+    // }
     function fireOnResizeEvent() {
         var width, height;
         if (navigator.appName.indexOf("Microsoft") != -1) {
@@ -563,7 +563,7 @@
       kt_hiden_orther_veticalmenu();
       kt_auto_width_vertical_menu();
       kt_stick_menu();
-      init_popup();
+      // init_popup();
       // Slide home 1
         if( $('.slide-home1 .slide-container').length > 0 ){
           $('.slide-home1 .slide-container').bxSlider({
