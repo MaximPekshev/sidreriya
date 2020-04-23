@@ -68,47 +68,54 @@ def show_good(request, slug):
 
 
 	opv = Object_property_values.objects.filter(good=good)
-
+	is_cidre = False
 	# Страна
 	country = opv.filter(_property=Properties.objects.filter(slug='728193372').first()).first()
 	if country:
 		country = country.property_value
+		is_cidre = True
 	else:
 		country = ''
 	# Крепость
 	strength = opv.filter(_property=Properties.objects.filter(slug='202312845').first()).first()
 	if strength:
 		strength = strength.property_value
+		is_cidre = True
 	else:
 		strength = ''
 	# Сахар
 	sugar = opv.filter(_property=Properties.objects.filter(slug='2193900133').first()).first()
 	if sugar:
 		sugar = sugar.property_value
+		is_cidre = True
 	else:
 		sugar = ''
 	# Объем
 	volume = opv.filter(_property=Properties.objects.filter(slug='3824689493').first()).first()
 	if volume:
 		volume = volume.property_value
+		is_cidre = True
 	else:
 		volume = ''
 	# Газация
 	gas = opv.filter(_property=Properties.objects.filter(slug='1240764269').first()).first()
 	if gas:
 		gas = gas.property_value
+		is_cidre = True
 	else:
 		gas = ''
 	# Пастеризация
 	pasteuriz = opv.filter(_property=Properties.objects.filter(slug='2448919171').first()).first()
 	if pasteuriz:
 		pasteuriz = pasteuriz.property_value
+		is_cidre = True
 	else:
 		pasteuriz = ''
 	# Фильтрация
 	filtration = opv.filter(_property=Properties.objects.filter(slug='1716778945').first()).first()
 	if filtration:
 		filtration = filtration.property_value
+		is_cidre = True
 	else:
 		filtration = ''
 
@@ -124,6 +131,7 @@ def show_good(request, slug):
 		'gas':gas,
 		'pasteuriz':pasteuriz,
 		'filtration':filtration,
+		'is_cidre': is_cidre,
 
 	}
 	return render(request, template_name, context)
