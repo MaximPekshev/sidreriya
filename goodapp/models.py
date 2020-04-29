@@ -26,7 +26,7 @@ class Good(models.Model):
 	is_active			= models.BooleanField(verbose_name='Активен', default=False)
 
 	quantity			= models.DecimalField(verbose_name='Остаток', max_digits=15, decimal_places=0, blank=True, null=True)
-	weight				= models.DecimalField(verbose_name='Вес', max_digits=6, decimal_places=0, blank=True, null=True)
+	weight				= models.CharField(max_length = 36, verbose_name='Вес', blank=True, null=True, default='')
 	
 	good_uid 			= models.CharField(max_length=36, verbose_name='Код', blank=True, null=True)
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
