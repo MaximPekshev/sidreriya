@@ -52,7 +52,7 @@
 										</a>
 									</div>
 									<div class="info">
-										<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }} / {{ item.good.name_en }}</a></h3>
+										<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
 										{% if item.good.price %}
 										<span class="price">&#8381 {{ item.good.price }}</span>
 										{% else %}

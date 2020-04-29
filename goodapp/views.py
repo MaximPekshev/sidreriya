@@ -145,7 +145,7 @@ def show_category(request, slug):
 		except:
 			category = None
 
-		subcategories = Category.objects.filter(parent_category=category)
+		subcategories = Category.objects.filter(parent_category=category).order_by('rank')
 
 		template_name = 'goodapp/catalog.html'
 

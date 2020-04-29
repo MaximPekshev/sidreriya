@@ -40,6 +40,7 @@ class GoodAdmin(admin.ModelAdmin):
 					'good_uid',
 					'price',
 					'quantity',
+					'weight',
 					'is_active',
 					'category',
 					'manufacturer',
@@ -85,6 +86,7 @@ admin.site.register(Manufacturer, ManufacturerAdmin)
 class CategoryAdmin(admin.ModelAdmin):
 	list_display = (
 					'name',
+					'rank',
 					)
 	
 	exclude = ('slug',)

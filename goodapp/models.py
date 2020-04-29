@@ -26,6 +26,7 @@ class Good(models.Model):
 	is_active			= models.BooleanField(verbose_name='Активен', default=False)
 
 	quantity			= models.DecimalField(verbose_name='Остаток', max_digits=15, decimal_places=0, blank=True, null=True)
+	weight				= models.DecimalField(verbose_name='Вес', max_digits=6, decimal_places=0, blank=True, null=True)
 	
 	good_uid 			= models.CharField(max_length=36, verbose_name='Код', blank=True, null=True)
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
@@ -93,6 +94,8 @@ class Category(models.Model):
 	parent_category 	= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
 	picture				= models.ImageField(upload_to=get_image_name, verbose_name='Изображение 370x334', default=None, null=True, blank=True)
 
+	rank				= models.DecimalField(verbose_name='Порядок', max_digits=6, decimal_places=0, blank=True, null=True)
+
 
 	def __str__(self):
 
@@ -132,6 +135,8 @@ class Picture(models.Model):
 
 		super(Picture, self).save(*args, **kwargs)
 
+
+	
 
 	class Meta:
 		

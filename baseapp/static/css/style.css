@@ -5038,6 +5038,7 @@ SHORTCODE
     -webkit-transition: all 1s ease;
     -o-transition: all 1s ease;
     position: relative;
+    filter: blur(2px);
 }
 .bg-image:before{
     content: '';
