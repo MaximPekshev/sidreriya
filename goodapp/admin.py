@@ -1,6 +1,12 @@
 from django.contrib import admin
 from django import forms
 
+from django.utils.safestring import mark_safe
+
+import csv
+from django.http import HttpResponse
+
+
 from .models import Good, Picture
 from .models import Properties, Property_value
 from .models import Object_property_values
@@ -19,8 +25,15 @@ class Object_property_valuesInlineForm(forms.ModelForm):
 
 class PictureInline(admin.TabularInline):
     model = Picture
+
+    fields = (
+    			'images',
+    			'main_image',
+    	)
+
     exclude = ('title', 'slug')
     extra = 0
+
 
 class Property_valueInline(admin.TabularInline):
     model = Property_value
@@ -44,9 +57,12 @@ class GoodAdmin(admin.ModelAdmin):
 					'is_active',
 					'category',
 					'manufacturer',
+					'image',
 					)
 	
 	inlines 	 = [PictureInline, Object_property_valuesInline, ]
+
+	actions = ["export_as_csv"]
 
 	exclude = ('slug',)
 
@@ -58,9 +74,35 @@ class GoodAdmin(admin.ModelAdmin):
 
 		if db_field.name == "category":
 			kwargs["queryset"] = Category.objects.all()
-			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)	
+			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+	def image(self, obj):
+
+		img = Picture.objects.filter(good=obj, main_image=True).first() if Picture.objects.filter(good=obj, main_image=True).first() else Picture.objects.filter(good=obj).first()
+		if img:
+			return mark_safe('<img src="{url}" width="50" />'.format(url=img.images.url))
+		else:
+			return ''	
+
+	def export_as_csv(self, request, queryset):
+
+		meta = self.model._meta
+		field_names = [field.name for field in meta.fields]
+		response = HttpResponse(content_type='text/csv')
+		response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+		writer = csv.writer(response)
+
+		writer.writerow(field_names)
+		for obj in queryset:
+			row = writer.writerow([getattr(obj, field) for field in field_names])
+
+		return response
+
+	export_as_csv.short_description = "Выгрузить выбранные"
 
 admin.site.register(Good, GoodAdmin)
+
+
 
 
 class PropertiesAdmin(admin.ModelAdmin):
