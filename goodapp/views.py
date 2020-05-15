@@ -118,6 +118,13 @@ def show_good(request, slug):
 		is_cidre = True
 	else:
 		filtration = ''
+	# Что внутри?
+	inside = opv.filter(_property=Properties.objects.filter(slug='552212307').first()).first()
+	if inside:
+		inside = inside.property_value
+		is_cidre = True
+	else:
+		inside = ''	
 
 	template_name = 'goodapp/good.html'
 
@@ -131,6 +138,7 @@ def show_good(request, slug):
 		'gas':gas,
 		'pasteuriz':pasteuriz,
 		'filtration':filtration,
+		'inside': inside,
 		'is_cidre': is_cidre,
 
 	}

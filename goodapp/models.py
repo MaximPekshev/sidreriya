@@ -17,6 +17,8 @@ class Good(models.Model):
 	name_en				= models.CharField(max_length = 150, verbose_name='Наименование на английском', blank=True,)
 	description 		= models.TextField(max_length=2048, verbose_name='Описание', blank=True)
 
+	gastronomy			= models.TextField(max_length=512, verbose_name='Гастрономия', blank=True, default='')
+
 	meta_name 			= models.CharField(max_length=150, verbose_name='meta name', blank=True, null=True)
 	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
 

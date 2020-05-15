@@ -59,7 +59,9 @@ class GoodAdmin(admin.ModelAdmin):
 					'manufacturer',
 					'image',
 					)
-	
+
+	list_filter = ('category', 'manufacturer')
+
 	inlines 	 = [PictureInline, Object_property_valuesInline, ]
 
 	actions = ["export_as_csv"]

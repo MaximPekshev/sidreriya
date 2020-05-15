@@ -54,16 +54,28 @@
 								<p class="stock out-of-stock"><label>вес, гр: {% if good.weight %} {{ good.weight }} {% endif %}</label>
 								{% endif %}
 								<div class="short-descript">
-									<p>{{ good.description|linebreaksbr }}</p>
+									<p align="justify">{{ good.description|linebreaksbr }}</p>
 								</div>
 								{% if is_cidre %}
+
 								<div class="variation_form_section">
-									<h1 class="product_title entry-title">Характеристики</h1>
+									<h1 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Гастрономия</h1>
+									<div class="short-descript">
+									<p align="justify">{{ good.gastronomy|linebreaksbr }}</p>
+									</div>
+								</div>
+
+								<div class="variation_form_section">
+									<h1 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Характеристики</h1>
 									<div class="row">
 										<div class="col-sm-6 col-md-6">
 											<div>
 												<label>Производитель:</label>
 												<a href="{% if good.manufacturer %} {% url 'show_manufacturer' slug=good.manufacturer.slug %} {% endif %}">{% if good.manufacturer %}{{ good.manufacturer }}{% endif %}</a>
+											</div>
+											<div>
+												<label>Что внутри?:</label>
+												<a>{% if inside %}{{ inside }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Страна:</label>
@@ -74,18 +86,18 @@
 												<a>{% if country %}{{ strength }} %{% endif %}</a>
 											</div>
 											<div>
-												<label>Сахар:</label>
+												<label>Сладость:</label>
 												<a>{% if country %}{{ sugar }}{% endif %}</a>
 											</div>
 
 										</div>
 										<div class="col-sm-6 col-md-6">
 											<div>
-												<label>Объем:</label>
+												<label>Объем бутылочки:</label>
 												<a>{% if country %}{{ volume }} L{% endif %}</a>
 											</div>
 											<div>
-												<label>Газация:</label>
+												<label>Пузырьки:</label>
 												<a>{% if country %}{{ gas }}{% endif %}</a>
 											</div>
 											<div>
