@@ -8313,7 +8313,7 @@ HOME SLIDER
 }
 .slide-home2 .content-slide .title{
     font-family: 'Bebas';
-    font-size: 90px;
+    font-size: 80px;
     font-weight: 900;
     margin-bottom: 30px;
 }
@@ -8330,7 +8330,7 @@ HOME SLIDER
     top: 50%;
     right: inherit;
     left: 0;
-    padding: 0 165px;
+    padding: 0 200px;
     text-align: center;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
