@@ -1,0 +1,203 @@
+
+
+
+
+
+<style type="text/css">
+	body
+	{
+		margin: 0;
+		background: #fff;
+		font-weight: bold;
+	}
+	table
+	{
+		font-family: Arial;
+		font-size: 11px;
+	}
+	td
+	{
+		border: 1pt solid #000;
+	}
+	thead td
+	{
+		padding: 4px;
+		text-align: center;
+		vertical-align: middle;
+		font-weight: bold;
+	}
+</style>
+
+<body>
+    <div>Ч/Г БСК 783-21/2018</div>
+	<div align="center">
+        
+		
+
+
+
+
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<div class="pr_5 pt_20 color_3 ff_t">
+	<div class="f_20 ta_c lh_20 pb_5">
+		Транзакции
+	</div>
+	<div class="f_14 lh_18 ta_c pb_5">
+		За период &nbsp;
+		с &nbsp;
+		<b>
+			
+					18.05.2020 00:00:00
+					
+		</b>
+		&nbsp;
+		по &nbsp;
+		<b>
+		
+				31.05.2020 23:59:59
+						
+		</b>
+	</div>
+    
+    
+    
+        
+        
+    
+	
+        
+        
+        
+            
+        
+        <div class="pr_5 pt_20 color_3 ff_t" align="center">
+            
+<table id="transactions" class="simple">
+<caption>
+                    <thead>
+                    <tr>
+                        <th rowspan="2">Карта</th>
+                        
+                            <th rowspan="2">Держатель</th>
+                        
+                        <th rowspan="2">Точка обслуживания</th>
+                        <th rowspan="2">Адрес ТО</th>
+                        <th rowspan="2">Дата</th>
+                        
+                            <th rowspan="2">Операция</th>
+                        
+                        <th rowspan="2">Услуга</th>
+                        
+                            <th rowspan="2">Кошелек/Счет</th>
+                            <th rowspan="2">Схема обсл.</th>
+                        
+                        <th rowspan="2">Количество</th>
+                        
+                        <th colspan="2">Клиент</th>
+                        
+                        
+                        
+                        
+                    </tr>
+                    <tr>
+                        
+                        <th>Цена</th>
+                        <th>Стоимость</th>
+                        
+                        
+                    </tr>
+                    </thead>
+                </caption>
+<tbody>
+<tr class="odd">
+<td class="alignLeft withoutLeftBorder">443414282</td>
+<td class="alignLeft"></td>
+<td class="alignLeft">[2005, 2575] ГЭС Поволжье ООО ИНН 3017025584</td>
+<td class="alignLeft">АГЗС № 2  г. Белгород, пр-т Б. Хмельницкого, р-н Аэропорт</td>
+<td>19.05.2020&nbsp;12:18:58</td>
+<td class="alignLeft">Обслуживание</td>
+<td class="alignLeft">СУГ (л)</td>
+<td>рубли</td>
+<td>ЭК</td>
+<td class="alignRight">-31,69</td>
+<td class="alignRight"> 21,90</td>
+<td class="alignRight">- 694,01</td></tr>
+<tr class="even">
+<td class="alignLeft withoutLeftBorder">443414283</td>
+<td class="alignLeft"></td>
+<td class="alignLeft">[2005, 2594] ГЭС Поволжье ООО ИНН 3017025584</td>
+<td class="alignLeft">АГЗС № 11 г. Белгород, ул. Б. Хмельницеого, 137К</td>
+<td>18.05.2020&nbsp;13:33:06</td>
+<td class="alignLeft">Обслуживание</td>
+<td class="alignLeft">СУГ (л)</td>
+<td>рубли</td>
+<td>ЭК</td>
+<td class="alignRight">-21,00</td>
+<td class="alignRight"> 21,90</td>
+<td class="alignRight">- 459,90</td></tr></tbody></table>
+                    <span class="pagebanner" style="text-align: left"> </span>
+                
+        </div>
+	
+	
+	<div align="center">
+		<br/>
+		
+<table class="simple">
+<caption class="f_16 ta_c lh_20 pb_5">Итог по услугам</caption>
+<thead>
+<tr>
+<th>Услуга</th>
+<th>Количество</th>
+<th>Стоимость</th></tr></thead>
+<tfoot>
+				<td class = "alignLeft withoutLeftBorder footerTotal">Итого:</td>
+				<td></td>
+                <td class = "alignRight footerTotal">
+                    -1153,91
+                </td>
+                
+                
+                
+                
+			</tfoot>
+<tbody>
+<tr class="odd">
+<td class="alignLeft withoutLeftBorder">СУГ (л)</td>
+<td class="alignRight">-52,69</td>
+<td class="alignRight">- 1153,91</td></tr></tbody></table>
+		<br>
+	</div>
+	
+	
+	<div align="center">
+		<br/>
+		
+<table class="simple">
+<caption class="f_16 ta_c lh_20 pb_5">Итог по картам</caption>
+<thead>
+<tr>
+<th class="sorted order1">Карта</th>
+<th>Услуга</th>
+<th>Количество</th>
+<th>Стоимость</th></tr></thead>
+<tbody>
+<tr class="odd">
+<td class="alignLeft withoutLeftBorder">443414282</td>
+<td class="alignLeft">СУГ (л)</td>
+<td class="alignRight">-31,69</td>
+<td class="alignRight">- 694,01</td></tr>
+<tr class="even">
+<td class="alignLeft withoutLeftBorder">443414283</td>
+<td class="alignLeft">СУГ (л)</td>
+<td class="alignRight">-21,00</td>
+<td class="alignRight">- 459,90</td></tr></tbody></table>
+		<br>
+	</div>	
+	
+</div>
+	</div>
+</body>

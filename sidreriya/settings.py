@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o-w+*8qks^v)0%^r(hxk4-##)9psib9$y#n5f(wcql4yq@*i62'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['sidreriyabelgorod.ru', 'www.sidreriyabelgorod.ru', 'localhost',]
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # annasoft
     'django_cleanup.apps.CleanupConfig',
     'baseapp',
     'goodapp',
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
     'wishlistapp',
     'categoryapp',
     'manufacturerapp',
+    'django.contrib.sites',
+    'account',
 
 ]
 
@@ -56,6 +59,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # annasoft
+    'account.middleware.LocaleMiddleware',
+    'account.middleware.TimezoneMiddleware',
+    'account.middleware.ExpiredPasswordMiddleware',
 ]
 
 ROOT_URLCONF = 'sidreriya.urls'
@@ -73,6 +80,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # annasoft
+                'account.context_processors.account',
             ],
         },
     },
@@ -91,6 +100,7 @@ DATABASES = {
     }
 }
 
+SITE_ID = 1
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -108,6 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'account.auth_backends.EmailAuthenticationBackend',
 ]
 
 
@@ -137,3 +151,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+
+ACCOUNT_LOGIN_URL = 'authapp:account_login'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = ACCOUNT_LOGIN_URL
+ACCOUNT_PASSWORD_RESET_REDIRECT_URL = ACCOUNT_LOGIN_URL
+ACCOUNT_EMAIL_CONFIRMATION_URL = "authapp:account_confirm_email"
+ACCOUNT_SETTINGS_REDIRECT_URL = 'authapp:account_settings'
+ACCOUNT_PASSWORD_CHANGE_REDIRECT_URL = "authapp:account_password"
+
+
+DEFAULT_FROM_EMAIL = 'info@annasoft.ru'
+EMAIL_HOST = "smtp.mail.ru"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "info@annasoft.ru"
+EMAIL_HOST_PASSWORD = "M@sterkey$302"
