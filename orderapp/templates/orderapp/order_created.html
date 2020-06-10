@@ -1,0 +1,80 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+		</nav>
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+
+				<div class="block-form">
+					<h3 class="form-heading">Заказ успешно отправлен!</h3>
+
+					<p>
+						Заказ для: {{ order.first_name }} {{ order.last_name }}
+					</p>
+					<p>	
+						Адрес доставки: {{ order.address }}
+					</p>
+					<p>	
+						Телефон: {{ order.phone }}	
+					</p>
+					<p>	
+						Номер заказа: {{ order.order_number }}	
+					</p>
+
+					<table class="shop_table">
+						<thead>
+							<tr>
+								<th class="product-name">Товар</th>
+								<th class="product-name">Кол-во</th>
+								<th class="product-total">Сумма</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in order_items %}
+							<tr>
+								<td class="product-name">{{ item.good }} </td>
+								<td class="product-total">{{ item.quantity }}</td>
+								<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+						<tfoot>
+							<tr class="order-total">
+								<th>Итого</th>
+								<td></td>
+								<td><strong><span class="amount">&#8381 {{ order.summ }}</span></strong></td>
+							</tr>
+						</tfoot>
+					</table>
+					{% if order.buyer %}
+					<div class="text-center">
+					<a href="{% url 'show_orders' %}" class="button primary">Мои заказы</a>
+					</div>
+					{% else %}
+					<div class="text-center">
+					<a href="{% url 'show_index' %}" class="button primary">На главную</a>
+					</div>
+					{% endif %}
+				</div>		
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

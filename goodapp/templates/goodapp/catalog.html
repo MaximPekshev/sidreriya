@@ -61,6 +61,16 @@
 										{% else %}
 										<span class="price">&#8381 0</span>
 										{% endif %}
+										<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+										</form>
+										<div class="group-button">
+											
+												<button form="{{ item.good.slug }}addtocart" type="submit" class="button add_to_cart_button">В корзину</button>
+												<a href="#" class="wishlist">В Избранное</a>
+											
+										</div>
 									</div>
 								</div>
 							</li>

@@ -29,6 +29,8 @@
 
 	<link rel="stylesheet" href="{% static 'css/jquery.arcticmodal.css' %}">
 	<link rel="stylesheet" href="{% static 'css/simple.css' %}">
+
+
 </head>
 <body class="home">
 <div id="box-mobile-menu" class="full-height full-width box-mobile-menu">
@@ -130,9 +132,19 @@
 	    <script type="text/javascript" src="{% static 'js/masonry.js' %}"></script>
 		<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
 
+
+
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="{% static 'js/jquery.arcticmodal.js' %}"></script>
 		<script src="{% static 'js/config.js' %}"></script>
 		<script src="//yandex.st/jquery/cookie/1.0/jquery.cookie.min.js"></script>
+
+		<script src="{% static 'js/jquery.maskedinput.js' %}"></script>
+
+		<script type="text/javascript">
+		   	jQuery(function($){
+		   		$("#phoneInput").mask("+7 (999) 999-9999");
+			});
+		</script>
 </body>
 </html>

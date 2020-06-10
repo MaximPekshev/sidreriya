@@ -4,6 +4,31 @@
 
 {% block header %}
 
+<div id="header" class="header style2 style9">
+	<div class="top-bar">
+		<div class="container">
+			<ul class="kt-nav top-bar-menu right">
+				{% if user.is_authenticated %}
+				<li>
+					<a href="{% url 'show_profile' %}">Привет, {{ user }}</a>
+				</li>
+				<li>	
+					<a href="{% url 'account_logout' %}">Выйти</a>
+				</li>	
+					{% else %}
+				<li>
+					<a href="{% url 'account_login' %}">Вход/Регистрация</a>
+				</li>
+				{% endif %}
+				<li class="menu-item-has-children box-setting">
+					<a href="tel:84722412416"><span class="menu-icon pe-7s-headphones"></span> Тел: 412-416</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>			
+
+
 <div id="header" class="header">
 	<div class="top-bar">
 		<div class="container">
@@ -16,23 +41,24 @@
 			<div class="top-bar-right">
 				<ul class="kt-nav top-bar-menu">
 					<li class="menu-item-has-children">
-						<a href="tel:84722412416"><span>Тел: 412-416</span></a>
-					</li>
-					<li class="menu-item-has-children">
-						<a href="{% url 'show_lk' %}"><span class="menu-icon flaticon-user5"></span></a>
+						<a href="https://www.instagram.com/sidreriya_bel/"><i class="fa fa-instagram"></i></a>
 					</li>
 					<li class="menu-item-has-children box-setting">
 						<a href="{% url 'show_wishlist' %}">
 							<span class="menu-icon icon flaticon-heart295"></span>
+							<!-- <span class="count">0</span> -->
 						</a>
 					</li>
 					<li class="menu-item-has-children mini-cart">
 						<a  href="{% url 'show_cart' %}">
 							<span class="menu-icon  icon flaticon-shopping-cart6"></span>
+							{% if cart %}
+							<span class="count">{{ cart_count }}</span>
+							<span class="text">шт.</span>
+							<span class="kak">-</span>
+							<span class="subtotal">&#8381 {{ cart.summ }}</span>
+							{% endif %}
 						</a>
-					</li>
-					<li class="menu-item-has-children">
-						<a href="https://www.instagram.com/sidreriya_bel/"><i class="fa fa-instagram"></i></a>
 					</li>
 				</ul>
 			</div>
@@ -51,10 +77,10 @@
 				</a>
 				<ul class="kt-nav main-menu clone-main-menu">
 					<li>
-						<a href="{% url 'show_index' %}">На главную</a>
+						<a href="{% url 'show_delivery' %}">Доставка</a>
 					</li>
 					<li>
-						<a href="{% url 'show_delivery' %}">Доставка</a>
+						<a href="#">В бочонках</a>
 					</li>
 					<li>
 						<a href="{% url 'show_category' slug='2717255153' %}">Сидр</a>
@@ -62,8 +88,6 @@
 					<li>
 						<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
 					</li>
-
-
 					<li>
 						<a href="{% url 'show_atmosphere' %}">Атмосфера</a>
 					</li>

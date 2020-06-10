@@ -1,0 +1,48 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_orders' %}">Ваши заказы</a>
+		</nav>
+		<div class="row">
+			<div class="col-sm-12">
+				<table class="table table-wishlist table-responsive">
+					<thead>
+						<tr>
+							<th>Номер заказа</th>
+							<th>Дата заказа</th>
+							<th>Кол-во</th>
+							<th>Сумма заказа</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in orders %}
+						<tr>
+							<td>{{ item.0.order_number }}</td>
+							<td>{{ item.0.date }}</td>
+							<td>{{ item.1 }}</td>
+							<td>{{ item.0.summ }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

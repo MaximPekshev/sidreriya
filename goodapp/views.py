@@ -2,6 +2,9 @@ from django.shortcuts import render
 from .models import Good, Picture, Object_property_values, Properties
 from .models import Category, Manufacturer
 
+from cartapp.models import Cart, Cart_Item
+from cartapp.views import get_cart
+
 from django.core.paginator import Paginator
 
 class Item(object):
@@ -53,6 +56,8 @@ def show_catalog(request):
 	template_name = 'goodapp/catalog.html'
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
+		'cart': get_cart(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
 	}
 	
 
@@ -140,6 +145,8 @@ def show_good(request, slug):
 		'filtration':filtration,
 		'inside': inside,
 		'is_cidre': is_cidre,
+		'cart': get_cart(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
 
 	}
 	return render(request, template_name, context)
@@ -159,6 +166,9 @@ def show_category(request, slug):
 
 		context = {
 			'subcategories': subcategories, 'category': category,
+			'cart': get_cart(request),
+			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+
 		}
 		
 	else:	
@@ -210,6 +220,8 @@ def show_category(request, slug):
 		context = {
 			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 			'category': category,
+			'cart': get_cart(request),
+			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
 		}
 
 	return render(request, template_name, context)
@@ -265,6 +277,8 @@ def show_manufacturer(request, slug):
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 		'manufacturer': manufacturer,
+		'cart': get_cart(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
 	}
 
 	return render(request, template_name, context)		

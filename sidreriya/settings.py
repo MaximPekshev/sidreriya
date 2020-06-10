@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o-w+*8qks^v)0%^r(hxk4-##)9psib9$y#n5f(wcql4yq@*i62'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['sidreriyabelgorod.ru', 'www.sidreriyabelgorod.ru', 'localhost',]
 
@@ -38,13 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
+    'django.contrib.sites',
     'baseapp',
     'goodapp',
     'authapp',
+    'orderapp',
     'cartapp',
     'wishlistapp',
     'categoryapp',
     'manufacturerapp',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
 ]
 
@@ -64,7 +69,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'templates', 'allauth')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -73,12 +78,22 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'sidreriya.wsgi.application'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
+
 
 
 # Database
@@ -110,6 +125,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ACCOUNT_EMAIL_REQUIRED =True
+ACCOUNT_AUTHENTICATION_METHOD='email'
+ACCOUNT_EMAIL_VERIFICATION='mandatory'
+
+# ACCOUNT_FORMS = {'login': 'authapp.forms.AnnasoftLoginForm'}
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -124,6 +146,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+EMAIL_HOST = 'smtp.inbox.ru'
+EMAIL_HOST_USER = 'annasoft@inbox.ru'
+EMAIL_HOST_PASSWORD = '1qazXSW@'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'annasoft@inbox.ru'
+# EMAIL_USE_SSL = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

@@ -1,0 +1,99 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			Новый заказ
+		</nav>
+		<form action="{% url 'order_add' %}" class="checkout" method="POST">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="block-form">
+						<h3 class="form-heading">Данные по доставке</h3>
+						<div class="row">
+							<div class="col-sm-6">
+								<span>Имя</span>
+								<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+							</div>
+							<div class="col-sm-6">
+								<span>Фамилия</span>
+								<p><input type="text" name="input_second_name" placeholder="Фамилия" value="{{ buyer.last_name }}"></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<span>Телефон</span>
+								<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<span>Нас. пункт</span>
+								<p><input type="text" name="input_locality" placeholder="Нас. пункт" value="{{ buyer.locality }}" required></p>
+							</div>
+							<div class="col-sm-6">
+								<span>Улица</span>
+								<p><input type="text" name="input_street" placeholder="Улица" value="{{ buyer.street }}" required></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<span>Дом</span>
+								<p><input type="text" name="input_house" placeholder="Дом" value="{{ buyer.house }}" required></p>
+							</div>
+							<div class="col-sm-6">
+								<span>Квартира</span>
+								<p><input type="text" name="input_apartments" value="{{ buyer.apartments }}" placeholder="Кв."></p>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="col-sm-6">
+					<div class="block-form order-review">
+						<h3 class="form-heading">Ваш заказ</h3>
+						<table class="shop_table">
+							<thead>
+								<tr>
+									<th class="product-name">Товар</th>
+									<th class="product-total">Сумма</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for item in cart_items %}
+								<tr>
+									<td class="product-name">{{ item.good }} </td>
+									<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							<tfoot>
+								<tr class="order-total">
+									<th>Итого</th>
+									<td><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
+								</tr>
+							</tfoot>
+						</table>
+						<button class="button primary">Отправить заказ</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>	
+</div>
+
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}
