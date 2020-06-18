@@ -141,6 +141,10 @@ class In_BarrelsAdmin(admin.ModelAdmin):
 	list_display = (
 					'good',
 					)
-	
 
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		if db_field.name == "good":
+			kwargs["queryset"] = Good.objects.filter(in_barrel=True)
+		return super(In_BarrelsAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+	
 admin.site.register(In_Barrels, In_BarrelsAdmin)
