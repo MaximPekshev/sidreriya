@@ -2929,7 +2929,7 @@ HEADER
 ---------------*/
 .page-banner{
     min-height: 405px;
-    background-image: url('../images/banners/1.jpg');
+    background-image: url('../images/banners/bar.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -2986,7 +2986,7 @@ HEADER
     position: absolute;
     top: 10px;
     right: 7px;
-    z-index: 2;
+    z-index: inherit;
 }
 .product-item .flash>span{
     padding: 0 10px;
