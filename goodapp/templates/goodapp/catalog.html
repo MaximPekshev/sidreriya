@@ -71,6 +71,11 @@
 												<a href="#" class="wishlist">В Избранное</a>
 											
 										</div>
+										{% if item.good in in_bar.0 %}
+										<div class="flash">
+											<span class="new">Розлив</span>
+										</div>
+										{% endif %}
 									</div>
 								</div>
 							</li>

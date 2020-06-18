@@ -2,6 +2,11 @@
 
 {% load static %}
 
+{% block meta_description %} {% if good.meta_description %} {{ good.meta_description }} {% else %} {{good.description|slice:"250" }} {% endif %}{% endblock %}
+
+{% block title %} {% if good.meta_name %} {{ good.meta_name }} {% else %}{{ good.name }} {% if good.name_en %} / {{ good.name_en }} {% endif %} {% endif %}{% endblock %}
+
+
 {% block content %}
 <div class="main-container left-sidebar">
 	<div class="container">

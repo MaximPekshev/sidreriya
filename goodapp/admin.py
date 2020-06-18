@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from .models import Good, Picture
 from .models import Properties, Property_value
 from .models import Object_property_values
-from .models import Manufacturer, Category
+from .models import Manufacturer, Category, In_Barrels
 
 
 class Object_property_valuesInlineForm(forms.ModelForm):
@@ -136,3 +136,11 @@ class CategoryAdmin(admin.ModelAdmin):
 	exclude = ('slug',)
 
 admin.site.register(Category, CategoryAdmin)
+
+class In_BarrelsAdmin(admin.ModelAdmin):
+	list_display = (
+					'good',
+					)
+	
+
+admin.site.register(In_Barrels, In_BarrelsAdmin)

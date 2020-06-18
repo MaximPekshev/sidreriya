@@ -17,6 +17,8 @@ class Buyer(models.Model):
 	street 					= models.CharField(max_length=30, verbose_name='Улица', blank=True, default='')
 	house 					= models.CharField(max_length=10, verbose_name='Дом', blank=True, default='')
 	apartments 				= models.CharField(max_length=10, verbose_name='Кв.', blank=True, default='')
+	porch 					= models.CharField(max_length=10, verbose_name='Подъезд', blank=True, default='')
+	floor 					= models.CharField(max_length=10, verbose_name='Этаж', blank=True, default='')
 
 	def __str__(self):
 		
@@ -25,7 +27,7 @@ class Buyer(models.Model):
 
 	def save(self, *args, **kwargs):
 
-		self.address = "{}, {} ул., д. {}, кв. {}".format(self.locality, self.street, self.house, self.apartments)
+		self.address = "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(self.locality, self.street, self.house, self.apartments, self.porch, self.floor)
 		
 		super(Buyer, self).save(*args, **kwargs)
 

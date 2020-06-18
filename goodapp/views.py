@@ -1,11 +1,44 @@
 from django.shortcuts import render
 from .models import Good, Picture, Object_property_values, Properties
-from .models import Category, Manufacturer
+from .models import Category, Manufacturer, In_Barrels
 
 from cartapp.models import Cart, Cart_Item
-from cartapp.views import get_cart
 
 from django.core.paginator import Paginator
+
+
+def get_cart_(request):
+
+	if request.user.is_authenticated:
+		cart 		= Cart.objects.filter(user = request.user).last()
+	else:
+		cart_id 	= request.session.get("cart_id")	
+		cart 		= Cart.objects.filter(id = cart_id).last()
+
+	return cart
+
+
+def get_in_barrels():
+
+	in_bar = In_Barrels.objects.all()[:8]
+
+	table = []
+
+	for good in in_bar:
+
+		item = Item()
+
+		item.good = good.good
+		
+		images = Picture.objects.filter(good=good.good, main_image=True).first()
+		if images:
+			item.image = images
+		else:
+			item.image = Picture.objects.filter(good=good.good).first()
+		 	
+		table.append(item)
+
+	return table	
 
 class Item(object):
 	
@@ -14,7 +47,7 @@ class Item(object):
 
 def show_catalog(request):
 
-	goods_count=12
+	goods_count=20
 
 	goods = Good.objects.filter(is_active=True)
 	
@@ -56,8 +89,9 @@ def show_catalog(request):
 	template_name = 'goodapp/catalog.html'
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
-		'cart': get_cart(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'cart': get_cart_(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'in_bar': get_in_barrels(),
 	}
 	
 
@@ -145,8 +179,9 @@ def show_good(request, slug):
 		'filtration':filtration,
 		'inside': inside,
 		'is_cidre': is_cidre,
-		'cart': get_cart(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'cart': get_cart_(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 	return render(request, template_name, context)
@@ -166,13 +201,14 @@ def show_category(request, slug):
 
 		context = {
 			'subcategories': subcategories, 'category': category,
-			'cart': get_cart(request),
-			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+			'cart': get_cart_(request),
+			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+			'in_bar': get_in_barrels(),
 
 		}
 		
 	else:	
-		goods_count=12
+		goods_count=20
 
 		try:
 			category = Category.objects.get(slug=slug)
@@ -220,8 +256,9 @@ def show_category(request, slug):
 		context = {
 			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 			'category': category,
-			'cart': get_cart(request),
-			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+			'cart': get_cart_(request),
+			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+			'in_bar': get_in_barrels(),
 		}
 
 	return render(request, template_name, context)
@@ -229,7 +266,7 @@ def show_category(request, slug):
 
 def show_manufacturer(request, slug):
 
-	goods_count=12
+	goods_count=20
 
 	try:
 		manufacturer = Manufacturer.objects.get(slug=slug)
@@ -277,8 +314,27 @@ def show_manufacturer(request, slug):
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 		'manufacturer': manufacturer,
-		'cart': get_cart(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'cart': get_cart_(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'in_bar': get_in_barrels(),
 	}
 
-	return render(request, template_name, context)		
+	return render(request, template_name, context)
+
+
+
+
+def show_in_barrels(request):
+
+	context = {
+
+		'in_bar': get_in_barrels(),
+		'cart': get_cart_(request),
+		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+
+	}
+
+	
+	return render(request, 'goodapp/in_barrels.html', context)
+
+

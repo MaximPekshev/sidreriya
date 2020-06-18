@@ -5,6 +5,7 @@ from cartapp.views import get_cart
 from cartapp.models import Cart, Cart_Item
 import django.core.exceptions
 from authapp.forms import BuyerSaveForm
+from goodapp.views import get_in_barrels
 
 def show_orders(request):
 
@@ -12,6 +13,7 @@ def show_orders(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -57,6 +59,9 @@ def order_add(request):
 			street  	= buyer_form.cleaned_data['input_street']
 			house  		= buyer_form.cleaned_data['input_house']
 			apartments  = buyer_form.cleaned_data['input_apartments']
+			porch  		= buyer_form.cleaned_data['input_porch']
+			floor 		= buyer_form.cleaned_data['input_floor']
+
 	
 			try:
 
@@ -79,6 +84,8 @@ def order_add(request):
 				street = street, 
 				house = house,
 				apartments = apartments,
+				porch = porch,
+				floor = floor,
 
 				)
 
@@ -86,10 +93,19 @@ def order_add(request):
 
 			if buyer:
 
-				new_order = Order(first_name=first_name, last_name=last_name, phone=phone, buyer=buyer, address = "{}, {} ул., д. {}, кв. {}".format(locality, street, house, apartments))
+				new_order = Order(
+					first_name=first_name, 
+					last_name=last_name, 
+					phone=phone, 
+					buyer=buyer, 
+					address = "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(locality, street, house, apartments, porch, floor))
 			else:
 
-				new_order = Order(first_name=first_name, last_name=last_name, phone=phone, address = "{}, {} ул., д. {}, кв. {}".format(locality, street, house, apartments))
+				new_order = Order(
+					first_name=first_name, 
+					last_name=last_name, 
+					phone=phone, 
+					address = "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(locality, street, house, apartments, porch, floor))
 
 			new_order.save()
 			
@@ -124,6 +140,7 @@ def order_add(request):
 				'order': new_order, 'order_items': Order_Item.objects.filter(order=new_order),
 				'cart': get_cart(request),
 				'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+				'in_bar': get_in_barrels(),
 
 				}
 

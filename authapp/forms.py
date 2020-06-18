@@ -9,3 +9,5 @@ class BuyerSaveForm(forms.Form):
 	input_street  		= forms.CharField(max_length = 30, required=False)
 	input_house  		= forms.CharField(max_length = 15, required=False)
 	input_apartments  	= forms.CharField(max_length = 15, required=False)
+	input_porch  		= forms.CharField(max_length = 15, required=False)
+	input_floor  		= forms.CharField(max_length = 15, required=False)

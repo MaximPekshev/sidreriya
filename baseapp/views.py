@@ -1,14 +1,17 @@
 from django.shortcuts import render
-from goodapp.models import Category
+from goodapp.models import Category, In_Barrels, Picture
 from cartapp.models import Cart, Cart_Item
 from cartapp.views import get_cart
+from goodapp.views import Item, get_in_barrels
+
 
 def show_index(request):
- 
+
 	context = {
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -20,6 +23,7 @@ def show_delivery(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -31,6 +35,7 @@ def show_atmosphere(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -42,6 +47,7 @@ def show_about_us(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -53,6 +59,7 @@ def show_contact_us(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -65,6 +72,7 @@ def show_wishlist(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 

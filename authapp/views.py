@@ -11,6 +11,7 @@ from cartapp.views import get_cart
 from authapp.models import Buyer
 import django.core.exceptions
 from .forms import BuyerSaveForm
+from goodapp.views import get_in_barrels
 
 
 
@@ -29,6 +30,9 @@ def profile_add(request):
 			street  	= buyer_form.cleaned_data['input_street']
 			house  		= buyer_form.cleaned_data['input_house']
 			apartments  = buyer_form.cleaned_data['input_apartments']
+			porch 		= buyer_form.cleaned_data['input_porch']
+			floor 		= buyer_form.cleaned_data['input_floor']
+
 
 			buyer = Buyer(
 				user = request.user,
@@ -39,6 +43,8 @@ def profile_add(request):
 				street = street, 
 				house = house,
 				apartments = apartments,
+				porch = porch, 
+				floor = floor,
 
 				)
 
@@ -63,6 +69,8 @@ def profile_change(request, buyer_id):
 			street  	= buyer_form.cleaned_data['input_street']
 			house  		= buyer_form.cleaned_data['input_house']
 			apartments  = buyer_form.cleaned_data['input_apartments']
+			porch  		= buyer_form.cleaned_data['input_porch']
+			floor  		= buyer_form.cleaned_data['input_floor']
 
 			try:
 				buyer = Buyer.objects.get(id=buyer_id)
@@ -74,6 +82,10 @@ def profile_change(request, buyer_id):
 				buyer.street 		= street
 				buyer.house 		= house
 				buyer.apartments 	= apartments
+				buyer.porch 		= porch
+				buyer.floor 		= floor
+
+
 				buyer.save()
 				
 			except Buyer.DoesNotExist:
@@ -92,6 +104,7 @@ def show_profile(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 
@@ -130,6 +143,7 @@ class CustomPasswordResetFromKeyView(PasswordResetFromKeyView):
 
 			'cart': get_cart(self.request),
         	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'in_bar': get_in_barrels(),
 
 			})
 
@@ -149,6 +163,7 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 
 			'cart': get_cart(self.request),
         	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'in_bar': get_in_barrels(),
 
 			})
 
@@ -172,6 +187,7 @@ class  CustomPasswordResetView(PasswordResetView):
 			'login_url': login_url,
 			'cart': get_cart(self.request),
         	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'in_bar': get_in_barrels(),
 
 			})
 
@@ -204,6 +220,7 @@ class CustomSignupView(SignupView):
 	                'redirect_field_value': redirect_field_value,
 	                'cart': get_cart(self.request),
         			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        			'in_bar': get_in_barrels(),
 	                })
 
 		return ret
@@ -223,7 +240,8 @@ class CustomLoginView(LoginView):
                     'redirect_field_name': self.redirect_field_name,
                     'redirect_field_value': redirect_field_value,
                     'cart': get_cart(self.request),
-        			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),})
+        			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        			'in_bar': get_in_barrels(),})
 		return ret
 
 		
@@ -239,6 +257,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         ret.update({
         	'cart': get_cart(self.request),
         	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'in_bar': get_in_barrels(),
         	})
 
         return ret
@@ -250,6 +269,7 @@ def account_password_change_succes(request):
 
 		'cart': get_cart(request),
 		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'in_bar': get_in_barrels(),
 
 	}
 

@@ -205,3 +205,14 @@ class Object_property_values(models.Model):
 		verbose_name_plural = 'Значения свойств объекта'
 
 		unique_together = (('good', '_property'),)
+		
+
+class In_Barrels(models.Model):
+
+	good					= models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+
+	class Meta:
+		
+		verbose_name = 'Сидр в бочках'
+		verbose_name_plural = 'Сидры в бочках'
+	

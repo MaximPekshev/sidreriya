@@ -3,6 +3,7 @@ from .models import Cart, Cart_Item
 from goodapp.models import Good, Picture 
 from .models import cart_calculate_summ
 from authapp.models import Buyer
+from goodapp.views import get_in_barrels
 
 
 class Item(object):
@@ -68,7 +69,12 @@ def show_cart(request):
 			table.append(cr_item)
 
 
-	context = {'cart_items': table, 'cart': cart , 'cart_count': len(Cart_Item.objects.filter(cart=cart)),}
+	context = {
+		'cart_items': table, 
+		'cart': cart , 
+		'cart_count': len(Cart_Item.objects.filter(cart=cart)),
+		'in_bar': get_in_barrels(),
+		}
 	
 	return render(request, 'cartapp/cart_page.html', context)
 
@@ -119,7 +125,12 @@ def cart_checkout(request):
 
 		cart_items 	 = Cart_Item.objects.filter(cart = cart)
 
-	context = {'cart_items': cart_items, 'cart': cart , 'cart_count': len(Cart_Item.objects.filter(cart=cart)),}
+	context = {
+		'cart_items': cart_items, 
+		'cart': cart , 
+		'cart_count': len(Cart_Item.objects.filter(cart=cart)),
+		'in_bar': get_in_barrels(),
+		}
 
 
 	if request.user.is_authenticated: 
