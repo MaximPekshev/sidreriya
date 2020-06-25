@@ -12,6 +12,7 @@ from authapp.models import Buyer
 import django.core.exceptions
 from .forms import BuyerSaveForm
 from goodapp.views import get_in_barrels
+from django.db.models import Sum
 
 
 
@@ -103,7 +104,7 @@ def show_profile(request):
 	context = {
 
 		'cart': get_cart(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 
 	}
@@ -142,7 +143,7 @@ class CustomPasswordResetFromKeyView(PasswordResetFromKeyView):
 		ret.update({
 
 			'cart': get_cart(self.request),
-        	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
 
 			})
@@ -162,7 +163,7 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 		ret.update({
 
 			'cart': get_cart(self.request),
-        	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
 
 			})
@@ -186,7 +187,7 @@ class  CustomPasswordResetView(PasswordResetView):
 
 			'login_url': login_url,
 			'cart': get_cart(self.request),
-        	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
 
 			})
@@ -219,7 +220,7 @@ class CustomSignupView(SignupView):
 	                'redirect_field_name': redirect_field_name,
 	                'redirect_field_value': redirect_field_value,
 	                'cart': get_cart(self.request),
-        			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        			'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         			'in_bar': get_in_barrels(),
 	                })
 
@@ -240,7 +241,7 @@ class CustomLoginView(LoginView):
                     'redirect_field_name': self.redirect_field_name,
                     'redirect_field_value': redirect_field_value,
                     'cart': get_cart(self.request),
-        			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        			'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         			'in_bar': get_in_barrels(),})
 		return ret
 
@@ -256,7 +257,7 @@ class CustomPasswordChangeView(PasswordChangeView):
 
         ret.update({
         	'cart': get_cart(self.request),
-        	'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(self.request))),
+        	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
         	})
 
@@ -268,7 +269,7 @@ def account_password_change_succes(request):
 	context = {
 
 		'cart': get_cart(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart(request))),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 
 	}

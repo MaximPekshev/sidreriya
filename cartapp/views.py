@@ -4,6 +4,7 @@ from goodapp.models import Good, Picture
 from .models import cart_calculate_summ
 from authapp.models import Buyer
 from goodapp.views import get_in_barrels
+from django.db.models import Sum
 
 
 class Item(object):
@@ -72,7 +73,7 @@ def show_cart(request):
 	context = {
 		'cart_items': table, 
 		'cart': cart , 
-		'cart_count': len(Cart_Item.objects.filter(cart=cart)),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		}
 	
@@ -128,7 +129,7 @@ def cart_checkout(request):
 	context = {
 		'cart_items': cart_items, 
 		'cart': cart , 
-		'cart_count': len(Cart_Item.objects.filter(cart=cart)),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		}
 

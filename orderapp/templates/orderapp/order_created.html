@@ -30,7 +30,10 @@
 						Телефон: {{ order.phone }}	
 					</p>
 					<p>	
-						Номер заказа: {{ order.order_number }}	
+						Номер заказа: {{ order.order_number }} от {{ order.date }}
+					</p>
+					<p>	
+						Время приготовления: {% if order.cook_time %}{{ order.cook_time }}{% else %} Время приготовления не выбрано{% endif %}
 					</p>
 
 					<table class="shop_table">

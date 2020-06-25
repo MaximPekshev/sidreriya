@@ -6,6 +6,8 @@ from cartapp.models import Cart, Cart_Item
 
 from django.core.paginator import Paginator
 
+from django.db.models import Sum
+
 
 def get_cart_(request):
 
@@ -90,7 +92,7 @@ def show_catalog(request):
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 		'cart': get_cart_(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 	}
 	
@@ -180,7 +182,7 @@ def show_good(request, slug):
 		'inside': inside,
 		'is_cidre': is_cidre,
 		'cart': get_cart_(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 
 	}
@@ -202,7 +204,7 @@ def show_category(request, slug):
 		context = {
 			'subcategories': subcategories, 'category': category,
 			'cart': get_cart_(request),
-			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+			'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 			'in_bar': get_in_barrels(),
 
 		}
@@ -257,7 +259,7 @@ def show_category(request, slug):
 			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 			'category': category,
 			'cart': get_cart_(request),
-			'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+			'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 			'in_bar': get_in_barrels(),
 		}
 
@@ -315,7 +317,7 @@ def show_manufacturer(request, slug):
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 		'manufacturer': manufacturer,
 		'cart': get_cart_(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 	}
 
@@ -330,7 +332,7 @@ def show_in_barrels(request):
 
 		'in_bar': get_in_barrels(),
 		'cart': get_cart_(request),
-		'cart_count' : len(Cart_Item.objects.filter(cart=get_cart_(request))),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 
 	}
 

@@ -53,9 +53,11 @@
 						<a  href="{% url 'show_cart' %}">
 							<span class="menu-icon  icon flaticon-shopping-cart6"></span>
 							{% if cart %}
+							{% if cart_count > 0 %}
 							<span class="count">{{ cart_count }}</span>
 							<span class="text">шт.</span>
 							<span class="kak">-</span>
+							{% endif %}
 							<span class="subtotal">&#8381 {{ cart.summ }}</span>
 							{% endif %}
 						</a>
@@ -79,8 +81,8 @@
 					<li>
 						<a href="{% url 'show_delivery' %}">Доставка</a>
 					</li>
-
-					<li class="{% if in_bar %} menu-item-has-children item-megamenu {% endif %}">
+					{% if in_bar %}
+					<li class="menu-item-has-children item-megamenu">
 						<a href="{% url 'show_in_barrels' %}">В бочонках</a>
 						<div class="sub-menu megamenu" style="width:1200px;">
 							<div class="row">
@@ -92,7 +94,7 @@
 							</div>
 						</div>
 					</li>
-
+					{% endif %}
 					<li>
 						<a href="{% url 'show_category' slug='2717255153' %}">Сидр</a>
 					</li>
@@ -116,22 +118,23 @@
 {% block content %}
 <div class="container">
 	<div class="kt_home_slide slide-home2 slide-home3 nav-center nav-style1 margin-top-30" data-nav="true" data-items="1" data-autoplay="true" data-loop="true" data-animateout="fadeOut" data-animatein="fadeIn">
+
 		<div class="item-slide">
-			<img src="{% static 'images/banners/home.jpg' %}" alt="">
-			<div class="content-slide">
-				<span data-animate="fadeInDown" class="caption subtitle">#сидимдомассидрерией</span>
-				<h3></h3>
-				<h1 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ЕДУ САМОВЫВОЗОМ</h1>
-				<a data-animate="fadeInDown" class="caption link merriweather" href="{% url 'show_delivery' %}">Подробнее...</a>
-			</div>
-		</div>
-		<div class="item-slide">
-			<img src="{% static 'images/banners/home.jpg' %}" alt="">
+			<img src="{% static 'images/banners/home.jpg' %}" alt="" style="filter: blur(2px);">
 			<div  class="content-slide">
-				<span data-animate="fadeInDown" class="caption subtitle">#сидимдомассидрерией</span>
 				<h3></h3>
 				<h1 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ЕДУ САМОВЫВОЗОМ</h1>
 				<a data-animate="fadeInDown"  class="caption link merriweather" href="{% url 'show_delivery' %}">Подробнее...</a>
+			</div>
+		</div>
+
+		<div class="item-slide">
+			<img src="{% static 'images/banners/opening.jpeg' %}" alt="" style="filter: blur(2px);">
+			<div class="content-slide">
+				<span data-animate="fadeInDown" class="caption subtitle">Теперь ваш заказ можно оформить здесь</span>
+				<h3></h3>
+				<h1 data-animate="zoomIn" class="caption title" >Мы запустили сайт!</h1>
+				<a data-animate="fadeInDown" class="caption link merriweather" href="{% url 'show_promo' %}">Подробнее...</a>
 			</div>
 		</div>
 	</div>

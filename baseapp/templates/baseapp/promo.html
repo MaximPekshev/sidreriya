@@ -1,0 +1,45 @@
+{% extends 'baseapp/index.html' %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+		</nav>
+		<div class="row">
+			<div class="col-sm-2 col-md-2" >	
+			</div>
+			<div class="col-sm-7 col-md-8 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-info">
+							<h3 class="post-title" align="center"><a>Мы начинаем тестировать наш сайт.</a></h3>
+							<div class="blog-content">
+								<p>Будем рады обратной связи — чтобы сделать его максимально удобным для вас.</p>
+								<blockquote>Уже сейчас вы можете оформить заказ, после мы свяжемся с вами для его подтверждения.</blockquote>
+								<p>Заказ можно забрать самим или оформить доставку.</p>
+								<blockquote>Также, мы собрали описание по всей нашей коллекции сидров.</blockquote>
+								<p>Вы можете прочесть его описание, узнать с чем сочетать и познакомиться с историей сидроделен из которых мы привезли для вас наш сидр.</p>
+							</div>
+						</div>
+						<div class="col-sm-12" >
+							<div class="text-center" style="padding-top: 30px ">
+								<a class="button primary" href="{% url 'show_catalog' %}">За покупками</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>			
+	</div>	
+</div>
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

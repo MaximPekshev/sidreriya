@@ -13,6 +13,8 @@ class Buyer(models.Model):
 
 	address 				= models.CharField(max_length=1024, verbose_name='Адрес', blank=True)
 
+	email 					= models.CharField(max_length=30, verbose_name='Email', blank=True)
+
 	locality 				= models.CharField(max_length=20, verbose_name='Нас. пункт', blank=True, default='')
 	street 					= models.CharField(max_length=30, verbose_name='Улица', blank=True, default='')
 	house 					= models.CharField(max_length=10, verbose_name='Дом', blank=True, default='')

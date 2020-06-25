@@ -14,99 +14,246 @@
 			<a href="{% url 'show_index' %}">На главную</a>
 			Новый заказ
 		</nav>
-		<form action="{% url 'order_add' %}" class="checkout" method="POST">
-			{% csrf_token %}
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="block-form">
-						<h3 class="form-heading">Данные по доставке</h3>
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Имя</span>
-								<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
-							</div>
-							<div class="col-sm-6">
-								<span>Фамилия</span>
-								<p><input type="text" name="input_second_name" placeholder="Фамилия" value="{{ buyer.last_name }}"></p>
-							</div>
+		<div class="row">
+
+			<div class="col-sm-6">
+
+				<div class="block-form" id="accordion-as" role="tablist" aria-multiselectable="true">
+					<div class="panel" style="border-bottom-style: none;">
+						<div class="" role="tab" id="headingOne-as">
+							<a data-toggle="collapse" data-parent="#accordion-as" href="#collapseOne-as" aria-expanded="true" aria-controls="collapseOne-as">
+								<h3 class="form-heading">Доставка</h3></a>
+							</a>
 						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Телефон</span>
-								<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
-							</div>
+						<div id="collapseOne-as" class="panel-collapse collapse" role="tabpane-as" aria-labelledby="headingOne-as">
+							<form id="deliv_form" action="{% url 'order_add' %}" class="checkout" method="POST" >
+								{% csrf_token %}	
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Имя</span>
+											<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Фамилия</span>
+											<p><input type="text" name="input_second_name" placeholder="Фамилия" value="{{ buyer.last_name }}"></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Телефон</span>
+											<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Email</span>
+											<p><input id="emailInput" name="input_email" type="text" placeholder="Email" value="{{ user.email }}" required></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Нас. пункт</span>
+											<p><input type="text" name="input_locality" placeholder="Нас. пункт" value="{{ buyer.locality }}" required></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Улица</span>
+											<p><input type="text" name="input_street" placeholder="Улица" value="{{ buyer.street }}" required></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Дом</span>
+											<p><input type="text" name="input_house" placeholder="Дом" value="{{ buyer.house }}" required></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Квартира</span>
+											<p><input type="text" name="input_apartments" value="{{ buyer.apartments }}" placeholder="Кв."></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Подъезд</span>
+											<p><input type="text" name="input_porch" placeholder="Подъезд" value="{{ buyer.porch }}"></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Этаж</span>
+											<p><input type="text" name="input_floor" value="{{ buyer.floor }}" placeholder="Этаж"></p>
+										</div>
+									</div>
+
+									<div class="custom-control custom-radio" style="margin-left: 30px">
+										<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input" checked value="now">
+										<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
+									</div>
+									<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
+										<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time">
+										<label class="custom-control-label" for="customRadio2">Выбрать время</label>
+										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px">
+									</div>
+
+
+									<div class="block-form-footer text-center">
+										<button form="deliv_form" class="button primary">Отправить заказ</button>
+									</div>
+							</form>
 						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Нас. пункт</span>
-								<p><input type="text" name="input_locality" placeholder="Нас. пункт" value="{{ buyer.locality }}" required></p>
-							</div>
-							<div class="col-sm-6">
-								<span>Улица</span>
-								<p><input type="text" name="input_street" placeholder="Улица" value="{{ buyer.street }}" required></p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Дом</span>
-								<p><input type="text" name="input_house" placeholder="Дом" value="{{ buyer.house }}" required></p>
-							</div>
-							<div class="col-sm-6">
-								<span>Квартира</span>
-								<p><input type="text" name="input_apartments" value="{{ buyer.apartments }}" placeholder="Кв."></p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Подъезд</span>
-								<p><input type="text" name="input_porch" placeholder="Подъезд" value="{{ buyer.porch }}"></p>
-							</div>
-							<div class="col-sm-6">
-								<span>Этаж</span>
-								<p><input type="text" name="input_floor" value="{{ buyer.floor }}" placeholder="Этаж"></p>
-							</div>
-						</div>
+
 					</div>
-					
-				</div>
-				<div class="col-sm-6">
-					<div class="block-form order-review">
-						<h3 class="form-heading">Ваш заказ</h3>
-						<table class="shop_table">
-							<thead>
-								<tr>
-									<th class="product-name">Товар</th>
-									<th class="product-total"></th>
-									<th class="product-total">Сумма</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for item in cart_items %}
-								<tr>
-									<td class="product-name">{{ item.good }} </td>
-									<td class="product-total"><span class="amount">x {{ item.quantity }}</span></td>
-									<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
-								</tr>
-								{% endfor %}
-							</tbody>
-							<tfoot>
-								<tr class="order-total">
-									<th>Итого</th>
-									<th></th>
-									<td><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
-								</tr>
-							</tfoot>
-						</table>
-						<button class="button primary">Отправить заказ</button>
+
+					<div class="panel" style="border-bottom-style: none;">
+						
+						<div class="" role="tab" id="headingTwo-as">
+							<a class="collapsed" data-toggle="collapse" data-parent="#accordion-as" href="#collapseTwo-as" aria-expanded="false" aria-controls="collapseTwo-as">
+								<h3 class="form-heading">Самовывоз</h3></a>
+							</a>
+						</div>
+
+						<div id="collapseTwo-as" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo-as">
+							<form id="pickup" action="{% url 'order_add' %}" class="checkout" method="POST">
+							{% csrf_token %}
+								<div class="row">
+									<div class="col-sm-6">
+										<span>Имя</span>
+										<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+									</div>
+									<div class="col-sm-6">
+										<span>Фамилия</span>
+										<p><input type="text" name="input_second_name" placeholder="Фамилия" value="{{ buyer.last_name }}"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<span>Телефон</span>
+										<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+									</div>
+									<div class="col-sm-6">
+										<span>Email</span>
+										<p><input id="emailInput" name="input_email" type="text" placeholder="Email" value="{{ user.email }}" required></p>
+									</div>
+								</div>
+
+								<div class="custom-control custom-radio" style="margin-left: 30px">
+									<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input" checked value="now">
+									<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
+								</div>
+								<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
+									<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time">
+									<label class="custom-control-label" for="customRadio2">Выбрать время</label>
+									<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" >
+								</div>
+
+								<div class="block-form-footer text-center">
+									<button form="pickup" class="button primary">Отправить заказ</button>
+								</div>
+
+							</form>
+						</div>
+
 					</div>
+
 				</div>
+				
 			</div>
-		</form>
+
+
+
+			<div class="col-sm-6">
+				<div class="block-form order-review">
+					<h3 class="form-heading">Ваш заказ</h3>
+					<table class="shop_table">
+						<thead>
+							<tr>
+								<th class="product-name">Товар</th>
+								<th class="product-total"></th>
+								<th class="product-total">Сумма</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in cart_items %}
+							<tr>
+								<td class="product-name">{{ item.good }} </td>
+								<td class="product-total"><span class="amount">x {{ item.quantity }}</span></td>
+								<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+						<tfoot>
+							<tr class="order-total">
+								<th>Итого</th>
+								<th></th>
+								<td><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<p>
+					Стоимость вашего заказа указана без скидок!
+				</p>
+				<p>	
+					На данный момент действуют акции:<br> -25% на весь сидр «с собой»<br> -20% на основное меню при самовывозе<br>
+				</p>
+				<p>
+					Скидка будет примена по факту подтверждения заказа нашими барменами.
+				</p>
+				<p>
+					<a href="{% url 'show_delivery' %}"> О нашей доставке </a>
+				</p>
+			</div>
+		</div>
 	</div>	
 </div>
+
+
+
 
 
 {% endblock %}
 
 {% block magnific_popup %}
 {% endblock %}
+
+
+<!-- <div class="panel" style="border-bottom-style: none;">
+						
+						<div class="" role="tab" id="headingTwo-as">
+							<a class="collapsed" data-toggle="collapse" data-parent="#accordion-as" href="#collapseTwo-as" aria-expanded="false" aria-controls="collapseTwo-as">
+								<h3 class="form-heading">Самовывоз</h3></a>
+							</a>
+						</div>
+
+						<div id="collapseTwo-as" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo-as">
+							<form action="{% url 'order_add' %}" class="checkout" method="POST">
+							{% csrf_token %}
+								<div class="row">
+									<div class="col-sm-6">
+										<span>Имя</span>
+										<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+									</div>
+									<div class="col-sm-6">
+										<span>Фамилия</span>
+										<p><input type="text" name="input_second_name" placeholder="Фамилия" value="{{ buyer.last_name }}"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<span>Телефон</span>
+										<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+									</div>
+								</div>
+
+								<div class="custom-control custom-radio" style="margin-left: 30px">
+									<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input" checked>
+									<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
+								</div>
+								<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
+									<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;">
+									<label class="custom-control-label" for="customRadio2">Выбрать время</label>
+									<input type="time" id="deliv_time" name="deliv_time" class="select-option" style="margin-left: 30px" >
+								</div>
+
+								<div class="block-form-footer text-center">
+									<button class="button primary">Отправить заказ</button>
+								</div>
+
+							</form>
+						</div>
+
+					</div> -->

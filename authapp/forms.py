@@ -11,3 +11,6 @@ class BuyerSaveForm(forms.Form):
 	input_apartments  	= forms.CharField(max_length = 15, required=False)
 	input_porch  		= forms.CharField(max_length = 15, required=False)
 	input_floor  		= forms.CharField(max_length = 15, required=False)
+	input_cook_time  	= forms.CharField(max_length = 10, required=False)
+	input_time  		= forms.TimeField(required=False)
+	input_email  		= forms.CharField(max_length = 30, required=False)
