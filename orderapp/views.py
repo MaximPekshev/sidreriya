@@ -233,7 +233,7 @@ def send_mail_to_buyer(order, buyer_email):
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381{5}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	
@@ -276,7 +276,7 @@ def send_mail_on_bar(order):
 
 	HOST = "mail.hosting.reg.ru"
 	sender_email = "info@sidreriyabelgorod.ru"
-	receiver_email = ['info@sidreriyabelgorod.ru']
+	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru']
 	password = "3X3w5I7g"
 
 	message = MIMEMultipart("alternative")
@@ -327,7 +327,7 @@ def send_mail_on_bar(order):
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381{5}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	

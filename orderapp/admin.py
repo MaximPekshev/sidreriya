@@ -11,7 +11,11 @@ class OrderAdmin(admin.ModelAdmin):
 	list_display = (
 
 					'date',
-					'buyer', 
+					'order_number', 
+					'first_name',
+					'last_name',
+					'phone',
+					'email',
 					'summ',
 					)
 	

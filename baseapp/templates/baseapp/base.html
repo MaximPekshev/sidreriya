@@ -35,6 +35,14 @@
 
 </head>
 <body class="home">
+
+<div class="preloader">
+  <div class="preloader__row">
+    <div class="preloader__item"></div>
+    <div class="preloader__item"></div>
+  </div>
+</div>
+
 <div id="box-mobile-menu" class="full-height full-width box-mobile-menu">
 	<div class="box-inner">
 		<a href="#" class="close-menu"><span class="icon fa fa-times"></span></a>
@@ -153,5 +161,12 @@
 		   		$("#phoneInput").mask("+7 (999) 999-9999");
 			});
 		</script>
+
+		<script>
+			window.onload = function () {
+				document.body.classList.add('loaded');
+			}
+		</script>
+
 </body>
 </html>
