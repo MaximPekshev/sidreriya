@@ -14,6 +14,8 @@ from email.mime.multipart import MIMEMultipart
 
 from django.db.models import Sum
 
+from decouple import config
+
 def show_orders(request):
 
 	context = {
@@ -182,9 +184,9 @@ def order_add(request):
 def send_mail_to_buyer(order, buyer_email):
 
 	HOST = "mail.hosting.reg.ru"
-	sender_email = "info@sidreriyabelgorod.ru"
+	sender_email = config('MAIL_USER')
 	receiver_email = [ buyer_email ]
-	password = "3X3w5I7g"
+	password = config('MAIL_PASSWORD')
 
 	message = MIMEMultipart("alternative")
 	message["Subject"] = "Заказ № {} от {}, Сидрерия".format(order.order_number, order.date.strftime("%Y-%m-%d")) 
@@ -275,9 +277,9 @@ def send_mail_to_buyer(order, buyer_email):
 def send_mail_on_bar(order):
 
 	HOST = "mail.hosting.reg.ru"
-	sender_email = "info@sidreriyabelgorod.ru"
+	sender_email = config('MAIL_USER')
 	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru']
-	password = "3X3w5I7g"
+	password = config('MAIL_PASSWORD')
 
 	message = MIMEMultipart("alternative")
 	message["Subject"] = "Поступил заказ № {} от {}".format(order.order_number, order.date.strftime("%Y-%m-%d")) 
