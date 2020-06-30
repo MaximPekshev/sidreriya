@@ -80,13 +80,13 @@
 									</div>
 
 									<div class="custom-control custom-radio" style="margin-left: 30px">
-										<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input" checked value="now">
+										<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input"  value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
 										<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
 									</div>
 									<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
-										<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time">
+										<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
 										<label class="custom-control-label" for="customRadio2">Выбрать время</label>
-										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px">
+										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
 									</div>
 
 
@@ -131,13 +131,13 @@
 								</div>
 
 								<div class="custom-control custom-radio" style="margin-left: 30px">
-									<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input" checked value="now">
-									<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
+									<input type="radio" id="customRadio1_self" name="input_cook_time" class="custom-control-input" checked value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
+									<label class="custom-control-label" for="customRadio1_self">Как можно скорее</label>
 								</div>
 								<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
-									<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time">
-									<label class="custom-control-label" for="customRadio2">Выбрать время</label>
-									<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" >
+									<input type="radio" id="customRadio2_self" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
+									<label class="custom-control-label" for="customRadio2_self">Выбрать время</label>
+									<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
 								</div>
 
 								<div class="block-form-footer text-center">
@@ -150,6 +150,16 @@
 					</div>
 
 				</div>
+
+				<p style="margin-left: 20px;">
+					Совершая заказ вы соглашаетесь с <a href="{% url 'show_delivery' %}">условиями  доставки</a>.<br> 
+				</p>
+				<p style="margin-left: 20px;">	
+					Часы работы:<br> Пн-Чт : 11:00/0:00<br>Пт : 11-00/3-00<br>Сб : 14-00/3-00<br>Вс : 14-00/0-00
+				</p>
+				<p style="margin-left: 20px;">	
+					За 30 минут до закрытия заведения прием заказов прекращается!
+				</p>
 				
 			</div>
 
@@ -209,51 +219,3 @@
 
 {% block magnific_popup %}
 {% endblock %}
-
-
-<!-- <div class="panel" style="border-bottom-style: none;">
-						
-						<div class="" role="tab" id="headingTwo-as">
-							<a class="collapsed" data-toggle="collapse" data-parent="#accordion-as" href="#collapseTwo-as" aria-expanded="false" aria-controls="collapseTwo-as">
-								<h3 class="form-heading">Самовывоз</h3></a>
-							</a>
-						</div>
-
-						<div id="collapseTwo-as" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo-as">
-							<form action="{% url 'order_add' %}" class="checkout" method="POST">
-							{% csrf_token %}
-								<div class="row">
-									<div class="col-sm-6">
-										<span>Имя</span>
-										<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
-									</div>
-									<div class="col-sm-6">
-										<span>Фамилия</span>
-										<p><input type="text" name="input_second_name" placeholder="Фамилия" value="{{ buyer.last_name }}"></p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<span>Телефон</span>
-										<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
-									</div>
-								</div>
-
-								<div class="custom-control custom-radio" style="margin-left: 30px">
-									<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input" checked>
-									<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
-								</div>
-								<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
-									<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;">
-									<label class="custom-control-label" for="customRadio2">Выбрать время</label>
-									<input type="time" id="deliv_time" name="deliv_time" class="select-option" style="margin-left: 30px" >
-								</div>
-
-								<div class="block-form-footer text-center">
-									<button class="button primary">Отправить заказ</button>
-								</div>
-
-							</form>
-						</div>
-
-					</div> -->

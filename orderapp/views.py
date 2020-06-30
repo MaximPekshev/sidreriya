@@ -256,6 +256,9 @@ def send_mail_to_buyer(order, buyer_email):
 			</p>
 			<p></p>
 			<p> С Уважением, Сидрерия </p>
+			<p>	
+				Часы работы:<br> Пн-Чт : 11:00/0:00<br>Пт : 11-00/3-00<br>Сб : 14-00/3-00<br>Вс : 14-00/0-00
+			</p>
 			</div>
 	      </body>
 	    </html>
@@ -278,7 +281,8 @@ def send_mail_on_bar(order):
 
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
-	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru']
+	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
+	# receiver_email = ['m.pekshev@annasoft.ru',]
 	password = config('MAIL_PASSWORD')
 
 	message = MIMEMultipart("alternative")

@@ -6,6 +6,8 @@ from authapp.models import Buyer
 from goodapp.views import get_in_barrels
 from django.db.models import Sum
 
+import datetime
+
 
 class Item(object):
 	
@@ -120,6 +122,63 @@ def cart_del_item(request, slug):
 
 def cart_checkout(request):
 
+	weekday = datetime.datetime.weekday(datetime.datetime.today())
+
+	now = datetime.datetime.now()
+
+	if weekday == 4:
+		min_time = '12:00'
+		max_time = '2:30'
+
+		min_time_datetime = now.replace(hour=12, minute=0)
+		max_time_datetime = now.replace(hour=23, minute=59, second=59)
+
+	elif weekday == 5:
+		min_time = '15:00'
+		max_time = '2:30'
+
+		if  now.replace(hour=0, minute=0) < now < now.replace(hour=2, minute=30):
+
+			min_time_datetime = now.replace(hour=0, minute=0)
+			max_time_datetime = now.replace(hour=2, minute=30)
+
+		else:	
+
+			min_time_datetime = now.replace(hour=15, minute=0)
+			max_time_datetime = now.replace(hour=23, minute=59, second=59)
+
+	elif weekday == 6:
+		min_time = '15:00'
+		max_time = '23:30'
+
+		if  now.replace(hour=0, minute=0) < now < now.replace(hour=2, minute=30):
+
+			min_time_datetime = now.replace(hour=0, minute=0)
+			max_time_datetime = now.replace(hour=2, minute=30)
+
+		else:
+
+			min_time_datetime = now.replace(hour=15, minute=0)
+			max_time_datetime = now.replace(hour=23, minute=30)
+
+	else:
+		min_time = '12:00'
+		max_time = '23:30'
+
+		min_time_datetime = now.replace(hour=12, minute=0)
+		max_time_datetime = now.replace(hour=23, minute=30)
+
+	now_active = False
+
+	if min_time_datetime < now < max_time_datetime:
+		now_active = True
+		if now < (max_time_datetime - datetime.timedelta(minutes=30)):
+			min_time = (now + datetime.timedelta(minutes=30)).strftime('%H:%M')
+		else:
+			min_time = max_time	
+
+
+
 	cart  = get_cart(request)
 
 	if cart != None:
@@ -131,6 +190,9 @@ def cart_checkout(request):
 		'cart': cart , 
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'min_time': min_time,
+		'max_time': max_time,
+		'now_active': now_active,
 		}
 
 
