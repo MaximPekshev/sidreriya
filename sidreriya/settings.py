@@ -118,12 +118,12 @@ USE_L10N = True
 USE_TZ = True
 
 
-EMAIL_HOST = 'smtp.inbox.ru'
-EMAIL_HOST_USER = 'annasoft@inbox.ru'
-EMAIL_HOST_PASSWORD = '1qazXSW@'
+EMAIL_HOST = 'mail.hosting.reg.ru'
+EMAIL_HOST_USER = config('MAIL_USER')
+EMAIL_HOST_PASSWORD = config('MAIL_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'annasoft@inbox.ru'
+DEFAULT_FROM_EMAIL = config('MAIL_USER')
 
 STATIC_URL = '/static/'
 
