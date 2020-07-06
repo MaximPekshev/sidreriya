@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin
+Disallow: /accounts
+Disallow: /cart
+Disallow: /order
+Sitemap: http://sidreriyabelgorod.ru/sitemap.xml
