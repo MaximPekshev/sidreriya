@@ -8,16 +8,15 @@
 
 {% block content %}
 
-
 <div class="main-container no-sidebar">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 main-content">
 				<nav class="woocommerce-breadcrumb breadcrumbs">
 					<a href="{% url 'show_index' %}">На главную</a>
-					<a href="{% url 'show_cart' %}">Корзина</a>
+					<a href="{% url 'show_wishlist' %}">Избранное</a>
 				</nav>
-				{% if cart_items %}
+				{% if wishlist_items %}
 				<div class="block-form">
 					
 					<table class="shop_table cart">
@@ -25,17 +24,16 @@
 							<tr>
 								<th class="product">Товар/Цена</th>
 								<th>Наличие</th>
-								<th>Кол-во</th>
-								<th>Сумма</th>
+								<th></th>
 								<th>Удалить</th>
 							</tr>
 						</thead>
 						<tbody>
 
-							{% for item in cart_items %}
+							{% for item in wishlist_items %}
 							<tr>
 								<td class="product">
-									<img class="product-thumb" src="{{ item.image.images.url }}" alt="">
+									<img class="product-thumb" src="{{ item.image.images.url }}" alt="" style="width: 50px;">
 									<div class="product-info">
 										<h3 class="product-name"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}</a></h3>
 										<span class="product-price">&#8381 {{ item.price }}</span>
@@ -58,31 +56,37 @@
 								</td>
 								<td>
 									<div class="quantity">
-										<input type="text" data-step="1" data-min="0" data-max="" value="{{ item.quantity }}" title="Qty" class="input-text qty text" size="4">
+										<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+
+											{% if item.good.quantity >= 1 %}
+											{% if item.good.in_barrel %}
+												{% if item.good in barrels %}
+												<button type="submit" class="button add_to_cart_button">В корзину</button>
+												{% endif %}
+											{% else %}
+											<button type="submit" class="button add_to_cart_button">В корзину</button>
+											{% endif %}
+											{% endif %}
+
+											
+										</form>
+										
 									</div>
 								</td>
-								<td class="product-subtotal">
-									<span class="amount">&#8381 {{ item.summ }}</span>
-								</td>
 								<td class="product-remove">
-									<a class="remove" href="{% url 'cart_del_item' slug=item.good.slug %}"><i class="fa fa-close"></i></a>
+									<a class="remove" href="{% url 'wishlist_add_item' slug=item.good.slug %}"><i class="fa fa-close"></i></a>
 								</td>
 							</tr>
 							{% endfor %}
-							<tr>
-								<td colspan="3"></td>
-								<td colspan="2" class="order-total">Итого:   &#8381 {{ cart.summ }}</td>
-							</tr>
 						</tbody>
 					</table>
-					<div class="block-form-footer text-right">
-						<a href="{% url 'cart_checkout' %}"><button class="button  primary">Оформить заказ</button></a>
-					</div>
 				</div>
 				{% else %}
 				<div class="col-sm-12" >
 					<div class="text-center">
-						<h2 class="title">Ваша корзина пуста</h2>
+						<h2 class="title">Отметь своих любимчиков из нашей коллекции сидров!</h2>
 					</div>
 					<div class="text-center" style="padding-top: 30px ">
 						<a class="button primary" href="{% url 'show_catalog' %}">За покупками</a>

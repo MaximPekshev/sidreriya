@@ -31,7 +31,7 @@ class Cart_Item(models.Model):
 
 	cart 		= models.ForeignKey(Cart, on_delete = models.CASCADE)
 	good 		= models.ForeignKey(Good, on_delete = models.PROTECT)
-	quantity	= models.DecimalField(max_digits = 15, decimal_places = 0)
+	quantity	= models.DecimalField(max_digits = 15, decimal_places = 1)
 	price		= models.DecimalField(max_digits = 15, decimal_places = 0)
 	summ		= models.DecimalField(max_digits = 15, decimal_places = 0)
 

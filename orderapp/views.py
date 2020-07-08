@@ -14,6 +14,9 @@ from email.mime.multipart import MIMEMultipart
 
 from django.db.models import Sum
 
+from wishlistapp.views import get_wishlist
+from wishlistapp.models import Wishlist, Wishlist_Item
+
 from decouple import config
 
 def show_orders(request):
@@ -23,6 +26,7 @@ def show_orders(request):
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 
 	}
 
@@ -172,6 +176,7 @@ def order_add(request):
 				'cart': get_cart(request),
 				'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 				'in_bar': get_in_barrels(),
+				'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 
 				}
 
@@ -235,7 +240,7 @@ def send_mail_to_buyer(order, buyer_email):
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381{5}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	
@@ -333,7 +338,7 @@ def send_mail_on_bar(order):
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381{5}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	

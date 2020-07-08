@@ -13,7 +13,8 @@ import django.core.exceptions
 from .forms import BuyerSaveForm
 from goodapp.views import get_in_barrels
 from django.db.models import Sum
-
+from wishlistapp.views import get_wishlist
+from wishlistapp.models import Wishlist, Wishlist_Item
 
 
 def profile_add(request):
@@ -106,6 +107,7 @@ def show_profile(request):
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 
 	}
 
@@ -145,6 +147,7 @@ class CustomPasswordResetFromKeyView(PasswordResetFromKeyView):
 			'cart': get_cart(self.request),
         	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
+        	'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))), 
 
 			})
 
@@ -165,6 +168,7 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 			'cart': get_cart(self.request),
         	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
+        	'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))),
 
 			})
 
@@ -189,6 +193,7 @@ class  CustomPasswordResetView(PasswordResetView):
 			'cart': get_cart(self.request),
         	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
+        	'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))),
 
 			})
 
@@ -222,6 +227,7 @@ class CustomSignupView(SignupView):
 	                'cart': get_cart(self.request),
         			'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         			'in_bar': get_in_barrels(),
+        			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))),
 	                })
 
 		return ret
@@ -242,7 +248,10 @@ class CustomLoginView(LoginView):
                     'redirect_field_value': redirect_field_value,
                     'cart': get_cart(self.request),
         			'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
-        			'in_bar': get_in_barrels(),})
+        			'in_bar': get_in_barrels(),
+        			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))),
+        			})
+
 		return ret
 
 		
@@ -259,6 +268,7 @@ class CustomPasswordChangeView(PasswordChangeView):
         	'cart': get_cart(self.request),
         	'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
         	'in_bar': get_in_barrels(),
+        	'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))),
         	})
 
         return ret
@@ -271,6 +281,7 @@ def account_password_change_succes(request):
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(self.request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(self.request))),
 
 	}
 

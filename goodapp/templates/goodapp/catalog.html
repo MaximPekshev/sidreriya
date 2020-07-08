@@ -57,7 +57,11 @@
 									<div class="info">
 										<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
 										{% if item.good.price %}
-										<span class="price">&#8381 {{ item.good.price }}</span>
+											{% if item.good.old_price %}
+											<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
+											{% else %}
+											<span class="price">{{ item.good.price }}</span>
+											{% endif %}
 										{% else %}
 										<span class="price">&#8381 0</span>
 										{% endif %}
@@ -66,16 +70,26 @@
 											<input type="hidden" name="quantity" value="1">
 										</form>
 										<div class="group-button">
-											
+												{% if item.good.quantity >= 1 %}
+												{% if item.good.in_barrel %}
+													{% if item.good in barrels %}
+														<button form="{{ item.good.slug }}addtocart" type="submit" class="button add_to_cart_button">В корзину</button>
+													{% endif %}
+												{% else %}
 												<button form="{{ item.good.slug }}addtocart" type="submit" class="button add_to_cart_button">В корзину</button>
-												<a href="#" class="wishlist">В Избранное</a>
+												{% endif %}
+												{% endif %}
+												<a href="{% url 'wishlist_add_item' slug=item.good.slug %}" class="wishlist"{% if item.good in wishlist %} style="color: red;" {% endif %}>В Избранное</a>
 											
 										</div>
-										{% if item.good in in_bar.0 %}
 										<div class="flash">
-											<span class="new">Розлив</span>
-										</div>
+										{% if not item.good.quantity %}
+										<span class="sale">Все выпили</span>
 										{% endif %}
+										{% if item.good.in_barrel %}
+										<span class="new">Розлив</span>
+										{% endif %}
+									</div>
 									</div>
 								</div>
 							</li>

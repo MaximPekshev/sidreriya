@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from .models import Cart, Cart_Item
-from goodapp.models import Good, Picture 
+from goodapp.models import Good, Picture, In_Barrels
 from .models import cart_calculate_summ
 from authapp.models import Buyer
 from goodapp.views import get_in_barrels
 from django.db.models import Sum
+from wishlistapp.views import get_wishlist
+from wishlistapp.models import Wishlist, Wishlist_Item
+from decimal import Decimal
 
 import datetime
 
@@ -72,11 +75,17 @@ def show_cart(request):
 			table.append(cr_item)
 
 
+	barrels = []
+	for item in In_Barrels.objects.all():
+		barrels.append(item.good)
+
 	context = {
 		'cart_items': table, 
 		'cart': cart , 
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'barrels': barrels,
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 		}
 	
 	return render(request, 'cartapp/cart_page.html', context)
@@ -86,7 +95,7 @@ def cart_add_item(request, slug):
 
 	if request.method == 'POST':
 
-		quantity 		= int(request.POST.get('quantity'))
+		quantity 		= Decimal(request.POST.get('quantity'))
 
 		cart 			= get_cart(request)
 
@@ -190,6 +199,7 @@ def cart_checkout(request):
 		'cart': cart , 
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 		'min_time': min_time,
 		'max_time': max_time,
 		'now_active': now_active,

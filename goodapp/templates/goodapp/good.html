@@ -49,6 +49,7 @@
 							<div class="summary">
 								<h1 class="product_title entry-title">{{ good.name }} {% if good.name_en %} / {{ good.name_en }} {% endif %}</h1>
 								{% if good.price %}
+
 								<span class="price">&#8381 {{ good.price }}</span>
 								{% else %}
 								<span class="price">&#8381 0</span>
@@ -73,38 +74,38 @@
 											</div>
 											<div>
 												<label>Что внутри?:</label>
-												<a>{% if inside %}{{ inside }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ inside }}">{% if inside %}{{ inside }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Страна:</label>
-												<a>{% if country %}{{ country }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ country }}">{% if country %}{{ country }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Крепость:</label>
-												<a>{% if country %}{{ strength }} %{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ strength }}">{% if country %}{{ strength }} %{% endif %}</a>
 											</div>
 											<div>
 												<label>Сладость:</label>
-												<a>{% if country %}{{ sugar }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ sugar }}">{% if country %}{{ sugar }}{% endif %}</a>
 											</div>
 
 										</div>
 										<div class="col-sm-6 col-md-6">
 											<div>
 												<label>Объем бутылочки:</label>
-												<a>{% if country %}{{ volume }} L{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ volume }}">{% if country %}{{ volume }} L{% endif %}</a>
 											</div>
 											<div>
 												<label>Пузырьки:</label>
-												<a>{% if country %}{{ gas }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ gas }}">{% if country %}{{ gas }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Пастеризация:</label>
-												<a>{% if country %}{{ pasteuriz }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ pasteuriz }}">{% if country %}{{ pasteuriz }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Фильрация:</label>
-												<a>{% if country %}{{ filtration }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ filtration }}">{% if country %}{{ filtration }}{% endif %}</a>
 											</div>
 										</div>
 									</div>
@@ -122,27 +123,66 @@
 
 								{% endif %}
 								<div class="quantity"></div>
-								<div class="">
+								<div class="wishlist-item">
 									<form id="quantityform" action="{% url 'cart_add_item' slug=good.slug %}" method="POST">
 										{% csrf_token %}
-										<input type="text" data-step="1" data-min="" data-max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="1">
+										{% if good.in_barrel %}
+										<select type="text" name="quantity">
+											<option value="0.5">0,5</option>
+											<option value="1.0">1,0</option>
+											<option value="1.5">1,5</option>
+											<option value="2.0">2,0</option>
+											<option value="2.5">2,5</option>
+											<option value="3.0">3,0</option>
+											<option value="3.5">3,5</option>
+											<option value="4.0">4,0</option>
+										</select>
+										{% else %}
+										<input type="text" name="quantity" value="1" title="Qty" class="input-text qty text" size="1" required>
+										{% endif %}
+										{% if good.quantity >= 1 %}
 										<button type="submit" class="">В корзину</button>
+										{% endif %}
+										<a href="{% url 'wishlist_add_item' slug=good.slug %}" class="button wishlist"><span class="flaticon-heart295" {% if good in wishlist %} style="color: red;" {% endif %}></span></a>
 									</form>
+									
 								</div>
 
-								
-								<!-- <a href="#" class="button wishlist"><span class="flaticon-heart295"></span></a>
-								<a href="#" class="button compare"><span class="flaticon-two298"></span></a>
-								<a href="#" class="button mailto"><span class="flaticon-new4"></span></a> -->
+
+								<!-- <a href="#" class="button compare"><span class="flaticon-two298"></span></a> -->
+								<!-- <a href="#" class="button mailto"><span class="flaticon-new4"></span></a> -->
 								
 							</div>
 						</div>
 					</div>
+					{% if opv %}
+					<div class="row">
+						<div class="col-sm-12 col-md-5"> </div>
+						<div class="col-sm-12 col-md-7">
+							<div class="product-tabs">
+								<ul class="nav-tab">
+						            <li class="active"><a data-toggle="tab" href="#tab-1">Теги</a></li>
+						        </ul>
+						        <div class="tab-container">
+						        	<div id="tab-1" class="tab-panel active">
+						        		<div class="tagcloud">
+						        			{% for item in opv %}
+						        				<a href="{% url 'show_product_with_tag' %}?tag={{ item.property_value }}">{{ item.property_value }}</a>
+						        			{% endfor %}
+				                        </div>
+						        	</div>
+						        </div>
+							</div>
+						</div>
+					</div>
+					{% endif %}	
 				</div> 
+
 			</div>
 		</div>
 	</div>
 </div>
+
 {% endblock %}
 
 {% block magnific_popup %}

@@ -9,7 +9,6 @@ from .views import show_delivery
 from .views import show_atmosphere
 from .views import show_about_us
 from .views import show_contact_us
-from .views import show_wishlist
 from .views import show_promo
 
 
@@ -20,7 +19,6 @@ urlpatterns = [
 	path('atmosphere/', 	show_atmosphere, name='show_atmosphere'),
 	path('about-us/', 		show_about_us, name='show_about_us'),
 	path('contact-us/', 	show_contact_us, name='show_contact_us'),
-	path('wishlist/', 		show_wishlist, name='show_wishlist'),
 	path('promo/', 			show_promo, name='show_promo'),
 
 			]

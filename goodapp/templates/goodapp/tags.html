@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block content %}
-{% if in_bar %}<div class="page-banner bg-parallax"></div>{% endif %}
+
 <div class="main-container no-sidebar">
 	<div class="container">
 		<div class="row">
@@ -11,12 +11,12 @@
 				<div class="shop-page-bar">
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
-						<a href="{% url 'show_in_barrels' %}">В бочонках</a>
+						<a href="{% url 'show_catalog' %}">Каталог</a>
+						{{ property_value }}
 					</nav>
 				</div>
-				
 				<ul class="products product-list-grid desktop-columns-4 tablet-columns-3 mobile-columns-2">
-					{% for item in in_bar %}
+					{% for item in page_object.object_list %}
 						<li class="product-item col-md-3 col-sm-4 col-xs-6">
 							<div class="product-inner">
 								<div class="thumb has-second-image">
@@ -53,7 +53,7 @@
 											<button form="{{ item.good.slug }}addtocart" type="submit" class="button add_to_cart_button">В корзину</button>
 											{% endif %}
 											{% endif %}
-											<a href="#" class="wishlist">В Избранное</a>
+											<a href="{% url 'wishlist_add_item' slug=item.good.slug %}" class="wishlist"{% if item.good in wishlist %} style="color: red;" {% endif %}>В Избранное</a>
 										
 									</div>
 									
@@ -61,22 +61,38 @@
 										{% if not item.good.quantity %}
 										<span class="sale">Все выпили</span>
 										{% endif %}
-										{% if item.good.in_barrel %}
+
+										{% if item.good.in_barrel  %}
 										<span class="new">Розлив</span>
 										{% endif %}
 									</div>
-									
 								</div>
 							</div>
 						</li>
 					{% endfor %}
 				</ul>
+					{% if is_paginated %}
+						<nav class="woocommerce-pagination navigation">
+							<ul class="page-numbers">
+								<li><a class="next page-numbers" href="{{ prev_url }}"><i class="fa fa-long-arrow-left"></i></a></li>
+								{% for n in page_object.paginator.page_range %}
+			                        {% if page_object.number == n %}
+										<li><span class="page-numbers current"><a href="?tag={{ property_value }}&page={{ n }}">{{ n }}</a></span></li>
+									{% elif n > page_object.number|add:-3 and n < page_object.number|add:3 %}
+										<li><a class="page-numbers" href="?tag={{ property_value }}&page={{ n }}">{{ n }}</a></li>
+									{% endif %}
+		                    	{% endfor %}
+								<li><a class="next page-numbers" href="{{ next_url }}"><i class="fa fa-long-arrow-right"></i></a></li>
+							</ul>
+						</nav>
+					{% endif %}
 
-				
 			</div>
 		</div>
 	</div>
 </div>
+
+
 {% endblock %}
 
 {% block magnific_popup %}
