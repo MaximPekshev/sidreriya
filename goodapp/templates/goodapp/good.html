@@ -20,29 +20,16 @@
 				<div class="single-product">
 					<div class="row">
 						<div class="col-sm-12 col-md-5">
-							<div class="images kt-images-zoom">
-								<div class="kt-easyzoom easyzoom easyzoom--with-thumbnails">
+							<div class="images kt-images">
+								<div class="kt-main-image">
 									{% if main_pictures.images %}
-									<a href="{{ main_pictures.images.url }}">
-										<img src="{{ main_pictures.images.url }}" alt=""/>
-									</a>
+									<a class="zoom" href="{{ main_pictures.images.url }}"><img src="{{ main_pictures.images.url }}" alt=""></a>
 									{% else %}
-									<a href="{% static 'images/products/no-photo.png' %}">
+									<a class="zoom" href="{% static 'images/products/no-photo.png' %}">
 										<img src="{% static 'images/products/no-photo.png' %}" alt=""/>
 									</a>
 									{% endif %}
 								</div>
-								{% if pictures.count > 1 %}
-								<ul class="kt-zoom-thumbnails owl-carousel" data-loop="true" data-nav="true" data-dots="false" data-margin="10" data-responsive='{"0":{"items":"2"},"768":{"items":"3"},"992":{"items":"3"}}'>
-									{% for picture in pictures %}
-									<li>
-										<a href="{{ picture.images.url }}" data-standard="{{ picture.images.url }}">
-											<img src="{{ picture.images.url }}" alt="{{ picture.images.title }}" />
-										</a>
-									</li>
-									{% endfor %}
-								</ul>
-								{% endif %}
 							</div>
 						</div>
 						<div class="col-sm-12 col-md-7">
