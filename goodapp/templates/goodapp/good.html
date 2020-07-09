@@ -141,7 +141,13 @@
 										<input type="text" name="quantity" value="1" title="Qty" class="input-text qty text" size="1" required>
 										{% endif %}
 										{% if good.quantity >= 1 %}
+										{% if good.in_barrel %}
+											{% if good in barrels %}
+												<button type="submit" class="">В корзину</button>
+											{% endif %}
+										{% else %}
 										<button type="submit" class="">В корзину</button>
+										{% endif %}
 										{% endif %}
 										<a href="{% url 'wishlist_add_item' slug=good.slug %}" class="button wishlist"><span class="flaticon-heart295" {% if good in wishlist %} style="color: red;" {% endif %}></span></a>
 									</form>

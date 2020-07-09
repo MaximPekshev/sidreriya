@@ -185,6 +185,9 @@ def show_good(request, slug):
 	for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
 		wishlist.append(item.good)
 
+	barrels = []
+	for item in In_Barrels.objects.all():
+		barrels.append(item.good)
 
 	template_name = 'goodapp/good.html'
 
@@ -203,6 +206,7 @@ def show_good(request, slug):
 		'cart': get_cart_(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
+		'barrels': barrels,
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 		'wishlist' : wishlist,
 
