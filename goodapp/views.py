@@ -66,7 +66,8 @@ def get_filters():
 	gas 		= {}
 	pasteuriz 	= {}
 	filtration 	= {}
-	strength 	= {}
+	strength 	= dict([(27, 'безалкогольный'), (31, 'до 3%'), (48, 'больше 3%')])
+	# dict(nonalc='безалкогольный', alcless3='до 3%', alcmore3='больше 3%')
 	volume 		= {}
 
 	for item in Good.objects.filter(is_active=True):
@@ -87,9 +88,9 @@ def get_filters():
 				if item_opv.id not in country.keys():
 					country.update({item_opv.id : item_opv.title})
 			# Крепость
-			elif item_opv._property.slug == '202312845':
-				if item_opv.id not in strength.keys():
-					strength.update({item_opv.id : item_opv.title})
+			# elif item_opv._property.slug == '202312845':
+			# 	if item_opv.id not in strength.keys():
+			# 		strength.update({item_opv.id : item_opv.title})
 			# Сахар
 			elif item_opv._property.slug == '2193900133':
 				if item_opv.id not in sugar.keys():
@@ -578,7 +579,7 @@ def show_product_with_filters(request):
 		for good in Good.objects.all():
 			goods.append(good)
 
-		active_filters = []
+		active_filters = {}
 
 		temp_table = []
 
@@ -586,46 +587,94 @@ def show_product_with_filters(request):
 
 			if f_item != 'page':
 
-				try:
-					property_value = Property_value.objects.get(id=f_item)
-
-					active_filters.append(property_value.title)
+				if f_item == '31':
 
 					f_goods = []
 
-					for opv in Object_property_values.objects.filter(property_value=property_value):
+					active_filters.update({31:'до 3%'})
 
-						opv_good = opv.good
+					property_values = Property_value.objects.filter(pk__in=[28,29,30,31,68])
 
-						if opv.good.is_active == True:
+					for pv in property_values:
 
-							f_goods.append(opv.good)
+						for opv in Object_property_values.objects.filter(property_value=pv):
+
+							if opv.good.is_active == True:
+
+								f_goods.append(opv.good)
+
 
 					temp_table = list(set(goods)&set(f_goods))
+							
+					goods = temp_table		
 
-					goods = temp_table	
+				elif f_item == '48':
 
-				except Property_value.DoesNotExist:
-					
+					f_goods = []
+
+					active_filters.update({48:'больше 3%'})
+
+					property_values = Property_value.objects.filter(pk__in=[32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53])
+
+					for pv in property_values:
+
+						for opv in Object_property_values.objects.filter(property_value=pv):
+
+							if opv.good.is_active == True:
+
+								f_goods.append(opv.good)
+								
+
+					temp_table = list(set(goods)&set(f_goods))
+							
+					goods = temp_table
+
+				else:	
+
 					try:
+						property_value = Property_value.objects.get(id=f_item)
 
-						manufacturer = Manufacturer.objects.get(slug=f_item)
+						if f_item == '27':
 
-						active_filters.append(manufacturer.name)
+							active_filters.update({27:'безалкогольный'})
+
+						else: 
+
+							active_filters.update({property_value.id : property_value.title})
 
 						f_goods = []
 
-						for good in Good.objects.filter(manufacturer=manufacturer, is_active=True):
+						for opv in Object_property_values.objects.filter(property_value=property_value):
 
-							f_goods.append(good)
+							if opv.good.is_active == True:
+
+								f_goods.append(opv.good)
 
 						temp_table = list(set(goods)&set(f_goods))
 
-						goods = temp_table
+						goods = temp_table	
 
-					except Manufacturer.DoesNotExist:
+					except Property_value.DoesNotExist:
+						
+						try:
 
-						pass
+							manufacturer = Manufacturer.objects.get(slug=f_item)
+
+							active_filters.update({manufacturer.slug : manufacturer.name})
+
+							f_goods = []
+
+							for good in Good.objects.filter(manufacturer=manufacturer, is_active=True):
+
+								f_goods.append(good)
+
+							temp_table = list(set(goods)&set(f_goods))
+
+							goods = temp_table
+
+						except Manufacturer.DoesNotExist:
+
+							pass
 
 		if not active_filters:
 
@@ -660,16 +709,19 @@ def show_product_with_filters(request):
 
 		page = paginator.get_page(page_number)
 
+		str_active_filters = '?'
+		for key, value in active_filters.items():
+			str_active_filters += str(key) + '=' + str(value) + '&'
 
 		is_paginated = page.has_other_pages()
 
 		if page.has_previous():
-			prev_url = '?page={}'.format(page.previous_page_number())
+			prev_url = '{1}page={0}'.format(page.previous_page_number(), str_active_filters)
 		else:
 			prev_url = ''	
 
 		if page.has_next():
-			next_url = '?page={}'.format(page.next_page_number())
+			next_url = '{1}page={0}'.format(page.next_page_number(), str_active_filters)
 		else:
 			next_url = ''			
 
@@ -692,7 +744,8 @@ def show_product_with_filters(request):
 			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 			'wishlist' : wishlist,
 			'filters' : filters,
-			'active_filters':active_filters,
+			'active_filters':active_filters.values(),
+			'str_active_filters': str_active_filters,
 		}
 
 		return render(request, template_name, context) 	
