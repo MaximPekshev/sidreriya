@@ -173,6 +173,24 @@
 					</div>
 
 					<div class="widget widget_product_categories margin-bottom-40">
+						<h2 class="widget-title margin-bottom-0">Объем</h2>
+						<ul class="product-categories">
+							{% for key , value in filters.5.items %}
+							<li><a><input type="checkbox" name="{{ key }} " value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }} L</a><span class="count"></span></li>
+							{% endfor %}
+						</ul>
+					</div>
+
+					<div class="widget widget_layered_nav margin-bottom-40">
+					<h2 class="widget-title margin-bottom-0">Крепость</h2>
+					<ul>
+						{% for key , value in filters.3.items %}
+						<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}{% endif %}> {{ value }}</a><span class="count"></span></li>
+						{% endfor %}
+					</ul>
+					</div>
+
+					<div class="widget widget_product_categories margin-bottom-40">
 						<h2 class="widget-title margin-bottom-0">Пастеризация</h2>
 						<ul class="product-categories">
 							{% for key , value in filters.7.items %}
@@ -205,24 +223,6 @@
 								</ul>
 							</div>
 						</div>
-					</div>
-
-					<div class="widget widget_product_categories margin-bottom-40">
-						<h2 class="widget-title margin-bottom-0">Объем</h2>
-						<ul class="product-categories">
-							{% for key , value in filters.5.items %}
-							<li><a><input type="checkbox" name="{{ key }} " value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }} L</a><span class="count"></span></li>
-							{% endfor %}
-						</ul>
-					</div>
-
-					<div class="widget widget_layered_nav margin-bottom-40">
-					<h2 class="widget-title margin-bottom-0">Крепость</h2>
-					<ul>
-						{% for key , value in filters.3.items %}
-						<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}{% endif %}> {{ value }}</a><span class="count"></span></li>
-						{% endfor %}
-					</ul>
 					</div>
 
 					<div class="block-form-footer text-left">
