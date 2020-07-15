@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import Good, Picture, Object_property_values, Properties, Property_value
 from .models import Category, Manufacturer, In_Barrels
 
+from django.http import HttpResponse
+
 from cartapp.models import Cart, Cart_Item
 
 from django.core.paginator import Paginator
@@ -10,6 +12,8 @@ from django.db.models import Sum
 
 from wishlistapp.views import get_wishlist
 from wishlistapp.models import Wishlist, Wishlist_Item
+
+# from django.core.exceptions import ObjectDoesNotExis
 
 
 def get_cart_(request):
@@ -43,7 +47,88 @@ def get_in_barrels():
 		 	
 		table.append(item)
 
-	return table	
+	return table
+
+def get_filters():
+
+	filters = []
+
+	manufacturers = {}
+
+	for man in Manufacturer.objects.all():
+		manufacturers.update({man.slug : man.name})
+
+	price = []
+
+	country 	= {}
+	what_inside = {}
+	sugar 		= {}
+	gas 		= {}
+	pasteuriz 	= {}
+	filtration 	= {}
+	strength 	= {}
+	volume 		= {}
+
+	for item in Good.objects.filter(is_active=True):
+
+		if item.price not in price:
+
+			if item.price != None:
+
+				price.append(item.price)
+
+
+	pv = Property_value.objects.all()
+
+	for item_opv in pv:
+		if item_opv != None:
+			# Страна
+			if item_opv._property.slug == '728193372':
+				if item_opv.id not in country.keys():
+					country.update({item_opv.id : item_opv.title})
+			# Крепость
+			elif item_opv._property.slug == '202312845':
+				if item_opv.id not in strength.keys():
+					strength.update({item_opv.id : item_opv.title})
+			# Сахар
+			elif item_opv._property.slug == '2193900133':
+				if item_opv.id not in sugar.keys():
+					sugar.update({item_opv.id : item_opv.title})
+			# Объем
+			elif item_opv._property.slug == '3824689493':
+				if item_opv.id not in volume.keys():
+					volume.update({item_opv.id : item_opv.title})
+			# Газация
+			elif item_opv._property.slug == '1240764269':
+				if item_opv.id not in gas.keys():
+					gas.update({item_opv.id : item_opv.title})
+			# Пастеризация
+			elif item_opv._property.slug == '2448919171':
+				if item_opv.id not in pasteuriz.keys():
+					pasteuriz.update({item_opv.id : item_opv.title})
+			# Фильтрация
+			elif item_opv._property.slug == '1716778945':
+				if item_opv.id not in filtration.keys():
+					filtration.update({item_opv.id : item_opv.title})
+			# Что внутри?
+			elif item_opv._property.slug == '552212307':
+				if item_opv.id not in what_inside.keys():
+					what_inside.update({item_opv.id : item_opv.title})													
+
+	price.sort()
+
+	filters.append(manufacturers)
+	filters.append(price)
+	filters.append(country)
+	filters.append(strength)
+	filters.append(sugar)
+	filters.append(volume)
+	filters.append(gas)
+	filters.append(pasteuriz)
+	filters.append(filtration)
+	filters.append(what_inside)
+
+	return filters	
 
 class Item(object):
 	
@@ -55,6 +140,8 @@ def show_catalog(request):
 	goods_count=20
 
 	goods = Good.objects.filter(is_active=True)
+
+	filters = get_filters()
 	
 	table = []
 	for good in goods:
@@ -107,6 +194,7 @@ def show_catalog(request):
 		'barrels': barrels,
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 		'wishlist' : wishlist,
+		'filters' : filters,
 	}
 	
 
@@ -248,6 +336,11 @@ def show_category(request, slug):
 		except:
 			category = None
 
+		if category.name == 'Сидр':
+			filters = get_filters()
+		else:
+			filters = None	
+
 		goods = Good.objects.filter(category=category, is_active=True)
 		
 		table = []
@@ -303,6 +396,7 @@ def show_category(request, slug):
 			'barrels': barrels,
 			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 			'wishlist' : wishlist,
+			'filters' : filters,
 		}
 
 	return render(request, template_name, context)
@@ -468,3 +562,137 @@ def show_product_with_tag(request):
 	}
 
 	return render(request, template_name, context)
+
+
+def show_product_with_filters(request):
+
+	
+	if request.method == 'GET':
+
+		goods_count=20
+
+		table = []
+
+		goods = []
+
+		for good in Good.objects.all():
+			goods.append(good)
+
+		active_filters = []
+
+		temp_table = []
+
+		for f_item in request.GET:
+
+			if f_item != 'page':
+
+				try:
+					property_value = Property_value.objects.get(id=f_item)
+
+					active_filters.append(property_value.title)
+
+					f_goods = []
+
+					for opv in Object_property_values.objects.filter(property_value=property_value):
+
+						opv_good = opv.good
+
+						if opv.good.is_active == True:
+
+							f_goods.append(opv.good)
+
+					temp_table = list(set(goods)&set(f_goods))
+
+					goods = temp_table	
+
+				except Property_value.DoesNotExist:
+					
+					try:
+
+						manufacturer = Manufacturer.objects.get(slug=f_item)
+
+						active_filters.append(manufacturer.name)
+
+						f_goods = []
+
+						for good in Good.objects.filter(manufacturer=manufacturer, is_active=True):
+
+							f_goods.append(good)
+
+						temp_table = list(set(goods)&set(f_goods))
+
+						goods = temp_table
+
+					except Manufacturer.DoesNotExist:
+
+						pass
+
+		if not active_filters:
+
+			for good in Good.objects.filter(is_active=True):
+				temp_table.append(good)
+
+
+
+		for n in temp_table:
+
+			if n.is_active:
+
+				item = Item()
+
+				item.good = n
+				
+				images = Picture.objects.filter(good=n, main_image=True).first()
+				if images:
+					item.image = images
+				else:
+					item.image = Picture.objects.filter(good=n).first()
+				 	
+				table.append(item)
+
+
+
+		filters = get_filters()
+		
+		page_number = request.GET.get('page', 1)
+
+		paginator = Paginator(table, goods_count)	
+
+		page = paginator.get_page(page_number)
+
+
+		is_paginated = page.has_other_pages()
+
+		if page.has_previous():
+			prev_url = '?page={}'.format(page.previous_page_number())
+		else:
+			prev_url = ''	
+
+		if page.has_next():
+			next_url = '?page={}'.format(page.next_page_number())
+		else:
+			next_url = ''			
+
+		wishlist = []
+		for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
+			wishlist.append(item.good)
+
+		barrels = []
+		for item in In_Barrels.objects.all():
+			barrels.append(item.good)
+
+
+		template_name = 'goodapp/catalog.html'
+		context = {
+			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
+			'cart': get_cart_(request),
+			'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+			'in_bar': get_in_barrels(),
+			'barrels': barrels,
+			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+			'wishlist' : wishlist,
+			'filters' : filters,
+			'active_filters':active_filters,
+		}
+
+		return render(request, template_name, context) 	
