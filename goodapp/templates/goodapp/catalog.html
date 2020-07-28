@@ -129,6 +129,9 @@
 
 				<form id="filter_form" action="{% url 'show_product_with_filters' %}" method="GET" >
 					<div class="widget widget_product_categories margin-bottom-40">
+						<h2 class="widget-title margin-bottom-0">Выбери свой сидр</h2>
+					</div>
+					<div class="widget widget_product_categories margin-bottom-40">
 						<h2 class="widget-title margin-bottom-0">Что внутри?</h2>
 						<ul class="product-categories">
 							{% for key , value in filters.9.items %}

@@ -7,6 +7,8 @@ from django.conf import settings
 
 import uuid
 
+from uuslug import slugify
+
 def get_uuid():
 	return str(uuid.uuid4().fields[0])
 
@@ -33,6 +35,8 @@ class Good(models.Model):
 	good_uid 			= models.CharField(max_length=36, verbose_name='Код', blank=True, null=True)
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
 
+	cpu_slug			= models.SlugField(max_length=70, verbose_name='ЧПУ_Url', blank=True, db_index=True)
+
 	manufacturer 		= models.ForeignKey('Manufacturer', verbose_name='Производитель', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
 
 	category 			= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
@@ -46,7 +50,9 @@ class Good(models.Model):
 	def save(self, *args, **kwargs):
 
 		if self.slug == "":
-			self.slug = get_uuid()	
+			self.slug = get_uuid()
+
+		self.cpu_slug = '{}'.format(slugify(self.name_en if self.name_en else self.name))	
 
 		super(Good, self).save(*args, **kwargs)
 			
@@ -66,6 +72,8 @@ class Manufacturer(models.Model):
 	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
 
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+
+	cpu_slug			= models.SlugField(max_length=70, verbose_name='ЧПУ_Url', blank=True, db_index=True)
 		
 	def __str__(self):
 
@@ -74,7 +82,9 @@ class Manufacturer(models.Model):
 	def save(self, *args, **kwargs):
 
 		if self.slug == "":
-			self.slug = get_uuid()	
+			self.slug = get_uuid()
+
+		self.cpu_slug = '{}'.format(slugify(self.name_en if self.name_en else self.name))	
 
 		super(Manufacturer, self).save(*args, **kwargs)
 
@@ -95,6 +105,7 @@ class Category(models.Model):
 	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
 
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
+	cpu_slug			= models.SlugField(max_length=70, verbose_name='ЧПУ_Url', blank=True, db_index=True)
 	parent_category 	= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
 	picture				= models.ImageField(upload_to=get_image_name, verbose_name='Изображение 370x334', default=None, null=True, blank=True)
 
@@ -108,7 +119,9 @@ class Category(models.Model):
 	def save(self, *args, **kwargs):
 
 		if self.slug == "":
-			self.slug = get_uuid()	
+			self.slug = get_uuid()
+
+		self.cpu_slug = '{}'.format(slugify(self.name))	
 
 		super(Category, self).save(*args, **kwargs)
 

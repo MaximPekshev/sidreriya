@@ -13,8 +13,12 @@ from django.db.models import Sum
 from wishlistapp.views import get_wishlist
 from wishlistapp.models import Wishlist, Wishlist_Item
 
-# from django.core.exceptions import ObjectDoesNotExis
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from .serializers import GoodSerializer
+
+# from django.core.exceptions import ObjectDoesNotExis
 
 def get_cart_(request):
 
@@ -138,7 +142,7 @@ class Item(object):
 
 def show_catalog(request):
 
-	goods_count=20
+	goods_count=12
 
 	goods = Good.objects.filter(is_active=True)
 
@@ -330,7 +334,7 @@ def show_category(request, slug):
 		}
 		
 	else:	
-		goods_count=20
+		goods_count=12
 
 		try:
 			category = Category.objects.get(slug=slug)
@@ -405,7 +409,7 @@ def show_category(request, slug):
 
 def show_manufacturer(request, slug):
 
-	goods_count=20
+	goods_count=12
 
 	try:
 		manufacturer = Manufacturer.objects.get(slug=slug)
@@ -500,7 +504,7 @@ def show_in_barrels(request):
 
 def show_product_with_tag(request):
 
-	goods_count=20
+	goods_count=12
 
 	property_value = Property_value.objects.get(title=request.GET.get('tag'))
 
@@ -570,7 +574,7 @@ def show_product_with_filters(request):
 	
 	if request.method == 'GET':
 
-		goods_count=20
+		goods_count=12
 
 		table = []
 
@@ -748,4 +752,4 @@ def show_product_with_filters(request):
 			'str_active_filters': str_active_filters,
 		}
 
-		return render(request, template_name, context) 	
+		return render(request, template_name, context) 

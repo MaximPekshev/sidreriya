@@ -66,7 +66,7 @@ class GoodAdmin(admin.ModelAdmin):
 
 	actions = ["export_as_csv"]
 
-	exclude = ('slug',)
+	exclude = ('slug', 'cpu_slug')
 
 	def formfield_for_foreignkey(self, db_field, request, **kwargs):
 
@@ -123,7 +123,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
 					'name',
 					)
 	
-	exclude = ('slug',)
+	exclude = ('slug', 'cpu_slug')
 
 admin.site.register(Manufacturer, ManufacturerAdmin)
 
@@ -133,7 +133,7 @@ class CategoryAdmin(admin.ModelAdmin):
 					'rank',
 					)
 	
-	exclude = ('slug',)
+	exclude = ('slug', 'cpu_slug')
 
 admin.site.register(Category, CategoryAdmin)
 
