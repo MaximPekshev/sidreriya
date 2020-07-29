@@ -142,7 +142,7 @@ class Item(object):
 
 def show_catalog(request):
 
-	goods_count=12
+	goods_count=18
 
 	goods = Good.objects.filter(is_active=True)
 
@@ -334,7 +334,7 @@ def show_category(request, slug):
 		}
 		
 	else:	
-		goods_count=12
+		goods_count=18
 
 		try:
 			category = Category.objects.get(slug=slug)
@@ -409,7 +409,7 @@ def show_category(request, slug):
 
 def show_manufacturer(request, slug):
 
-	goods_count=12
+	goods_count=18
 
 	try:
 		manufacturer = Manufacturer.objects.get(slug=slug)
@@ -504,7 +504,7 @@ def show_in_barrels(request):
 
 def show_product_with_tag(request):
 
-	goods_count=12
+	goods_count=18
 
 	property_value = Property_value.objects.get(title=request.GET.get('tag'))
 
@@ -574,7 +574,7 @@ def show_product_with_filters(request):
 	
 	if request.method == 'GET':
 
-		goods_count=12
+		goods_count=18
 
 		table = []
 
