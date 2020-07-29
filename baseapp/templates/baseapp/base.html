@@ -184,6 +184,9 @@
 		<script>
 			window.onload = function () {
 				document.body.classList.add('loaded');
+				if (window.innerWidth > 480) {
+					document.getElementById('collapseAll').classList.add('in');
+				}
 			}
 		</script>
 
