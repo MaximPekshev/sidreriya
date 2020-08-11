@@ -25,6 +25,7 @@
 								<h2 class="widget-title margin-bottom-0">Что внутри?</h2>
 								<ul>
 									{% for key , value in filters.9.items %}
+										<!-- <li><a><input onclick="Click()" type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li> -->
 										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
 									{% endfor %}
 								</ul>
@@ -119,7 +120,7 @@
 							</div>
 
 							<div class="block-form-footer text-left">
-								<button form="filter_form" class="button primary">Показать</button>
+								<button id="filter_form_button" form="filter_form" class="button primary">Показать</button>
 							</div>
 
 						</form>
@@ -142,6 +143,15 @@
 						<a href="{% url 'show_manufacturer' slug=manufacturer.slug %}">{{ manufacturer.name }}</a>
 						{% endif %}
 					</nav>
+				<!-- 	<div class="page-bar-right">
+						<form class="woocommerce-ordering">
+							<select name="orderby" class="orderby" onchange="document.location=this.options[this.selectedIndex].value" style="display: none;">
+								<option value="#">Сортировка</option>
+								<option value="{% url 'show_catalog' %}?sort=by_popularity">Сначала дорогие</option>
+								<option value="{% url 'show_catalog' %}">Сначала дешевые</option>
+							</select>
+						</form>
+					</div> -->
 				</div>
 				{% if subcategories %}
 				<div class="margin-top-30">
@@ -152,7 +162,7 @@
 								<div class="kt-banner block-banner-text style3 margin-top-30" data-height="334" data-reponsive='{"320":320,"480":480,"768":220,"1024":293}' data-background="{% if cat.picture %}{{ cat.picture.url }} {% else %} {% static 'images/products/no-photo.png' %} {% endif %}" data-positionright="0px" data-positionleft="0px" data-verticalmiddle="middle">
 									<a href="{% url 'show_category' slug=cat.slug %}" class="bg-image">Banner Bg</a>
 									<div class="content text-center">
-										<h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">{{ cat.name }}</h4>
+										<a href="{% url 'show_category' slug=cat.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">{{ cat.name }}</h4> </a>
 									</div>
 								</div>
 							</div>

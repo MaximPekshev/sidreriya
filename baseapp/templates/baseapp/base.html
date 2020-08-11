@@ -182,12 +182,23 @@
 		</script>
 
 		<script>
-			window.onload = function () {
+
+
+			window.onload = init;
+
+			function init() {
+
 				document.body.classList.add('loaded');
 				if (window.innerWidth > 480) {
 					document.getElementById('collapseAll').classList.add('in');
 				}
+
 			}
+
+			// function Click(){
+			// 	document.getElementById("filter_form").submit()
+			// }
+
 		</script>
 
 </body>
