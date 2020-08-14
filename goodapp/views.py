@@ -18,7 +18,70 @@ from rest_framework.views import APIView
 
 from .serializers import GoodSerializer
 
+from filterapp.models import PropertiesFilter
+
 # from django.core.exceptions import ObjectDoesNotExis
+
+
+
+# def get_goods_of_object_property_values(property_values, goods_table):
+
+# 	f_goods = []
+
+# 	for pv in property_values:
+
+# 		for opv in Object_property_values.objects.filter(property_value=pv):
+
+# 			if opv.good.is_active == True and (opv.good in goods_table):
+
+# 				f_goods.append(opv.good)
+
+# 	return f_goods
+
+
+# def get_goods_of_single_object_property_value(property_value, goods_table):
+
+# 	f_goods = []
+
+# 	for opv in Object_property_values.objects.filter(property_value=property_value):
+
+# 		if opv.good.is_active == True and (opv.good in goods_table):
+
+# 			f_goods.append(opv.good)
+
+# 	return f_goods
+
+def get_goods_of_object_property_values(property_values, goods_table):
+
+	f_goods = []
+
+	for good in goods_table:
+
+		if good.is_active==True:
+
+			for pv in property_values:
+
+				for opv in Object_property_values.objects.filter(property_value=pv, good=good):
+
+					f_goods.append(opv.good)
+
+	return f_goods
+
+def get_goods_of_single_object_property_value(property_value, goods_table):
+
+	f_goods = []
+
+	for good in goods_table:
+
+		if good.is_active==True:
+
+			for opv in Object_property_values.objects.filter(property_value=property_value, good=good):
+
+				f_goods.append(opv.good)
+
+	return f_goods	
+
+
 
 def get_cart_(request):
 
@@ -53,102 +116,70 @@ def get_in_barrels():
 
 	return table
 
-def get_filters():
+
+def get_filters_a(goods_table=[]):
 
 	filters = []
 
-	manufacturers = {}
+	properties_filter = PropertiesFilter.objects.all().order_by('-pk')
 
-	for man in Manufacturer.objects.all():
-		manufacturers.update({man.slug : man.name})
+	if properties_filter:
 
-	price = []
+		for pf in properties_filter:
 
-	country 	= {}
-	what_inside = {}
-	sugar 		= {}
-	gas 		= {}
-	pasteuriz 	= {}
-	filtration 	= {}
-	strength 	= dict([(27, 'безалкогольный'), (31, 'до 3%'), (48, 'больше 3%')])
-	# dict(nonalc='безалкогольный', alcless3='до 3%', alcmore3='больше 3%')
-	volume 		= {}
+			property_value = Property_value.objects.filter(_property=pf.p_filter) 
 
-	for item in Good.objects.filter(is_active=True):
+			if property_value:
 
-		if item.price not in price:
+				filter_values = []
 
-			if item.price != None:
+				for pv in property_value:
 
-				price.append(item.price)
+					opv = Object_property_values.objects.filter(property_value=pv)
+
+					# goods_with_opv = []
+
+					# for item in opv:
+					# 	if item.good.is_active == True and item.good in goods_table:
+					# 		goods_with_opv.append(item.good)
 
 
-	pv = Property_value.objects.all()
+					# filter_values.append([pv.title, len(goods_with_opv)])
+					filter_values.append([pv.title, 1])
 
-	for item_opv in pv:
-		if item_opv != None:
-			# Страна
-			if item_opv._property.slug == '728193372':
-				if item_opv.id not in country.keys():
-					country.update({item_opv.id : item_opv.title})
-			# Крепость
-			# elif item_opv._property.slug == '202312845':
-			# 	if item_opv.id not in strength.keys():
-			# 		strength.update({item_opv.id : item_opv.title})
-			# Сахар
-			elif item_opv._property.slug == '2193900133':
-				if item_opv.id not in sugar.keys():
-					sugar.update({item_opv.id : item_opv.title})
-			# Объем
-			elif item_opv._property.slug == '3824689493':
-				if item_opv.id not in volume.keys():
-					volume.update({item_opv.id : item_opv.title})
-			# Газация
-			elif item_opv._property.slug == '1240764269':
-				if item_opv.id not in gas.keys():
-					gas.update({item_opv.id : item_opv.title})
-			# Пастеризация
-			elif item_opv._property.slug == '2448919171':
-				if item_opv.id not in pasteuriz.keys():
-					pasteuriz.update({item_opv.id : item_opv.title})
-			# Фильтрация
-			elif item_opv._property.slug == '1716778945':
-				if item_opv.id not in filtration.keys():
-					filtration.update({item_opv.id : item_opv.title})
-			# Что внутри?
-			elif item_opv._property.slug == '552212307':
-				if item_opv.id not in what_inside.keys():
-					what_inside.update({item_opv.id : item_opv.title})													
+				dict_filters_values = dict.fromkeys([pf.p_filter.title], filter_values)
+				
+				filters.append(dict_filters_values)
 
-	price.sort()
+	# filters.append(dict.fromkeys(
+	# 	['Крепость'],
+	# 	 [['безалкогольный', len(get_goods_of_single_object_property_value(Property_value.objects.get(pk=27), goods_table))],
+	# 	  ['до 3%', len(get_goods_of_object_property_values(Property_value.objects.filter(pk__in=[28,29,30,31,68]), goods_table))],
+	# 	  ['больше 3%', len(get_goods_of_object_property_values(Property_value.objects.filter(pk__in=[32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53]), goods_table))]
+	# 	  ]
+	# 	  )
+	# )
+	filters.append(dict.fromkeys(
+		['Крепость'],
+		 [['безалкогольный', 1],
+		  ['до 3%', 2],
+		  ['больше 3%', 3]
+		  ]
+		  )
+	)
 
-	filters.append(manufacturers)
-	filters.append(price)
-	filters.append(country)
-	filters.append(strength)
-	filters.append(sugar)
-	filters.append(volume)
-	filters.append(gas)
-	filters.append(pasteuriz)
-	filters.append(filtration)
-	filters.append(what_inside)
 
-	return filters	
+	return filters								
 
 class Item(object):
 	
 	good 	= Good
 	image 	= Picture
 
-def show_catalog(request):
+def get_items_with_pictures(goods):
 
-	goods_count=18
-
-	goods = Good.objects.filter(is_active=True)
-
-	filters = get_filters()
-	
 	table = []
+
 	for good in goods:
 
 		item = Item()
@@ -161,7 +192,20 @@ def show_catalog(request):
 		else:
 			item.image = Picture.objects.filter(good=good).first()
 		 	
-		table.append(item)	
+		table.append(item)
+
+	return table	
+
+
+
+def show_catalog(request):
+
+	goods_count=18
+
+	goods = Good.objects.filter(is_active=True).order_by('price')
+	
+	table = get_items_with_pictures(goods)
+
 
 	page_number = request.GET.get('page', 1)
 
@@ -199,12 +243,27 @@ def show_catalog(request):
 		'barrels': barrels,
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 		'wishlist' : wishlist,
-		'filters' : filters,
+		'filters_a' : get_filters_a(goods),
 	}
 	
 
 
 	return render(request, template_name, context)
+
+
+def get_object_property_value(opv, slug):
+
+	value = opv.filter(_property=Properties.objects.filter(slug=slug).first()).first()
+
+	if value:
+		value = value.property_value
+	else:
+		value = ''
+
+	return value		
+
+
+
 
 def show_good(request, slug):
 
@@ -217,61 +276,24 @@ def show_good(request, slug):
 	opv = Object_property_values.objects.filter(good=good)
 	is_cidre = False
 	# Страна
-	country = opv.filter(_property=Properties.objects.filter(slug='728193372').first()).first()
-	if country:
-		country = country.property_value
-		is_cidre = True
-	else:
-		country = ''
+	country = get_object_property_value(opv, '728193372')
 	# Крепость
-	strength = opv.filter(_property=Properties.objects.filter(slug='202312845').first()).first()
-	if strength:
-		strength = strength.property_value
-		is_cidre = True
-	else:
-		strength = ''
+	strength = get_object_property_value(opv, '202312845')
 	# Сахар
-	sugar = opv.filter(_property=Properties.objects.filter(slug='2193900133').first()).first()
-	if sugar:
-		sugar = sugar.property_value
-		is_cidre = True
-	else:
-		sugar = ''
+	sugar = get_object_property_value(opv, '2193900133')
 	# Объем
-	volume = opv.filter(_property=Properties.objects.filter(slug='3824689493').first()).first()
-	if volume:
-		volume = volume.property_value
-		is_cidre = True
-	else:
-		volume = ''
+	volume = get_object_property_value(opv, '3824689493')
 	# Газация
-	gas = opv.filter(_property=Properties.objects.filter(slug='1240764269').first()).first()
-	if gas:
-		gas = gas.property_value
-		is_cidre = True
-	else:
-		gas = ''
+	gas = get_object_property_value(opv, '1240764269')
 	# Пастеризация
-	pasteuriz = opv.filter(_property=Properties.objects.filter(slug='2448919171').first()).first()
-	if pasteuriz:
-		pasteuriz = pasteuriz.property_value
-		is_cidre = True
-	else:
-		pasteuriz = ''
+	pasteuriz = get_object_property_value(opv, '2448919171')
 	# Фильтрация
-	filtration = opv.filter(_property=Properties.objects.filter(slug='1716778945').first()).first()
-	if filtration:
-		filtration = filtration.property_value
-		is_cidre = True
-	else:
-		filtration = ''
+	filtration = get_object_property_value(opv, '1716778945')
 	# Что внутри?
-	inside = opv.filter(_property=Properties.objects.filter(slug='552212307').first()).first()
-	if inside:
-		inside = inside.property_value
+	inside = get_object_property_value(opv, '552212307')
+
+	if country or strength or sugar or volume or gas or pasteuriz or filtration or inside:
 		is_cidre = True
-	else:
-		inside = ''	
 
 
 	wishlist = []
@@ -333,35 +355,23 @@ def show_category(request, slug):
 
 		}
 		
-	else:	
+	else:
+
 		goods_count=18
 
 		try:
 			category = Category.objects.get(slug=slug)
 		except:
-			category = None
+			category = None	
+
+		goods = Good.objects.filter(category=category, is_active=True).order_by('price')
 
 		if category.name == 'Сидр':
-			filters = get_filters()
+			filters_a = get_filters_a(goods)
 		else:
-			filters = None	
-
-		goods = Good.objects.filter(category=category, is_active=True)
+			filters_a = None
 		
-		table = []
-		for good in goods:
-
-			item = Item()
-			
-			item.good = good
-			
-			images = Picture.objects.filter(good=good, main_image=True).first()
-			if images:
-				item.image = images
-			else:
-				item.image = Picture.objects.filter(good=good).first()
-			 	
-			table.append(item)	
+		table = get_items_with_pictures(goods)
 
 		page_number = request.GET.get('page', 1)
 
@@ -401,7 +411,7 @@ def show_category(request, slug):
 			'barrels': barrels,
 			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 			'wishlist' : wishlist,
-			'filters' : filters,
+			'filters_a' : filters_a,
 		}
 
 	return render(request, template_name, context)
@@ -416,22 +426,9 @@ def show_manufacturer(request, slug):
 	except:
 		manufacturer = None
 	
-	goods = Good.objects.filter(manufacturer=manufacturer, is_active=True)
+	goods = Good.objects.filter(manufacturer=manufacturer, is_active=True).order_by('price')
 	
-	table = []
-	for good in goods:
-
-		item = Item()
-		
-		item.good = good
-		
-		images = Picture.objects.filter(good=good, main_image=True).first()
-		if images:
-			item.image = images
-		else:
-			item.image = Picture.objects.filter(good=good).first()
-		 	
-		table.append(item)	
+	table = get_items_with_pictures(goods)
 
 	page_number = request.GET.get('page', 1)
 
@@ -473,7 +470,6 @@ def show_manufacturer(request, slug):
 	}
 
 	return render(request, template_name, context)
-
 
 
 
@@ -578,113 +574,104 @@ def show_product_with_filters(request):
 
 		table = []
 
-		goods = []
+		goods = Good.objects.all().order_by('price')
 
-		for good in Good.objects.all():
-			goods.append(good)
-
-		active_filters = {}
+		active_filters = []
 
 		temp_table = []
 
-		for f_item in request.GET:
+		str_active_filters = '?'
 
-			if f_item != 'page':
+		for item in request.GET:
 
-				if f_item == '31':
+			goods_in_filter_group = []
 
-					f_goods = []
+			if item != 'page':
 
-					active_filters.update({31:'до 3%'})
-
-					property_values = Property_value.objects.filter(pk__in=[28,29,30,31,68])
-
-					for pv in property_values:
-
-						for opv in Object_property_values.objects.filter(property_value=pv):
-
-							if opv.good.is_active == True:
-
-								f_goods.append(opv.good)
-
-
-					temp_table = list(set(goods)&set(f_goods))
-							
-					goods = temp_table		
-
-				elif f_item == '48':
-
-					f_goods = []
-
-					active_filters.update({48:'больше 3%'})
-
-					property_values = Property_value.objects.filter(pk__in=[32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53])
-
-					for pv in property_values:
-
-						for opv in Object_property_values.objects.filter(property_value=pv):
-
-							if opv.good.is_active == True:
-
-								f_goods.append(opv.good)
-								
-
-					temp_table = list(set(goods)&set(f_goods))
-							
-					goods = temp_table
-
-				else:	
-
-					try:
-						property_value = Property_value.objects.get(id=f_item)
-
-						if f_item == '27':
-
-							active_filters.update({27:'безалкогольный'})
-
-						else: 
-
-							active_filters.update({property_value.id : property_value.title})
-
-						f_goods = []
-
-						for opv in Object_property_values.objects.filter(property_value=property_value):
-
-							if opv.good.is_active == True:
-
-								f_goods.append(opv.good)
-
-						temp_table = list(set(goods)&set(f_goods))
-
-						goods = temp_table	
-
-					except Property_value.DoesNotExist:
+				if item == 'Крепость':
+					
+					for f_item in request.GET.getlist('Крепость'):
 						
+						if f_item == 'до 3%':
+
+							property_value = Property_value.objects.filter(pk__in=[28,29,30,31,68])
+
+							active_filters.append('до 3%')
+
+							str_active_filters += 'Крепость=до 3%&'
+
+							goods_with_opv = get_goods_of_object_property_values(property_value, Good.objects.filter(is_active=True))
+						
+							for i in goods_with_opv:
+
+								goods_in_filter_group.append(i)
+
+						elif f_item == 'больше 3%':
+
+							active_filters.append('больше 3%')
+
+							str_active_filters += 'Крепость=больше 3%&'
+
+							property_value = Property_value.objects.filter(pk__in=[32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53])
+										
+							goods_with_opv = get_goods_of_object_property_values(property_value, Good.objects.filter(is_active=True))
+						
+							for i in goods_with_opv:
+
+								goods_in_filter_group.append(i)
+
+						elif f_item == 'безалкогольный':
+
+
+							active_filters.append('безалкогольный')
+
+							str_active_filters += 'Крепость=безалкогольный&'
+
+							property_value = Property_value.objects.get(pk=27)
+										
+							goods_with_opv = get_goods_of_single_object_property_value(property_value, Good.objects.filter(is_active=True))
+						
+							for i in goods_with_opv:
+
+								goods_in_filter_group.append(i)
+
+				else:
+
+					for f_item in request.GET.getlist(item):
+
 						try:
+							property_value = Property_value.objects.get(title=f_item)
+							
+							active_filters.append(property_value.title)
 
-							manufacturer = Manufacturer.objects.get(slug=f_item)
+							str_active_filters += str(item) + '=' + str(f_item) + '&'
 
-							active_filters.update({manufacturer.slug : manufacturer.name})
+							goods_with_opv = get_goods_of_single_object_property_value(property_value, Good.objects.filter(is_active=True))
+							
+							for i in goods_with_opv:
 
-							f_goods = []
-
-							for good in Good.objects.filter(manufacturer=manufacturer, is_active=True):
-
-								f_goods.append(good)
-
-							temp_table = list(set(goods)&set(f_goods))
-
-							goods = temp_table
-
-						except Manufacturer.DoesNotExist:
+								goods_in_filter_group.append(i)	
+							
+						except Property_value.DoesNotExist:
 
 							pass
 
+				temp_table = list(set(goods)&set(goods_in_filter_group))
+
+				goods = temp_table	
+		
+
 		if not active_filters:
 
-			for good in Good.objects.filter(is_active=True):
-				temp_table.append(good)
+			try:
+				category = Category.objects.get(name='Сидр')
 
+				temp_table = Good.objects.filter(category=category, is_active=True).order_by('price')
+
+			except Category.DoesNotExist:
+
+				temp_table = Good.objects.filter(is_active=True).order_by('price')
+				
 
 
 		for n in temp_table:
@@ -703,9 +690,6 @@ def show_product_with_filters(request):
 				 	
 				table.append(item)
 
-
-
-		filters = get_filters()
 		
 		page_number = request.GET.get('page', 1)
 
@@ -713,11 +697,8 @@ def show_product_with_filters(request):
 
 		page = paginator.get_page(page_number)
 
-		str_active_filters = '?'
-		for key, value in active_filters.items():
-			str_active_filters += str(key) + '=' + str(value) + '&'
-
 		is_paginated = page.has_other_pages()
+
 
 		if page.has_previous():
 			prev_url = '{1}page={0}'.format(page.previous_page_number(), str_active_filters)
@@ -747,8 +728,8 @@ def show_product_with_filters(request):
 			'barrels': barrels,
 			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 			'wishlist' : wishlist,
-			'filters' : filters,
-			'active_filters':active_filters.values(),
+			'filters_a' : get_filters_a(temp_table),
+			'active_filters': active_filters,
 			'str_active_filters': str_active_filters,
 		}
 

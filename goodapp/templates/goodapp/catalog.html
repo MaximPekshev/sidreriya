@@ -7,130 +7,48 @@
 	<div class="container">
 		<div class="row">
 			{% if not subcategories %}
-			{% if filters %}
+			{% if filters_a %}
 			<div class="col-sm-4 col-md-3 sidebar blog-sidebar margin-bottom-20" id="accordion">
 
 				<div class="widget widget_categories margin-bottom-20">
 					<a data-toggle="collapse" data-target="#collapseAll" aria-expanded="true" aria-controls="collapseAll">
-						<h2 class="widget-title margin-bottom-0">Выбери свой сидр<span style="float: right;">&#9660</span></h2>
+						<h2 class="widget-title margin-bottom-0"><i style="padding-right: 20px;" class="fa fa-exchange" aria-hidden="true"></i>Фильтры</h2> 
 					</a>
 				</div>
-
-				<div id="collapseAll" class="collapse" aria-labelledby="headingAll" data-parent="#accordion">
+				<div id="collapseAll" class="collapse {% if active_filters %} in {% endif %}" aria-labelledby="headingAll" data-parent="#accordion">
 					<div class="card-body">
-
 						<form id="filter_form" action="{% url 'show_product_with_filters' %}" method="GET" >
-							
+
+							{% for filter in filters_a %}
+							{% for key , value in filter.items %}
 							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Что внутри?</h2>
+								<h2 class="widget-title margin-bottom-0">{{ key }}</h2>
 								<ul>
-									{% for key , value in filters.9.items %}
-										<!-- <li><a><input onclick="Click()" type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li> -->
-										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
+									{% for val in value %}
+									<li><a><input onclick="Click()" type="checkbox" name="{{ key }}" value="{{ val.0 }}" {% if val.0 in active_filters %} checked {% else %} {% endif %}> {{ val.0 }}<span class="count"></span></a></li>
 									{% endfor %}
+									
 								</ul>
 							</div>
-
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Страна</h2>
-								<ul>
-									{% for key , value in filters.2.items %}
-										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
-									{% endfor %}
-								</ul>
-							</div>
-
-							<!-- <div class="widget widget_price_filter">
-								<h2 class="widget-title margin-bottom-40">Цена</h2>
-								<div class="price_slider_wrapper">
-									<div class="amount-range-price"><span>&#8381 {{ filters.1|first }}</span> - <span>&#8381 {{ filters.1|last }}</span></div>
-									<div data-label-reasult="Цена:" data-min="{{ filters.1|first }}" data-max="{{ filters.1|last }}" data-unit="&#8381" class="slider-range-price " data-value-min="{{ filters.1|first }}" data-value-max="{{ filters.1|last }}"></div>
-								</div>
-							</div> -->
-
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Сладость</h2>
-								<ul>
-									{% for key , value in filters.4.items %}
-										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
-									{% endfor %}
-								</ul>
-							</div>
-
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Пузырьки</h2>
-								<ul>
-									{% for key , value in filters.6.items %}
-										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
-									{% endfor %}
-								</ul>
-							</div>
-
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Объем</h2>
-								<ul>
-									{% for key , value in filters.5.items %}
-									<li><a><input type="checkbox" name="{{ key }} " value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }} L</a><span class="count"></span></li>
-									{% endfor %}
-								</ul>
-							</div>
-
-							<div class="widget widget_categories margin-bottom-20">
-							<h2 class="widget-title margin-bottom-0">Крепость</h2>
-							<ul>
-								{% for key , value in filters.3.items %}
-								<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}{% endif %}> {{ value }}</a><span class="count"></span></li>
-								{% endfor %}
-							</ul>
-							</div>
-
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Пастеризация</h2>
-								<ul>
-									{% for key , value in filters.7.items %}
-										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
-									{% endfor %}
-								</ul>
-							</div>
-
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">Фильтрация</h2>
-								<ul>
-									{% for key , value in filters.8.items %}
-										<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
-									{% endfor %}
-								</ul>
-							</div>
-
-							<div class="widget widget_categories margin-bottom-40">
-
-								<a data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-									<h2 class="widget-title margin-bottom-0">Производители<span style="float: right;">&#9660</span></h2>
-								</a>
-
-								<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-									<div class="card-body">
-										<ul>
-											{% for key , value in filters.0.items %}
-											<li><a><input type="checkbox" name="{{ key }}" value="{{ value }}" {% if value in active_filters %} checked {% else %}  {% endif %}> {{ value }}</a><span class="count"></span></li>
-											{% endfor %}
-										</ul>
-									</div>
-								</div>
-							</div>
+							{% endfor %}
+							{% endfor %}
 
 							<div class="block-form-footer text-left">
-								<button id="filter_form_button" form="filter_form" class="button primary">Показать</button>
+								<button id="filter_form_button" form="filter_form" class="button primary" style="display: None;" >Показать</button>
 							</div>
-
 						</form>
+						{% if active_filters %}
+						<div class="block-form-footer text-left">
+							<a href="{% url 'show_product_with_filters' %}" ><button class="button primary">Сбросить фильтр</button></a>
+						</div>
+						{% endif %}
 					</div>
 				</div>		
 
 			</div>
 			{% endif %}
 			{% endif %}
-			<div class="{% if filters %} col-sm-8 col-md-9 {% else %} col-sm-12 col-md-12 {% endif %} main-content">
+			<div class="{% if filters_a %} col-sm-8 col-md-9 {% else %} col-sm-12 col-md-12 {% endif %} main-content">
 				<div class="shop-page-bar">
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
@@ -175,9 +93,9 @@
 					<p align="justify">{{ manufacturer.description }}</p>
 				{% endif %}
 					{% if page_object.object_list %}
-					<ul class="products product-list-grid {% if filters %} desktop-columns-3 {% else %} desktop-columns-4 {% endif %} tablet-columns-3 mobile-columns-2">
+					<ul class="products product-list-grid {% if filters_a %} desktop-columns-3 {% else %} desktop-columns-4 {% endif %} tablet-columns-3 mobile-columns-2">
 						{% for item in page_object.object_list %}
-							<li class="product-item {% if filters %} col-md-4 {% else %} col-md-3 {% endif %}col-sm-4 col-xs-6">
+							<li class="product-item {% if filters_a %} col-md-4 {% else %} col-md-3 {% endif %}col-sm-4 col-xs-6">
 								<div class="product-inner">
 									<div class="thumb has-second-image">
 										<a href="{% url 'show_good' slug=item.good.slug %}">
