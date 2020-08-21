@@ -168,8 +168,19 @@ def get_filters_a(goods_table=[]):
 		  )
 	)
 
+	manufacturers = Manufacturer.objects.all()
 
-	return filters								
+	if manufacturers:
+		filter_values = []
+		for manufacturer in manufacturers:
+			filter_values.append([manufacturer.name, 1])
+
+		dict_filters_values = dict.fromkeys(['Производители'], filter_values)
+				
+		filters.append(dict_filters_values)
+
+	return filters
+
 
 class Item(object):
 	
@@ -634,6 +645,27 @@ def show_product_with_filters(request):
 							for i in goods_with_opv:
 
 								goods_in_filter_group.append(i)
+
+				elif item == 'Производители':
+
+					for f_item in request.GET.getlist('Производители'):
+
+						try:
+							manufacturer = Manufacturer.objects.get(name=f_item)
+
+							active_filters.append(manufacturer.name)
+
+							str_active_filters += 'Производители=' + str(f_item) + '&'
+
+							goods_with_filter = Good.objects.filter(manufacturer=manufacturer, is_active=True)
+
+							for good in goods_with_filter:
+
+								goods_in_filter_group.append(good)
+
+						except Manufacturer.DoesNotExist:
+
+							pass
 
 				else:
 
