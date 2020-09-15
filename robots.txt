@@ -4,4 +4,4 @@ Disallow: /accounts
 Disallow: /cart
 Disallow: /order
 Disallow: /wishlist
-Sitemap: http://sidreriyabelgorod.ru/sitemap.xml
+Sitemap: https://sidreriyabelgorod.ru/sitemap.xml

@@ -2,6 +2,15 @@
 
 {% load static %}
 
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+{{ block.super }}
+{% endblock %}
+
+
 {% block content %}
 {% if in_bar %}<div class="page-banner bg-parallax"></div>{% endif %}
 <div class="main-container no-sidebar">

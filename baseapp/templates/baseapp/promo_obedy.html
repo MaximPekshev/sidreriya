@@ -1,0 +1,50 @@
+{% extends 'baseapp/index.html' %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_description %}От 4-х обедов привезём бесплатно. За полный обед с салатом и напитком просим 250 Р. с 11:00 до 18:00{% endblock %}
+
+{% block title %}Бесплатная доставка обедов из Сидрерии!{% endblock %}
+
+
+{% block content %}
+
+<div class="main-container">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+		</nav>
+		<div class="row">
+			<div class="col-sm-2 col-md-2" >	
+			</div>
+			<div class="col-sm-7 col-md-8 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-info">
+							<h3 class="post-title" align="center"><a>Бесплатная доставка обедов из Сидрерии!</a></h3>
+							<div class="blog-content">
+								<p>От 4-х обедов привезём бесплатно, чтобы наши Дружеские обеды оказались в вашем офисе!</p>
+								<blockquote>За полный обед с салатом и напитком просим 250 Р.</blockquote>
+								<p>Готовим из натуральных продуктов, словно мама, с заботой о вас!</p>
+								<blockquote>Обеды по акции можно заказать по телефону <a href="tel:84722412416"> 412-416</a></blockquote>
+								<p>Обеды в Сидрерии с 11:00 до 18:00</p>
+							</div>
+						</div>
+						<div class="col-sm-12" >
+							<div class="text-center" style="padding-top: 30px ">
+								<a class="button primary" href="{% url 'show_index' %}">На главную</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>			
+	</div>	
+</div>
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

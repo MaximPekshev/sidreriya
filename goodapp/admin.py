@@ -34,7 +34,6 @@ class PictureInline(admin.TabularInline):
     exclude = ('title', 'slug')
     extra = 0
 
-
 class Property_valueInline(admin.TabularInline):
     model = Property_value
     exclude = ('slug',)
@@ -62,7 +61,7 @@ class GoodAdmin(admin.ModelAdmin):
 
 	list_filter = ('category', 'manufacturer')
 
-	inlines 	 = [PictureInline, Object_property_valuesInline, ]
+	inlines 	 = [PictureInline, Object_property_valuesInline]
 
 	actions = ["export_as_csv"]
 
@@ -77,6 +76,10 @@ class GoodAdmin(admin.ModelAdmin):
 		if db_field.name == "category":
 			kwargs["queryset"] = Category.objects.all()
 			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+		if db_field.name == "upsell_products":
+			kwargs["queryset"] = Good.objects.all()
+			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)	
 
 	def image(self, obj):
 

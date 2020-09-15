@@ -2,9 +2,9 @@
 
 {% load static %}
 
-{% block meta_description %}{% if good.meta_description %}{{ good.meta_description }}{% else %} {{good.description|slice:"250" }}{% endif %}{% endblock %}
+{% block meta_description %}{% if good.meta_description %}{{ good.meta_description }}{% else %} {{good.description|slice:"230" }}{% endif %}. Гастробар Сидрерия.{% endblock %}
 
-{% block title %}{% if good.meta_name %}{{ good.meta_name }}{% else %}{{ good.name }}{% if good.name_en %} / {{ good.name_en }}{% endif %}{% endif %}{% endblock %}
+{% block title %}{% if good.meta_name %}{{ good.meta_name }}{% else %}{{ good.name }}{% if good.name_en %} / {{ good.name_en }}{% endif %}{% endif %}. Гастробар Сидрерия.{% endblock %}
 
 
 {% block content %}
@@ -166,6 +166,34 @@
 					</div>
 					{% endif %}	
 				</div> 
+
+				<!-- <div class="related products">	
+					<div class="heading-section text-center">
+						<h3 class="title">UPSELL Products</h3>
+					</div>
+					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="10" data-responsive='{"0":{"items":"1"},"768":{"items":"2"},"992":{"items":"3"}, "1222":{"items":"4"}}'>
+						<li class="product-item">
+							<div class="product-inner">
+								<div class="thumb has-second-image">
+									<a href="#">
+										<img src="{% static 'images/products/no-photo.png' %}" alt="">
+									</a>
+									<div class="group-button">
+										<a class="wishlist" href="#">Wishlist</a>
+										<a class="button add_to_cart_button" href="#">Add to cart</a>
+									</div>
+									<div class="flash">
+										<span class="new">New</span>
+									</div>
+								</div>
+								<div class="info">
+									<h3 class="product-name short"><a href="#">Stockholm Chair high Mosta gruancy</a></h3>
+									<span class="price">$75.00</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div> -->
 
 			</div>
 		</div>

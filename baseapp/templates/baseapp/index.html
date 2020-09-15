@@ -2,6 +2,12 @@
 
 {% load static %}
 
+{% block meta_description %}
+Гастробар Сидрерия. Еда, сидр, музыка. Место для любителей и ценителей сидра и не только. Собственная служба доставки. 
+{% endblock %}
+
+{% block title %}Первая Сидрерия в Белгороде{% endblock %}
+
 {% block header %}
 
 <div id="header" class="header style2 style9">
@@ -123,21 +129,20 @@
 			<img src="{% static 'images/banners/home.jpg' %}" alt="" style="filter: blur(2px);">
 			<div  class="content-slide">
 				<span data-animate="fadeInDown" class="caption subtitle">акции при самовывозе</span>
-				<!-- <h3>акции при самовывозе</h3> -->
 				<h1 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h1>
 				<a data-animate="fadeInDown"  class="caption link merriweather" href="{% url 'show_delivery' %}">Подробнее...</a>
 			</div>
 		</div>
 
 		<div class="item-slide">
-			<img src="{% static 'images/banners/opening.jpeg' %}" alt="" style="filter: blur(2px);">
+			<img src="{% static 'images/banners/obedy.png' %}" alt="">
 			<div class="content-slide">
-				<span data-animate="fadeInDown" class="caption subtitle">Теперь ваш заказ можно оформить здесь</span>
-				<h3></h3>
-				<h1 data-animate="zoomIn" class="caption title" >Мы запустили сайт!</h1>
-				<a data-animate="fadeInDown" class="caption link merriweather" href="{% url 'show_promo' %}">Подробнее...</a>
+				<span data-animate="fadeInDown" class="caption subtitle">Бесплатная доставка обедов из Сидрерии!</span>
+				<h1 data-animate="zoomIn" class="caption title">От 4-х обедов привезём бесплатно</h1>
+				<a data-animate="fadeInDown"  class="caption link merriweather" href="{% url 'show_promo_obedy' %}">Подробнее...</a>
 			</div>
 		</div>
+		
 	</div>
 </div>
 
@@ -184,8 +189,23 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="block-social" style="margin-bottom: 30px; margin-top: 30px; background-image: url('{% static 'images/banners/footer.png' %}');">
+					<div class="social">
+						<a href="https://www.facebook.com/sidreriyabel" target="_blank"><i class="fa fa-facebook"></i></a>
+						<a href="https://vk.com/sidreriya_bel" target="_blank"><i class="fa fa-vk"></i></a>
+						<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+
+
+
 {% endblock %}
 
 {% block magnific_popup %}

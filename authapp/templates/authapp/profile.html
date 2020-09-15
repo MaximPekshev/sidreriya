@@ -2,6 +2,15 @@
 
 {% load static %}
 
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+{{ block.super }}
+{% endblock %}
+
+
 {% block header %}
 {{ block.super }}
 {% endblock %}

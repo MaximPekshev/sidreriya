@@ -99,3 +99,16 @@ def show_promo(request):
 	}
 
 	return  render(request, 'baseapp/promo.html', context)
+
+def show_promo_obedy(request):
+
+	context = {
+
+		'cart': get_cart(request),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+
+	}
+
+	return  render(request, 'baseapp/promo_obedy.html', context)	

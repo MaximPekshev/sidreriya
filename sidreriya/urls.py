@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from ajax_select import urls as ajax_select_urls
 
 urlpatterns = [
 	path(''		 		, include('baseapp.urls')),
@@ -11,4 +12,5 @@ urlpatterns = [
     path('wishlist/'    , include('wishlistapp.urls')),
     # path('API/'    		, include('API.urls')),
     path('admin/'		, admin.site.urls),
+
 ]
