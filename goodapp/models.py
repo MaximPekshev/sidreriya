@@ -41,7 +41,7 @@ class Good(models.Model):
 
 	category 			= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
 
-	upsell_products 	= models.ManyToManyField('Good', verbose_name='Рекомендуемые товары')
+	upsell_products 	= models.ManyToManyField('Good', verbose_name='Рекомендуемые товары', blank=True)
 
 	in_barrel 			= models.BooleanField(verbose_name='Розлив', default=False)
 
