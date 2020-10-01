@@ -320,6 +320,7 @@ def show_good(request, slug):
 	context = {
 	
 		'good': good, 'pictures': pictures, 'main_pictures': main_pictures, 'opv': opv,
+		'upsell_products' : get_items_with_pictures(good.upsell_products.all()),
 		'country':country,
 		'strength':strength,
 		'sugar':sugar,

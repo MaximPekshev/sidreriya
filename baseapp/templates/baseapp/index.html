@@ -169,7 +169,7 @@
 	</div>
 </div>
 
-<div class="section-banner margin-bottom-30">
+<div class="section-banner" style="margin-bottom: 120px;">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 col-md-6">
@@ -189,18 +189,6 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="block-social" style="margin-bottom: 30px; margin-top: 30px; background-image: url('{% static 'images/banners/footer.png' %}');">
-					<div class="social">
-						<a href="https://www.facebook.com/sidreriyabel" target="_blank"><i class="fa fa-facebook"></i></a>
-						<a href="https://vk.com/sidreriya_bel" target="_blank"><i class="fa fa-vk"></i></a>
-						<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
 
@@ -209,4 +197,21 @@
 {% endblock %}
 
 {% block magnific_popup %}
+{% endblock %}
+
+{% block social %}
+<div class="section-footer-top">
+	<div class="row">
+		<div class="col-sm-12 col-md-12">
+			<div class="footer-social">
+				<div class="social">
+					<label>Наши соцсети</label>
+					<a href="https://www.facebook.com/sidreriyabel"><i class="fa fa-facebook" target="_blank"></i></a>
+					<a href="https://vk.com/sidreriya_bel" target="_blank"><i class="fa fa-vk"></i></a>
+					<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}

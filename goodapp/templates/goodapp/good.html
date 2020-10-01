@@ -6,14 +6,17 @@
 
 {% block title %}{% if good.meta_name %}{{ good.meta_name }}{% else %}{{ good.name }}{% if good.name_en %} / {{ good.name_en }}{% endif %}{% endif %}. Гастробар Сидрерия.{% endblock %}
 
+{% block social %}
+{% endblock %}
+
 
 {% block content %}
 <div class="main-container left-sidebar">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
 			<a href="{% url 'show_index' %}">На главную</a>
-			<a href="{% url 'show_catalog' %}">Каталог</a>
-			{{ good.name_en }}
+			<a href="{% url 'show_category' slug=good.category.slug %}">{{ good.category }}</a>
+			<a href="{% url 'show_good'  slug=good.slug %}">{{ good.name }} {% if good.name_en %} / {{ good.name_en }}{% endif %}</a>
 		</nav>
 		<div class="row">
 			<div class="col-sm-12 col-md-12 main-content">
@@ -23,7 +26,7 @@
 							<div class="images kt-images">
 								<div class="kt-main-image">
 									{% if main_pictures.images %}
-									<a class="zoom" href="{{ main_pictures.images.url }}"><img src="{{ main_pictures.images.url }}" alt=""></a>
+									<a class="zoom" href="{{ main_pictures.images.url }}"><img src="{{ main_pictures.images.url }}" alt="{{ good.name }} {% if good.name_en %} / {{ good.name_en }}{% endif %}"></a>
 									{% else %}
 									<a class="zoom" href="{% static 'images/products/no-photo.png' %}">
 										<img src="{% static 'images/products/no-photo.png' %}" alt=""/>
@@ -166,34 +169,66 @@
 					</div>
 					{% endif %}	
 				</div> 
-
-				<!-- <div class="related products">	
+				{% if upsell_products %}
+				<div class="related products">	
 					<div class="heading-section text-center">
-						<h3 class="title">UPSELL Products</h3>
+						<h3 class="title">Сопутствующие товары</h3>
 					</div>
 					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="10" data-responsive='{"0":{"items":"1"},"768":{"items":"2"},"992":{"items":"3"}, "1222":{"items":"4"}}'>
+						{% for item in upsell_products %}
 						<li class="product-item">
 							<div class="product-inner">
 								<div class="thumb has-second-image">
-									<a href="#">
-										<img src="{% static 'images/products/no-photo.png' %}" alt="">
+									<a href="{% url 'show_good' slug=item.good.slug %}">
+										{% if item.image %}
+											<img src="{{ item.image.images.url }}" alt="">
+											{% else %}
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}">
+										{% endif %}
 									</a>
+									<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+									</form>
 									<div class="group-button">
-										<a class="wishlist" href="#">Wishlist</a>
-										<a class="button add_to_cart_button" href="#">Add to cart</a>
+										{% if item.good.quantity >= 1 %}
+										{% if item.good.in_barrel %}
+										{% if item.good in barrels %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+										{% endif %}
+										{% else %}
+										<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+										{% endif %}
+										{% endif %}
 									</div>
 									<div class="flash">
-										<span class="new">New</span>
-									</div>
+										{% if not item.good.quantity %}
+										<span class="sale">Все выпили</span>
+										{% endif %}
+										{% if item.good.in_barrel %}
+										<span class="new">Розлив</span>
+										{% endif %}
+									</div>	
 								</div>
 								<div class="info">
-									<h3 class="product-name short"><a href="#">Stockholm Chair high Mosta gruancy</a></h3>
-									<span class="price">$75.00</span>
+									<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
+									{% if item.good.price %}
+										{% if item.good.old_price %}
+											&#8381 {{ item.good.old_price }}</del></span>
+										{% else %}
+										<span class="price">&#8381 {{ item.good.price }}</span>
+										{% endif %}
+									{% else %}
+										<span class="price">&#8381 0</span>
+									{% endif %}
 								</div>
 							</div>
 						</li>
+						{% endfor %}
+
 					</ul>
-				</div> -->
+				</div>
+				{% endif %}
 
 			</div>
 		</div>

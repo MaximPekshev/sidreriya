@@ -76,10 +76,14 @@ class GoodAdmin(admin.ModelAdmin):
 		if db_field.name == "category":
 			kwargs["queryset"] = Category.objects.all()
 			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+		
 
+	def formfield_for_manytomany(self, db_field, request, **kwargs):
+		
 		if db_field.name == "upsell_products":
-			kwargs["queryset"] = Good.objects.all()
-			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)	
+			kwargs["queryset"] = Good.objects.filter(is_active=True).order_by('name')
+			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 	def image(self, obj):
 

@@ -2,6 +2,9 @@
 
 {% load static %}
 
+{% block social %}
+{% endblock %}
+
 {% block content %}
 <div class="main-container {% if not subcategories %} left-sidebar {% endif %} {% if filters %} left-sidebar {% endif %}">
 	<div class="container">
@@ -52,7 +55,6 @@
 				<div class="shop-page-bar">
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
-						<a href="{% url 'show_catalog' %}">Каталог</a>
 						{% if category %}
 						<a href="{% url 'show_category' slug=category.slug %}">{{ category.name }}</a>
 						{% endif %}
@@ -100,9 +102,9 @@
 									<div class="thumb has-second-image">
 										<a href="{% url 'show_good' slug=item.good.slug %}">
 											{% if item.image %}
-											<img src="{{ item.image.images.url }}" alt="">
+											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 											{% else %}
-											<img src="{% static 'images/products/no-photo.png' %}" alt="">
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 											{% endif %}
 										</a>
 									</div>

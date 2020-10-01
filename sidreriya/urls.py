@@ -11,6 +11,7 @@ urlpatterns = [
     path('order/'       , include('orderapp.urls')),
     path('wishlist/'    , include('wishlistapp.urls')),
     # path('API/'    		, include('API.urls')),
+    # path('ajax_select/', include('ajax_select_urls')),
     path('admin/'		, admin.site.urls),
 
 ]
