@@ -55,6 +55,9 @@
 				<div class="shop-page-bar">
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
+						{% if not filters_a and not subcategories %}
+						<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
+						{% endif %}
 						{% if category %}
 						<a href="{% url 'show_category' slug=category.slug %}">{{ category.name }}</a>
 						{% endif %}

@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from .models import Good, Picture
 from .models import Properties, Property_value
 from .models import Object_property_values
-from .models import Manufacturer, Category, In_Barrels
+from .models import Manufacturer, Category, In_Barrels, Set_Lunch
 
 
 class Object_property_valuesInlineForm(forms.ModelForm):
@@ -155,3 +155,11 @@ class In_BarrelsAdmin(admin.ModelAdmin):
 		return super(In_BarrelsAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 	
 admin.site.register(In_Barrels, In_BarrelsAdmin)
+
+class Set_LunchAdmin(admin.ModelAdmin):
+	list_display = (
+					'date',
+					'image',
+					)
+	
+admin.site.register(Set_Lunch, Set_LunchAdmin)

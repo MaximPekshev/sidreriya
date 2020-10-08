@@ -51,6 +51,7 @@
 						<thead>
 							<tr>
 								<th class="product-name">Товар</th>
+								<th class="product-name">Цена</th>
 								<th class="product-name">Кол-во</th>
 								<th class="product-total">Сумма</th>
 							</tr>
@@ -59,6 +60,7 @@
 							{% for item in order_items %}
 							<tr>
 								<td class="product-name">{{ item.good }} </td>
+								<td class="product-name">{{ item.price }} </td>
 								<td class="product-total">{{ item.quantity }}</td>
 								<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
 							</tr>
@@ -67,6 +69,7 @@
 						<tfoot>
 							<tr class="order-total">
 								<th>Итого</th>
+								<td></td>
 								<td></td>
 								<td><strong><span class="amount">&#8381 {{ order.summ }}</span></strong></td>
 							</tr>

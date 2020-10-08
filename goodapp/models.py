@@ -226,10 +226,28 @@ class Object_property_values(models.Model):
 
 class In_Barrels(models.Model):
 
-	good					= models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+	good	= models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
 
 	class Meta:
 		
 		verbose_name = 'Сидр в бочках'
 		verbose_name_plural = 'Сидры в бочках'
 	
+
+
+def get_image_name_without_slug(instance, filename):
+	
+	new_name = ('%s' + '.' + filename.split('.')[-1]) % instance.date
+	return new_name
+
+
+class Set_Lunch(models.Model):
+
+	title 	= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
+	date	= models.DateField(unique=True ,auto_now=False, auto_now_add=False)
+	image	= models.ImageField(upload_to=get_image_name_without_slug, verbose_name='Изображение', default=None)
+
+	class Meta:
+		
+		verbose_name = 'Комплексный обед'
+		verbose_name_plural = 'Комплексные обеды'

@@ -3,6 +3,7 @@ from .models import Order, Order_Item
 from authapp.models import Buyer
 from cartapp.views import get_cart
 from cartapp.models import Cart, Cart_Item
+from goodapp.models import Good
 import django.core.exceptions
 from authapp.forms import BuyerSaveForm
 from goodapp.views import get_in_barrels
@@ -18,6 +19,8 @@ from wishlistapp.views import get_wishlist
 from wishlistapp.models import Wishlist, Wishlist_Item
 
 from decouple import config
+
+from decimal import Decimal
 
 def show_orders(request):
 
@@ -77,6 +80,7 @@ def order_add(request):
 			input_cook_time = buyer_form.cleaned_data['input_cook_time']
 			input_time 		= buyer_form.cleaned_data['input_time']
 			input_email 	= buyer_form.cleaned_data['input_email']
+			quantity 		= buyer_form.cleaned_data['quantity']
 
 			if street:
 				address =  "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(locality, street, house, apartments, porch, floor)
@@ -140,35 +144,52 @@ def order_add(request):
 					)
 
 			new_order.save()
-			
-			cart_items = Cart_Item.objects.filter(cart=get_cart(request))
 
-			for item in cart_items:
+			if quantity:
+
+				set_lunch_good = Good.objects.filter(name="Комплексный обед").first()
 
 				order_item = Order_Item(
 
 					order = new_order,
-					good = item.good,
-					quantity = item.quantity,
-					price = item.price,
-					summ = item.summ,
+					good = set_lunch_good,
+					quantity = Decimal(quantity),
+					price = set_lunch_good.price,
+					summ = set_lunch_good.price*Decimal(quantity),
 
 					)
 				order_item.save()
 
-			cart_to_clear = get_cart(request)
 
-			cart_items_to_delete = Cart_Item.objects.filter(cart=cart_to_clear)
+			else:	
+				cart_items = Cart_Item.objects.filter(cart=get_cart(request))
 
-			for item in cart_items_to_delete:
+				for item in cart_items:
 
-				item.delete()
+					order_item = Order_Item(
 
-			cart_to_clear.summ = 0	
-			cart_to_clear.save()	
+						order = new_order,
+						good = item.good,
+						quantity = item.quantity,
+						price = item.price,
+						summ = item.summ,
 
-			send_mail_to_buyer(new_order, input_email)
-			send_mail_on_bar(new_order)
+						)
+					order_item.save()
+
+				cart_to_clear = get_cart(request)
+
+				cart_items_to_delete = Cart_Item.objects.filter(cart=cart_to_clear)
+
+				for item in cart_items_to_delete:
+
+					item.delete()
+
+				cart_to_clear.summ = 0	
+				cart_to_clear.save()	
+
+			# send_mail_to_buyer(new_order, input_email)
+			# send_mail_on_bar(new_order)
 
 			context = {
 

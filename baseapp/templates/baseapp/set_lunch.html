@@ -1,0 +1,192 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block meta_description %}От 4-х обедов привезём бесплатно. За полный обед с салатом и напитком просим 250 Р. с 11:00 до 18:00{% endblock %}
+
+{% block title %}Бесплатная доставка обедов из Сидрерии!{% endblock %}
+
+{% block social %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="main-container right-sidebar">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_set_lunch' %}">Комплексные обеды</a>
+			Сегодня в меню
+		</nav>
+		<div class="row">
+			<div class="col-sm-12 col-md-8 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-thumb">
+							<div class="images kt-images">
+								<div class="kt-main-image">
+									<a class="zoom" href="{{ set_lunch.image.url }}"><img src="{{ set_lunch.image.url }}" alt=""></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
+				<div class="inner">
+					<div class="block-form" id="accordion-as" role="tablist" aria-multiselectable="true">
+						<div class="panel" style="border-bottom-style: none;">
+							<div class="" role="tab" id="headingOne-as">
+								<a data-toggle="collapse" data-parent="#accordion-as" href="#collapseOne-as" aria-expanded="true" aria-controls="collapseOne-as">
+									<h3 class="form-heading">Доставка</h3></a>
+								</a>
+							</div>
+							<div id="collapseOne-as" class="panel-collapse collapse" role="tabpane-as" aria-labelledby="headingOne-as">
+								<form id="deliv_form" action="{% url 'order_add' %}" class="checkout" method="POST" >
+									{% csrf_token %}
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Количество</span>
+											<p><input type="text" name="quantity" value="1" title="Количество" class="input-text qty text" size="1" required></p>
+										</div>
+									</div>	
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Имя</span>
+											<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Телефон</span>
+											<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Нас. пункт</span>
+											<p><input type="text" name="input_locality" placeholder="Нас. пункт" value="{{ buyer.locality }}" required></p>
+										</div>
+										
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Улица</span>
+											<p><input type="text" name="input_street" placeholder="Улица" value="{{ buyer.street }}" required></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Дом</span>
+											<p><input type="text" name="input_house" placeholder="Дом" value="{{ buyer.house }}" required></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Квартира/Офис</span>
+											<p><input type="text" name="input_apartments" value="{{ buyer.apartments }}" placeholder="Кв."></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Подъезд</span>
+											<p><input type="text" name="input_porch" placeholder="Подъезд" value="{{ buyer.porch }}"></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Этаж</span>
+											<p><input type="text" name="input_floor" value="{{ buyer.floor }}" placeholder="Этаж"></p>
+										</div>
+									</div>
+
+									<div class="custom-control custom-radio" style="margin-left: 30px">
+										<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input"  value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
+										<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
+									</div>
+									<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
+										<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
+										<label class="custom-control-label" for="customRadio2">Выбрать время</label>
+										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
+									</div>
+
+
+									<div class="block-form-footer text-center">
+										<button form="deliv_form" class="button primary">Заказать</button>
+									</div>
+								</form>
+							</div>
+
+						</div>
+
+						<div class="panel" style="border-bottom-style: none;">
+
+							<div class="" role="tab" id="headingTwo-as">
+								<a class="collapsed" data-toggle="collapse" data-parent="#accordion-as" href="#collapseTwo-as" aria-expanded="false" aria-controls="collapseTwo-as">
+									<h3 class="form-heading">Самовывоз</h3></a>
+								</a>
+							</div>
+
+							<div id="collapseTwo-as" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo-as">
+								<form id="pickup" action="{% url 'order_add' %}" class="checkout" method="POST">
+									{% csrf_token %}
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Количество</span>
+											<p><input type="text" name="quantity" value="1" title="Количество" class="input-text qty text" size="1" required></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Имя</span>
+											<p><input type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Телефон</span>
+											<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+										</div>
+									</div>
+
+									<div class="custom-control custom-radio" style="margin-left: 30px">
+										<input type="radio" id="customRadio1_self" name="input_cook_time" class="custom-control-input" checked value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
+										<label class="custom-control-label" for="customRadio1_self">Как можно скорее</label>
+									</div>
+									<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
+										<input type="radio" id="customRadio2_self" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
+										<label class="custom-control-label" for="customRadio2_self">Выбрать время</label>
+										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
+									</div>
+
+									<div class="block-form-footer text-center">
+										<button form="pickup" class="button primary">Заказать</button>
+									</div>
+
+								</form>
+							</div>
+
+						</div>
+
+					</div>
+
+					<p style="margin-left: 20px;">
+						Совершая заказ вы соглашаетесь с <a href="{% url 'show_delivery' %}">условиями  доставки</a>.<br> 
+					</p>
+					<p style="margin-left: 20px;">	
+						Обеденное время:<br> Пн-Пт : 11:00/18:00
+					</p>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

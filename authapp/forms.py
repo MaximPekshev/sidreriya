@@ -14,3 +14,4 @@ class BuyerSaveForm(forms.Form):
 	input_cook_time  	= forms.CharField(max_length = 10, required=False)
 	input_time  		= forms.TimeField(required=False)
 	input_email  		= forms.CharField(max_length = 30, required=False)
+	quantity  			= forms.CharField(max_length = 5, required=False)
