@@ -186,9 +186,10 @@ def order_add(request):
 					item.delete()
 
 				cart_to_clear.summ = 0	
-				cart_to_clear.save()	
-
-			send_mail_to_buyer(new_order, input_email)
+				cart_to_clear.save()
+				
+		        send_mail_to_buyer(new_order, input_email)
+		        
 			send_mail_on_bar(new_order)
 
 			context = {
