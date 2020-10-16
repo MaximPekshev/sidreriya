@@ -65,6 +65,8 @@ class GoodAdmin(admin.ModelAdmin):
 
 	actions = ["export_as_csv"]
 
+	search_fields = ('name', 'name_en', )
+
 	exclude = ('slug', 'cpu_slug')
 
 	def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -132,6 +134,8 @@ class ManufacturerAdmin(admin.ModelAdmin):
 	
 	exclude = ('slug', 'cpu_slug')
 
+	search_fields = ('name', 'name_en', )
+
 admin.site.register(Manufacturer, ManufacturerAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -141,6 +145,8 @@ class CategoryAdmin(admin.ModelAdmin):
 					)
 	
 	exclude = ('slug', 'cpu_slug')
+
+	search_fields = ('name', )
 
 admin.site.register(Category, CategoryAdmin)
 

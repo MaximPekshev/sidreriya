@@ -30,7 +30,11 @@
 						<div class="post-thumb">
 							<div class="images kt-images">
 								<div class="kt-main-image">
+									{% if set_lunch.image %}
 									<a class="zoom" href="{{ set_lunch.image.url }}"><img src="{{ set_lunch.image.url }}" alt=""></a>
+									{% else %}
+									<a class="zoom" href="{% static 'images/banners/set_lunch_default.png' %}"><img src="{% static 'images/banners/set_lunch_default.png' %}" alt=""></a>
+									{% endif %}
 								</div>
 							</div>
 						</div>
