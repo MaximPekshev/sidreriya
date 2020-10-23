@@ -125,29 +125,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-	<div class="kt_home_slide slide-home2 slide-home3 nav-center nav-style1 margin-top-30" data-nav="true" data-items="1" data-autoplay="true" data-loop="true" data-animateout="fadeOut" data-animatein="fadeIn">
-
-		<div class="item-slide">
-			<img src="{% static 'images/banners/home.jpg' %}" alt="" style="filter: blur(2px);">
-			<div  class="content-slide">
-				<span data-animate="fadeInDown" class="caption subtitle">акции при самовывозе</span>
-				<h1 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h1>
-				<a data-animate="fadeInDown"  class="caption link merriweather" href="{% url 'show_delivery' %}">Подробнее...</a>
+<!-- Home slide-->
+<div class="kt_home_slide slide-home2 slide-home3 nav-center nav-style1" data-nav="true"  data-autoplay="true" data-loop="true" data-responsive='{"0":{"items":"1","nav":false},"768":{"items":"1","nav":false},"992":{"items":"1"}}'>
+	<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner.jpg' %}" data-height="543"  data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+		<div class="content-slide">
+			<div class="container container-slide">
+				<div class="inner">
+					<span data-animate="fadeInDown" class="caption subtitle">акции при самовывозе</span>
+					<h2 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h2>
+					<a data-animate="fadeInDown" class="caption link" href="{% url 'show_delivery' %}">Подробнее...</a>
+				</div>
 			</div>
 		</div>
-
-		<div class="item-slide">
-			<img src="{% static 'images/banners/obedy.png' %}" alt="">
-			<div class="content-slide">
-				<span data-animate="fadeInDown" class="caption subtitle">Бесплатная доставка обедов из Сидрерии!</span>
-				<h1 data-animate="zoomIn" class="caption title">От 4-х обедов привезём бесплатно</h1>
-				<a data-animate="fadeInDown"  class="caption link merriweather" href="{% url 'show_promo' %}">Подробнее...</a>
+	</div>
+	<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner2.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+		<div class="content-slide">
+			<div class="container container-slide">
+				<div class="inner">
+					<span data-animate="fadeInDown" class="caption subtitle">бесплатная доставка обедов из Сидрерии!</span>
+					<h2 data-animate="zoomIn" class="caption title">От 4-х обедов<br>привезём<br>БЕСПЛАТНО</h2>
+					<a data-animate="fadeInDown" class="caption link" href="{% url 'show_promo' %}">Подробнее...</a>
+				</div>
 			</div>
 		</div>
-		
 	</div>
 </div>
+<!-- Banner -->
 {% if bestsellers %}
 <!-- Tab product -->
 <div class="margin-top-30">

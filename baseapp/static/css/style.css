@@ -8311,6 +8311,11 @@ HOME SLIDER
     margin: 0;
     font-size: 30px;
 }
+
+.slide-home2 .item-slide {
+    backdrop-filter: blur(10px); 
+}
+
 .slide-home2 .content-slide .title{
     font-family: 'Bebas';
     font-size: 80px;
@@ -8331,7 +8336,7 @@ HOME SLIDER
     right: 0;
     left: 0;
     padding: 0;
-    text-align: center;
+    text-align: right;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     -o-transform: translateY(-50%);
@@ -8366,6 +8371,7 @@ HOME SLIDER
     float: right;
     padding-right: 110px;
 }
+
 
 .slide-home4 .subtitle{
     font-size: 18px;
@@ -9497,16 +9503,26 @@ RESPONSIVE
        left: 15px;
        right: 15px;
     }
+
+    .slide-home3 .content-slide{
+        text-align: center;
+    }
+
+    .slide-home3 .inner{
+        background: rgba(0,0,0,.2);
+        backdrop-filter: grayscale(1) contrast(1) blur(1px);
+    }
+
     .slide-home2 .content-slide .subtitle{
-        font-size: 18px;
+        font-size: 25px;
     }
     .slide-home2 .content-slide .title{
         font-family: 'Bebas';
-        font-size: 30px;
+        font-size: 40px;
     }    
 
     .slide-home2 .content-slide .link{
-        font-size: 15px;    
+        font-size: 25px;
     }
     .footer .coppyright{
         text-align: center;
