@@ -11,6 +11,10 @@ from .models import Good, Picture
 from .models import Properties, Property_value
 from .models import Object_property_values
 from .models import Manufacturer, Category, In_Barrels, Set_Lunch
+from .models import Bestseller
+
+# from ajax_select.admin import AjaxSelectAdmin
+# from ajax_select import make_ajax_form
 
 
 class Object_property_valuesInlineForm(forms.ModelForm):
@@ -169,3 +173,17 @@ class Set_LunchAdmin(admin.ModelAdmin):
 					)
 	
 admin.site.register(Set_Lunch, Set_LunchAdmin)
+
+class BestsellerAdmin(admin.ModelAdmin):
+	list_display = (
+					'good',
+					)
+
+	exclude = ('name',)
+
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		if db_field.name == "good":
+			kwargs["queryset"] = Good.objects.filter( is_active=True).order_by('name')
+		return super(BestsellerAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+	
+admin.site.register(Bestseller, BestsellerAdmin)

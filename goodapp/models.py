@@ -29,6 +29,8 @@ class Good(models.Model):
 
 	is_active			= models.BooleanField(verbose_name='Активен', default=False)
 
+	is_cidre			= models.BooleanField(verbose_name='Сидр', default=False)
+
 	quantity			= models.DecimalField(verbose_name='Остаток', max_digits=15, decimal_places=0, blank=True, null=True)
 	weight				= models.CharField(max_length = 36, verbose_name='Вес', blank=True, null=True, default='')
 	
@@ -251,3 +253,21 @@ class Set_Lunch(models.Model):
 		
 		verbose_name = 'Комплексный обед'
 		verbose_name_plural = 'Комплексные обеды'
+
+
+class Bestseller(models.Model):
+
+	name 	= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
+	good	= models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+
+
+	def save(self, *args, **kwargs):
+		
+		self.name = self.good.name
+
+		super(Bestseller, self).save(*args, **kwargs)
+
+	class Meta:
+		
+		verbose_name = 'Хит продаж'
+		verbose_name_plural = 'Хиты продаж'		

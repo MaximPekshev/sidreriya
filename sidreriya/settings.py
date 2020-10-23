@@ -88,6 +88,10 @@ DATABASES = {
     }
 }
 
+# Django-Ajax-Selects
+# AJAX_LOOKUP_CHANNELS = {
+#     'postal_code': {'model': 'places.PostalCode', 'search_field': 'code'}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

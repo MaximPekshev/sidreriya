@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from goodapp.models import Category, In_Barrels, Picture, Set_Lunch
+from goodapp.models import Bestseller
 from cartapp.models import Cart, Cart_Item
 from wishlistapp.models import Wishlist, Wishlist_Item
 from cartapp.views import get_cart
 from wishlistapp.views import get_wishlist
 from goodapp.views import Item, get_in_barrels
+from goodapp.views import get_items_with_pictures
 from django.db.models import Sum
 
 import datetime
@@ -13,12 +15,19 @@ from authapp.models import Buyer
 
 def show_index(request):
 
+	bestsellsers = []
+
+	for good in Bestseller.objects.all():
+		bestsellsers.append(good.good)
+
+
 	context = {
 
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
+		'bestsellers' : get_items_with_pictures(bestsellsers),
 
 	}
 

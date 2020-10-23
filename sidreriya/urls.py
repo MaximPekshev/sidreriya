@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from ajax_select import urls as ajax_select_urls
+# from ajax_select import urls as ajax_select_urls
+
+admin.autodiscover()
 
 urlpatterns = [
 	path(''		 		, include('baseapp.urls')),
@@ -11,7 +13,7 @@ urlpatterns = [
     path('order/'       , include('orderapp.urls')),
     path('wishlist/'    , include('wishlistapp.urls')),
     # path('API/'    		, include('API.urls')),
-    # path('ajax_select/', include('ajax_select_urls')),
+    # path('ajax_select/', include(ajax_select_urls)),
     path('admin/'		, admin.site.urls),
 
 ]

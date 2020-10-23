@@ -148,6 +148,139 @@
 		
 	</div>
 </div>
+{% if bestsellers %}
+<!-- Tab product -->
+<div class="margin-top-30">
+	<div class="container">
+		<div class="kt-tabs style1 kt-tab-fadeeffect">
+			<div class="tab-head">
+				<h3 class="tab-title">РЕКОМЕНДУЕМ</h3>
+				<ul class="nav-tab">
+					<li class="active"><a data-animated="fadeInUp" data-toggle="tab" href="#tab-3">СИДР</a></li>
+					<li ><a data-animated="fadeInUp" data-toggle="tab" href="#tab-4">ЕДА</a></li>
+				</ul>
+			</div>
+			<div class="tab-container">
+				<div id="tab-3" class="tab-panel active">
+					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":1},"480":{"items":2},"768":{"items":3},"1000":{"items":4}}'>
+						{% for item in bestsellers %}
+						{% if item.good.is_cidre %}
+						<li class="product-item style3">
+							<div class="product-inner">
+								<div class="thumb">
+									<a href="{% url 'show_good' slug=item.good.slug %}">
+										{% if item.image %}
+											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% else %}
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% endif %}
+									</a>
+									<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+									</form>
+									<div class="group-button">
+										{% if item.good.quantity >= 1 %}
+										{% if item.good.in_barrel %}
+										{% if item.good in barrels %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+										{% endif %}
+										{% else %}
+										<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+										{% endif %}
+										{% endif %}
+									</div>
+									<div class="flash">
+										{% if not item.good.quantity %}
+										<span class="sale">Все выпили</span>
+										{% endif %}
+										{% if item.good.in_barrel %}
+										<span class="new">Розлив</span>
+										{% endif %}
+									</div>
+								<div class="info">
+									<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
+									{% if item.good.price %}
+										{% if item.good.old_price %}
+										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
+										{% else %}
+										<span class="price">{{ item.good.price }}</span>
+										{% endif %}
+									{% else %}
+									<span class="price">&#8381 0</span>
+									{% endif %}
+								</div>
+							</div>
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+				<div id="tab-4" class="tab-panel">
+					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":1},"480":{"items":2},"768":{"items":3},"1000":{"items":4}}'>
+
+
+						{% for item in bestsellers %}
+						{% if not item.good.is_cidre %}
+						<li class="product-item style3">
+							<div class="product-inner">
+								<div class="thumb">
+									<a href="{% url 'show_good' slug=item.good.slug %}">
+										{% if item.image %}
+											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% else %}
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% endif %}
+									</a>
+									<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+									</form>
+									<div class="group-button">
+										{% if item.good.quantity >= 1 %}
+										{% if item.good.in_barrel %}
+										{% if item.good in barrels %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+										{% endif %}
+										{% else %}
+										<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+										{% endif %}
+										{% endif %}
+									</div>
+									<div class="flash">
+										{% if not item.good.quantity %}
+										<span class="sale">Все выпили</span>
+										{% endif %}
+										{% if item.good.in_barrel %}
+										<span class="new">Розлив</span>
+										{% endif %}
+									</div>
+								<div class="info">
+									<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
+									{% if item.good.price %}
+										{% if item.good.old_price %}
+										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
+										{% else %}
+										<span class="price">{{ item.good.price }}</span>
+										{% endif %}
+									{% else %}
+									<span class="price">&#8381 0</span>
+									{% endif %}
+								</div>
+							</div>
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Tab product -->
+{% endif %}
+
+
 
 <div class="section-banner">
 	<div class="container">
