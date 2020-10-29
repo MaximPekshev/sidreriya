@@ -15,3 +15,4 @@ class BuyerSaveForm(forms.Form):
 	input_time  		= forms.TimeField(required=False)
 	input_email  		= forms.CharField(max_length = 30, required=False)
 	quantity  			= forms.CharField(max_length = 5, required=False)
+	comment  			= forms.CharField(max_length = 250, required=False)

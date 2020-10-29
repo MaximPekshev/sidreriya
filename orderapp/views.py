@@ -81,6 +81,7 @@ def order_add(request):
 			input_time 		= buyer_form.cleaned_data['input_time']
 			input_email 	= buyer_form.cleaned_data['input_email']
 			quantity 		= buyer_form.cleaned_data['quantity']
+			comment 		= buyer_form.cleaned_data['comment']
 
 			if street:
 				address =  "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(locality, street, house, apartments, porch, floor)
@@ -130,6 +131,7 @@ def order_add(request):
 					email = input_email,
 					address = address,
 					cook_time= "{}".format(str(input_time) if input_cook_time=="by_time" else "Как можно скорее"),
+					comment=comment,
 						)
 
 			else:
@@ -141,6 +143,7 @@ def order_add(request):
 					address = address,
 					email = input_email,
 					cook_time= "{}".format(str(input_time) if input_cook_time=="by_time" else "Как можно скорее"),
+					comment=comment,
 					)
 
 			new_order.save()
@@ -308,8 +311,8 @@ def send_mail_on_bar(order):
 
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
-	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
-	# receiver_email = ['m.pekshev@annasoft.ru',]
+	# receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
+	receiver_email = ['m.pekshev@annasoft.ru',]
 	password = config('MAIL_PASSWORD')
 
 	message = MIMEMultipart("alternative")
@@ -344,6 +347,8 @@ def send_mail_on_bar(order):
 	        <p>Email: {8}</p>
 	        <p>Адрес доставки: {2}</p>
 	        <p>Время приготовления: {3}</p>
+	        <p></p>
+	        <p>Комментарий покупателя:<br> {9}</p>
 	        
 			<table style="max-width:600px; width:100%; margin:0; padding:0;" border="0" cellpadding="0">
 				<thead>
@@ -369,7 +374,7 @@ def send_mail_on_bar(order):
 			</div>
 	      </body>
 	    </html>
-	    """.format(order.order_number, order.phone, order.address, order.cook_time, order_items, order.summ, order.first_name, order.last_name, order.email)
+	    """.format(order.order_number, order.phone, order.address, order.cook_time, order_items, order.summ, order.first_name, order.last_name, order.email, order.comment)
 
 	part1 = MIMEText(text, "plain")
 	part2 = MIMEText(html, "html")

@@ -44,13 +44,14 @@
 			<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
 				<div class="inner">
 					<div class="block-form" id="accordion-as" role="tablist" aria-multiselectable="true">
+
 						<div class="panel" style="border-bottom-style: none;">
 							<div class="" role="tab" id="headingOne-as">
-								<a data-toggle="collapse" data-parent="#accordion-as" href="#collapseOne-as" aria-expanded="true" aria-controls="collapseOne-as">
-									<h3 class="form-heading">Доставка</h3></a>
+								<a class="" data-toggle="collapse" data-parent="#accordion-as" href="#collapseOne-as" aria-controls="collapseOne-as" aria-expanded="true">
+									<h3 class="form-heading">Заказать доставку</h3></a>
 								</a>
 							</div>
-							<div id="collapseOne-as" class="panel-collapse collapse" role="tabpane-as" aria-labelledby="headingOne-as">
+							<div id="collapseOne-as" class="collapse" role="tabpanel" aria-labelledby="headingOne-as">
 								<form id="deliv_form" action="{% url 'order_add' %}" class="checkout" method="POST" >
 									{% csrf_token %}
 									<div class="row">
@@ -58,7 +59,13 @@
 											<span>Количество</span>
 											<p><input type="text" name="quantity" value="1" title="Количество" class="input-text qty text" size="1" required></p>
 										</div>
-									</div>	
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Комментарий</span>
+											<p><textarea style="width: 100%; resize: both;" type="text" name="comment" placeholder="Ваши пожелания к заказу" title="Комментарий" class="input-text qty text" rows="4"></textarea></p>
+										</div>
+									</div>
 									<div class="row">
 										<div class="col-sm-12">
 											<span>Имя</span>
@@ -127,18 +134,24 @@
 						<div class="panel" style="border-bottom-style: none;">
 
 							<div class="" role="tab" id="headingTwo-as">
-								<a class="collapsed" data-toggle="collapse" data-parent="#accordion-as" href="#collapseTwo-as" aria-expanded="false" aria-controls="collapseTwo-as">
-									<h3 class="form-heading">Самовывоз</h3></a>
+								<a class="collapsed" data-toggle="collapse" data-parent="#accordion-as" href="#collapseTwo-as"  aria-controls="collapseTwo-as" aria-expanded="false">
+									<h3 class="form-heading">Заказать самовывоз</h3></a>
 								</a>
 							</div>
 
-							<div id="collapseTwo-as" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo-as">
+							<div id="collapseTwo-as" class="collapsed" role="tabpanel" aria-labelledby="headingTwo-as">
 								<form id="pickup" action="{% url 'order_add' %}" class="checkout" method="POST">
 									{% csrf_token %}
 									<div class="row">
 										<div class="col-sm-12">
 											<span>Количество</span>
 											<p><input type="text" name="quantity" value="1" title="Количество" class="input-text qty text" size="1" required></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<span>Комментарий</span>
+											<textarea style="resize: none;" type="text" name="comment" placeholder="Ваши пожелания к заказу" title="Комментарий" class="input-text qty text" rows="4" cols="27"></textarea>
 										</div>
 									</div>
 									<div class="row">
@@ -174,6 +187,9 @@
 						</div>
 
 					</div>
+					<p style="margin-left: 20px;">
+						- От 3-х обедов привезём БЕСПЛАТНО!
+					</p>
 
 					<p style="margin-left: 20px;">
 						Совершая заказ вы соглашаетесь с <a href="{% url 'show_delivery' %}">условиями  доставки</a>.<br> 

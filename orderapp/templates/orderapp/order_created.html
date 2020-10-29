@@ -46,6 +46,9 @@
 					<p>	
 						Время приготовления: {% if order.cook_time %}{{ order.cook_time }}{% else %} Время приготовления не выбрано{% endif %}
 					</p>
+					<p>	
+						Ваши пожелания к заказу:<br> {% if order.comment %}{{ order.comment|linebreaksbr }}{% else %}{% endif %}
+					</p>
 
 					<table class="shop_table">
 						<thead>
