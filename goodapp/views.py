@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Good, Picture, Object_property_values, Properties, Property_value
-from .models import Category, Manufacturer, In_Barrels
+from .models import Category, Manufacturer, In_Barrels, Bestseller
 
 from django.http import HttpResponse
 
@@ -19,37 +19,6 @@ from rest_framework.views import APIView
 from .serializers import GoodSerializer
 
 from filterapp.models import PropertiesFilter
-
-# from django.core.exceptions import ObjectDoesNotExis
-
-
-
-# def get_goods_of_object_property_values(property_values, goods_table):
-
-# 	f_goods = []
-
-# 	for pv in property_values:
-
-# 		for opv in Object_property_values.objects.filter(property_value=pv):
-
-# 			if opv.good.is_active == True and (opv.good in goods_table):
-
-# 				f_goods.append(opv.good)
-
-# 	return f_goods
-
-
-# def get_goods_of_single_object_property_value(property_value, goods_table):
-
-# 	f_goods = []
-
-# 	for opv in Object_property_values.objects.filter(property_value=property_value):
-
-# 		if opv.good.is_active == True and (opv.good in goods_table):
-
-# 			f_goods.append(opv.good)
-
-# 	return f_goods
 
 def get_goods_of_object_property_values(property_values, goods_table):
 
@@ -208,6 +177,15 @@ def get_items_with_pictures(goods):
 	return table	
 
 
+def query_set_to_list(q_set):
+	
+	my_list = []
+
+	for item in q_set:
+		my_list.append(item.good)
+
+	return my_list	
+
 
 def show_catalog(request):
 
@@ -237,28 +215,27 @@ def show_catalog(request):
 	else:
 		next_url = ''			
 
-	wishlist = []
-	for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-		wishlist.append(item.good)
+	current_wishlist = get_wishlist(request)
 
-	barrels = []
-	for item in In_Barrels.objects.all():
-		barrels.append(item.good)
+	wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+	barrels = query_set_to_list(In_Barrels.objects.all())
+
+	current_cart = 	get_cart_(request)
+
 
 	template_name = 'goodapp/catalog.html'
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
-		'cart': get_cart_(request),
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'cart': current_cart,
+		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'barrels': barrels,
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 		'filters_a' : get_filters_a(goods),
+		'bestsellers' : get_items_with_pictures(query_set_to_list(Bestseller.objects.all().order_by('?'))),
 	}
 	
-
-
 	return render(request, template_name, context)
 
 
@@ -285,7 +262,6 @@ def show_good(request, slug):
 
 
 	opv = Object_property_values.objects.filter(good=good)
-	is_cidre = False
 	# Страна
 	country = get_object_property_value(opv, '728193372')
 	# Крепость
@@ -303,17 +279,12 @@ def show_good(request, slug):
 	# Что внутри?
 	inside = get_object_property_value(opv, '552212307')
 
-	if country or strength or sugar or volume or gas or pasteuriz or filtration or inside:
-		is_cidre = True
+	current_wishlist = 	get_wishlist(request)
 
+	wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+	barrels = query_set_to_list(In_Barrels.objects.all())
 
-	wishlist = []
-	for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-		wishlist.append(item.good)
-
-	barrels = []
-	for item in In_Barrels.objects.all():
-		barrels.append(item.good)
+	current_cart = get_cart_(request)
 
 	template_name = 'goodapp/good.html'
 
@@ -329,40 +300,41 @@ def show_good(request, slug):
 		'pasteuriz':pasteuriz,
 		'filtration':filtration,
 		'inside': inside,
-		'is_cidre': is_cidre,
-		'cart': get_cart_(request),
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'is_cidre': good.is_cidre,
+		'cart': current_cart,
+		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'barrels': barrels,
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 
 	}
 	return render(request, template_name, context)
 
-def show_category(request, slug):
+def show_category(request, cpu_slug):
 
-	if slug == '4127154760':
+	if cpu_slug == 'eda':
 
 		try:
-			category = Category.objects.get(slug=slug)
+			category = Category.objects.get(cpu_slug=cpu_slug)
 		except:
 			category = None
 
 		subcategories = Category.objects.filter(parent_category=category).order_by('rank')
 
-		wishlist = []
-		for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-			wishlist.append(item.good)
+		current_wishlist = 	get_wishlist(request)
+
+		wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+		current_cart = get_cart_(request)
 
 		template_name = 'goodapp/catalog.html'
 
 		context = {
 			'subcategories': subcategories, 'category': category,
-			'cart': get_cart_(request),
-			'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+			'cart': current_cart,
+			'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 			'in_bar': get_in_barrels(),
-			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 			'wishlist' : wishlist,
 
 		}
@@ -372,7 +344,7 @@ def show_category(request, slug):
 		goods_count=18
 
 		try:
-			category = Category.objects.get(slug=slug)
+			category = Category.objects.get(cpu_slug=cpu_slug)
 		except:
 			category = None	
 
@@ -380,8 +352,10 @@ def show_category(request, slug):
 
 		if category.name == 'Сидр':
 			filters_a = get_filters_a(goods)
+			bestsellers = get_items_with_pictures(query_set_to_list(Bestseller.objects.all().order_by('?')))
 		else:
 			filters_a = None
+			bestsellers = None
 		
 		table = get_items_with_pictures(goods)
 
@@ -404,37 +378,37 @@ def show_category(request, slug):
 		else:
 			next_url = ''			
 
-		wishlist = []
-		for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-			wishlist.append(item.good)
+		current_wishlist = 	get_wishlist(request)
 
-		barrels = []
-		for item in In_Barrels.objects.all():
-			barrels.append(item.good)	
+		wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+		barrels = query_set_to_list(In_Barrels.objects.all())
 
+		current_cart = get_cart_(request)
 
 		template_name = 'goodapp/catalog.html'
+
 		context = {
 			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 			'category': category,
-			'cart': get_cart_(request),
-			'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+			'cart': current_cart,
+			'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 			'in_bar': get_in_barrels(),
 			'barrels': barrels,
-			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 			'wishlist' : wishlist,
 			'filters_a' : filters_a,
+			'bestsellers' : bestsellers,
 		}
 
 	return render(request, template_name, context)
 
 
-def show_manufacturer(request, slug):
+def show_manufacturer(request, cpu_slug):
 
 	goods_count=18
 
 	try:
-		manufacturer = Manufacturer.objects.get(slug=slug)
+		manufacturer = Manufacturer.objects.get(cpu_slug=cpu_slug)
 	except:
 		manufacturer = None
 	
@@ -461,23 +435,22 @@ def show_manufacturer(request, slug):
 	else:
 		next_url = ''			
 
-	wishlist = []
-	for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-		wishlist.append(item.good)
+	current_wishlist = 	get_wishlist(request)
 
-	barrels = []
-	for item in In_Barrels.objects.all():
-		barrels.append(item.good)	
+	wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+	barrels = query_set_to_list(In_Barrels.objects.all())
+
+	current_cart = get_cart_(request)
 
 	template_name = 'goodapp/catalog.html'
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
 		'manufacturer': manufacturer,
-		'cart': get_cart_(request),
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'cart': current_cart,
+		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'barrels': barrels,
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 	}
 
@@ -487,21 +460,20 @@ def show_manufacturer(request, slug):
 
 def show_in_barrels(request):
 
-	wishlist = []
-	for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-		wishlist.append(item.good)
+	current_wishlist = 	get_wishlist(request)
 
-	barrels = []
-	for item in In_Barrels.objects.all():
-		barrels.append(item.good)
+	wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+	barrels = query_set_to_list(In_Barrels.objects.all())
+
+	current_cart = get_cart_(request)
 
 	context = {
 
 		'in_bar': get_in_barrels(),
-		'cart': get_cart_(request),
+		'cart': current_cart,
 		'barrels': barrels,
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 
 	}
@@ -553,23 +525,22 @@ def show_product_with_tag(request):
 	else:
 		next_url = ''			
 
-	wishlist = []
-	for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-		wishlist.append(item.good)
+	current_wishlist = 	get_wishlist(request)
 
-	barrels = []
-	for item in In_Barrels.objects.all():
-		barrels.append(item.good)
+	wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+	barrels = query_set_to_list(In_Barrels.objects.all())
+
+	current_cart = get_cart_(request)
 
 
 	template_name = 'goodapp/tags.html'
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
-		'cart': get_cart_(request),
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'cart': current_cart,
+		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'barrels': barrels,
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 		'property_value': property_value,
 	}
@@ -743,27 +714,26 @@ def show_product_with_filters(request):
 		else:
 			next_url = ''			
 
-		wishlist = []
-		for item in Wishlist_Item.objects.filter(wishlist=get_wishlist(request)):
-			wishlist.append(item.good)
+		current_wishlist = 	get_wishlist(request)
 
-		barrels = []
-		for item in In_Barrels.objects.all():
-			barrels.append(item.good)
+		wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+		barrels = query_set_to_list(In_Barrels.objects.all())
 
+		current_cart = get_cart_(request)
 
 		template_name = 'goodapp/catalog.html'
 		context = {
 			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
-			'cart': get_cart_(request),
-			'cart_count' : Cart_Item.objects.filter(cart=get_cart_(request)).aggregate(Sum('quantity'))['quantity__sum'],
+			'cart': current_cart,
+			'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 			'in_bar': get_in_barrels(),
 			'barrels': barrels,
-			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 			'wishlist' : wishlist,
 			'filters_a' : get_filters_a(temp_table),
 			'active_filters': active_filters,
 			'str_active_filters': str_active_filters,
+			'bestsellers' : get_items_with_pictures(query_set_to_list(Bestseller.objects.all().order_by('?'))),
 		}
 
 		return render(request, template_name, context) 

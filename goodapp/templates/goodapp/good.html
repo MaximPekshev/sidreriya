@@ -16,9 +16,9 @@
 		<nav class="woocommerce-breadcrumb breadcrumbs">
 			<a href="{% url 'show_index' %}">На главную</a>
 			{% if not is_cidre %}
-			<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
+			<a href="{% url 'show_category' cpu_slug='eda' %}">Еда</a>
 			{% endif %}
-			<a href="{% url 'show_category' slug=good.category.slug %}">{{ good.category }}</a>
+			<a href="{% url 'show_category' cpu_slug=good.category.cpu_slug %}">{{ good.category }}</a>
 			<a href="{% url 'show_good'  slug=good.slug %}">{{ good.name }} {% if good.name_en %} / {{ good.name_en }}{% endif %}</a>
 		</nav>
 		<div class="row">
@@ -63,7 +63,7 @@
 										<div class="col-sm-6 col-md-6">
 											<div>
 												<label>Производитель:</label>
-												<a href="{% if good.manufacturer %} {% url 'show_manufacturer' slug=good.manufacturer.slug %} {% endif %}">{% if good.manufacturer %}{{ good.manufacturer }}{% endif %}</a>
+												<a href="{% if good.manufacturer %} {% url 'show_manufacturer' cpu_slug=good.manufacturer.cpu_slug %} {% endif %}">{% if good.manufacturer %}{{ good.manufacturer }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Что внутри?:</label>
@@ -75,30 +75,30 @@
 											</div>
 											<div>
 												<label>Крепость:</label>
-												<a href="{% url 'show_product_with_tag' %}?tag={{ strength }}">{% if country %}{{ strength }} %{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ strength }}">{% if strength %}{{ strength }} %{% endif %}</a>
 											</div>
 											<div>
 												<label>Сладость:</label>
-												<a href="{% url 'show_product_with_tag' %}?tag={{ sugar }}">{% if country %}{{ sugar }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ sugar }}">{% if sugar %}{{ sugar }}{% endif %}</a>
 											</div>
 
 										</div>
 										<div class="col-sm-6 col-md-6">
 											<div>
 												<label>Объем бутылочки:</label>
-												<a href="{% url 'show_product_with_tag' %}?tag={{ volume }}">{% if country %}{{ volume }} L{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ volume }}">{% if volume %}{{ volume }} L{% endif %}</a>
 											</div>
 											<div>
 												<label>Пузырьки:</label>
-												<a href="{% url 'show_product_with_tag' %}?tag={{ gas }}">{% if country %}{{ gas }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ gas }}">{% if gas %}{{ gas }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Пастеризация:</label>
-												<a href="{% url 'show_product_with_tag' %}?tag={{ pasteuriz }}">{% if country %}{{ pasteuriz }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ pasteuriz }}">{% if pasteuriz %}{{ pasteuriz }}{% endif %}</a>
 											</div>
 											<div>
 												<label>Фильрация:</label>
-												<a href="{% url 'show_product_with_tag' %}?tag={{ filtration }}">{% if country %}{{ filtration }}{% endif %}</a>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ filtration }}">{% if filtration %}{{ filtration }}{% endif %}</a>
 											</div>
 										</div>
 									</div>

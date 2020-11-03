@@ -17,7 +17,7 @@ def show_index(request):
 
 	bestsellsers = []
 
-	for good in Bestseller.objects.all():
+	for good in Bestseller.objects.all().order_by('?'):
 		bestsellsers.append(good.good)
 
 

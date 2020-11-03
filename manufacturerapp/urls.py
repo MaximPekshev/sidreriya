@@ -4,6 +4,6 @@ from goodapp.views import show_manufacturer
 
 urlpatterns = [
 
-	path('<str:slug>/', 		show_manufacturer, name='show_manufacturer'),
+	path('<str:cpu_slug>/', 		show_manufacturer, name='show_manufacturer'),
 
 			]
