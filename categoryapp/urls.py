@@ -4,6 +4,6 @@ from goodapp.views import show_category
 
 urlpatterns = [
 
-	path('<str:cpu_slug>/', 		show_category, name='show_category'),
+	path('<str:slug>/', 		show_category, name='show_category'),
 
 			]

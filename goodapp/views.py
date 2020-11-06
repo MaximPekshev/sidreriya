@@ -311,12 +311,12 @@ def show_good(request, slug):
 	}
 	return render(request, template_name, context)
 
-def show_category(request, cpu_slug):
+def show_category(request, slug):
 
-	if cpu_slug == 'eda':
+	if slug == '4127154760':
 
 		try:
-			category = Category.objects.get(cpu_slug=cpu_slug)
+			category = Category.objects.get(slug=slug)
 		except:
 			category = None
 
@@ -344,7 +344,7 @@ def show_category(request, cpu_slug):
 		goods_count=18
 
 		try:
-			category = Category.objects.get(cpu_slug=cpu_slug)
+			category = Category.objects.get(slug=slug)
 		except:
 			category = None	
 

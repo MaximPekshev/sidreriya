@@ -132,10 +132,10 @@
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
 						{% if not filters_a and not subcategories and not manufacturer %}
-						<a href="{% url 'show_category' cpu_slug='eda' %}">Еда</a>
+						<a href="{% url 'show_category' slug='2717255153' %}">Еда</a>
 						{% endif %}
 						{% if category %}
-						<a href="{% url 'show_category' cpu_slug=category.cpu_slug %}">{{ category.name }}</a>
+						<a href="{% url 'show_category' slug=category.slug %}">{{ category.name }}</a>
 						{% endif %}
 						{% if manufacturer %}
 						<a>Производители</a>
@@ -159,9 +159,9 @@
 							{% for cat in subcategories %}
 							<div class="col-sm-4">
 								<div class="kt-banner block-banner-text style3 margin-top-30" data-height="334" data-reponsive='{"320":320,"480":480,"768":220,"1024":293}' data-background="{% if cat.picture %}{{ cat.picture.url }} {% else %} {% static 'images/products/no-photo.png' %} {% endif %}" data-positionright="0px" data-positionleft="0px" data-verticalmiddle="middle">
-									<a href="{% url 'show_category' cpu_slug=cat.cpu_slug %}" class="bg-image">Banner Bg</a>
+									<a href="{% url 'show_category' slug=cat.slug %}" class="bg-image">Banner Bg</a>
 									<div class="content text-center">
-										<a href="{% url 'show_category' cpu_slug=cat.cpu_slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">{{ cat.name }}</h4> </a>
+										<a href="{% url 'show_category' slug=cat.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">{{ cat.name }}</h4> </a>
 									</div>
 								</div>
 							</div>

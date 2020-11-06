@@ -16,9 +16,9 @@
 		<nav class="woocommerce-breadcrumb breadcrumbs">
 			<a href="{% url 'show_index' %}">На главную</a>
 			{% if not is_cidre %}
-			<a href="{% url 'show_category' cpu_slug='eda' %}">Еда</a>
+			<a href="{% url 'show_category' slug='2717255153' %}">Еда</a>
 			{% endif %}
-			<a href="{% url 'show_category' cpu_slug=good.category.cpu_slug %}">{{ good.category }}</a>
+			<a href="{% url 'show_category' slug=good.category.slug %}">{{ good.category }}</a>
 			<a href="{% url 'show_good'  slug=good.slug %}">{{ good.name }} {% if good.name_en %} / {{ good.name_en }}{% endif %}</a>
 		</nav>
 		<div class="row">
