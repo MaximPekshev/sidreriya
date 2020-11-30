@@ -335,7 +335,7 @@ def order_add(request):
 
 			if quantity:
 
-				set_lunch_good = Good.objects.filter(name="Комплексный обед").first()
+				set_lunch_good = Good.objects.filter(name="Дружеский обед").first()
 
 				order_item = Order_Item(
 
