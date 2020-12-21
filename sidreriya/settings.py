@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'API',
     'filterapp',
     'ajax_select',
+    'background_task',
+    'django_crontab',
 
 ]
 
@@ -139,3 +141,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+BACKGROUND_TASK_RUN_ASYNC = True
+
+
+CRONJOBS = [
+    ('*/2 * * * *', '../manage.py process_tasks'),
+]
