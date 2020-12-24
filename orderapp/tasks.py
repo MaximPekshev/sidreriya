@@ -26,6 +26,47 @@ from decimal import Decimal
 from background_task import background
 
 
+@background(schedule=2)
+def sand_mail_to_me():
+
+	HOST = "mail.hosting.reg.ru"
+	sender_email = config('MAIL_USER')
+	receiver_email = ['m.pekshev@annasoft.ru',]
+	password = config('MAIL_PASSWORD')
+
+	message = MIMEMultipart("alternative")
+	message["Subject"] = "Тестовое сообщение"
+	message["From"] = sender_email
+	message["To"] = ','.join(receiver_email)
+
+	
+	text = """\
+	Тестовое сообщение"""
+
+
+	html = """\
+    <html>
+      <body>
+      <div style="max-width: 610px; width:100%">
+        <H4 style="background-color: #262626; color: #fff; padding: 12px 0; text-align: center; font-size: 14px; margin-bottom: 30px;">Сообщение отправлено!</H4>
+        <p></p>
+		</div>
+      </body>
+    </html>
+    """
+
+	part1 = MIMEText(text, "plain")
+	part2 = MIMEText(html, "html")
+	message.attach(part1)
+	message.attach(part2)
+	context = ssl.create_default_context()
+	server = smtplib.SMTP(HOST, 587)
+	server.starttls()
+	server.login(sender_email, password)
+	server.sendmail(
+	sender_email, receiver_email , message.as_string()
+	)
+	server.quit()
 
 @background(schedule=1)
 def send_mail_on_bar(order_id):

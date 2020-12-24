@@ -144,8 +144,3 @@ MEDIA_URL = '/media/'
 
 
 BACKGROUND_TASK_RUN_ASYNC = True
-
-
-CRONJOBS = [
-    ('*/2 * * * *', '../manage.py process_tasks'),
-]

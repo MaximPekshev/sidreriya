@@ -23,8 +23,16 @@ from decouple import config
 from decimal import Decimal
 
 from background_task import background
+from .tasks import sand_mail_to_me
+
+from django.http import HttpResponse
 
 # from .tasks import send_mail_on_bar, send_mail_to_buyer
+
+def sendmail(request):
+	sand_mail_to_me()
+	return HttpResponse('Задача запущена')
+
 
 # helpers
 def send_mail_on_bar(order_id):
