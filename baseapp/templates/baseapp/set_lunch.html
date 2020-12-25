@@ -54,6 +54,7 @@
 							<div id="collapseOne-as" class="collapse" role="tabpanel" aria-labelledby="headingOne-as">
 								<form id="deliv_form" action="{% url 'order_add' %}" class="checkout" method="POST" >
 									{% csrf_token %}
+									<input type="text" name="good_id" value="lunch" hidden>
 									<div class="row">
 										<div class="col-sm-12">
 											<span>Количество</span>
@@ -142,6 +143,7 @@
 							<div id="collapseTwo-as" class="collapsed" role="tabpanel" aria-labelledby="headingTwo-as">
 								<form id="pickup" action="{% url 'order_add' %}" class="checkout" method="POST">
 									{% csrf_token %}
+									<input type="text" name="good_id" value="lunch" hidden>
 									<div class="row">
 										<div class="col-sm-12">
 											<span>Количество</span>

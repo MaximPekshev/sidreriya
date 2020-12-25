@@ -1,0 +1,113 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+
+{% block social %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container right-sidebar style3 margin-bottom-30">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_gift_boxes' %}">Подарочные коробочки</a>
+		</nav>
+		<div class="row">
+
+			<div class="col-sm-12 col-md-8 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-thumb">
+							<div class="images kt-images">
+								<div class="kt-main-image">
+									<a class="zoom" href="{% static 'images/banners/gift_boxes.jpg' %}"><img src="{% static 'images/banners/gift_boxes.jpg' %}" alt=""></a>
+								</div>
+							</div>
+						</div>
+						<div class="post-info">
+							<h3 class="post-title"><a style="font-size: 110%;">Подарки, которые точно понравятся всем — это ли не мечта?!</a></h3>
+							<div class="blog-content">
+								<blockquote style="font-size: 110%;"> Когда город встаёт в беспросветную пробку, до нового года остаётся считанное количество дней, нерешённых задач ещё миллион, а еще нужно придумать подарки вашим близким и коллегам, на помощь приходят они — наши <a href="{% url 'show_gift_boxes' %}">НОВОГОДНИЕ КОРОБКИ</a>.</blockquote>
+								<p>Наш бокс работает в режиме конструктора: мы берём наш деревянную коробку и наполняем ее в зависимости от заявленного вами бюджета и ваших пожеланий.</p>
+								<blockquote style="font-size: 120%;">
+									<p class="margin-bottom-10">В коробочку можно добавить:</p>
+									<footer>
+										наши сидры. А это 150 видов из нашего <a href="{% url 'show_catalog' %}">каталога</a>, со скидкой 25%
+									</footer>
+									<footer>
+										конфеты от <a href="https://www.instagram.com/liveinchoco/" target="_blank">@liveinchoco</a>
+									</footer>
+									<footer>
+										натуральная пастила наборы для горячего сидра от <a href="https://www.instagram.com/vitamin_time31/" target="_blank">@vitamin_time31</a>
+									</footer>
+									<footer>
+										свечи, дрип кофе, ароматические палочки и чудесные сумочки для бутылочки сидра из коллекции <a href="https://www.instagram.com/secretgarden_daily/" target="_blank">@secretgarden_daily</a>
+									</footer>
+								</blockquote>
+								<p></p>
+								<p>Чтобы посетив одно место, вы сразу могли получить готовый подарок, а не тратили на это уйму времени, разъезжая по «пробочному» городу.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
+				<div class="inner">
+						<div class="panel" style="border-bottom-style: none;">
+							<h3 class="form-heading">Подарочные коробочки</h3></a>
+							<form id="deliv_form" action="{% url 'order_add' %}" class="checkout" method="POST" >
+								{% csrf_token %}
+								<input type="text" name="good_id" value="gift" hidden>
+								<div class="row">
+										<div class="col-sm-12">
+											<span>Количество</span>
+											<p><input style="width: 100%; resize: both;" type="text" name="quantity" value="1" title="Количество" class="input-text qty text" size="1" required></p>
+										</div>
+									</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<span>Имя</span>
+										<p><input style="width: 100%; resize: both;" type="text" name="input_first_name" placeholder="Имя" value="{{ buyer.first_name }}"></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<span>Телефон</span>
+										<p><input style="width: 100%; resize: both;" id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<span>Комментарий</span>
+										<p><textarea style="width: 100%; resize: both;" type="text" name="comment" placeholder="Ваши пожелания к заказу" title="Комментарий" class="input-text qty text" rows="3"></textarea></p>
+									</div>
+								</div>
+								<div class="block-form-footer text-center  padding-bottom-20 padding-top-20" style="background-color: #fafafa;">
+									<button form="deliv_form" class="button primary">Отправить заявку</button>
+								</div>
+							</form>
+
+						</div>
+
+						<p style="margin-left: 20px;">
+							Вы можете прийти к нам сами, или мы соберём и привезём подарочную коробку к вам или торжественно её вручим вашему адресату.
+						</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

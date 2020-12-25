@@ -16,3 +16,4 @@ class BuyerSaveForm(forms.Form):
 	input_email  		= forms.CharField(max_length = 30, required=False)
 	quantity  			= forms.CharField(max_length = 5, required=False)
 	comment  			= forms.CharField(max_length = 250, required=False)
+	good_id  			= forms.CharField(max_length = 10, required=False)

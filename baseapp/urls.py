@@ -9,7 +9,10 @@ from .views import show_delivery
 from .views import show_atmosphere
 from .views import show_about_us
 from .views import show_contact_us
-from .views import show_promo, show_set_lunch
+from .views import show_promo
+from .views import show_set_lunch
+from .views import show_gift_boxes
+from .views import show_breakfasts
 
 
 urlpatterns = [
@@ -21,6 +24,9 @@ urlpatterns = [
 	path('contact-us/', 	show_contact_us, name='show_contact_us'),
 	path('promo/', 			show_promo, name='show_promo'),
 	path('lunch-set/', 		show_set_lunch, name='show_set_lunch'),
+	path('gift-boxes/', 	show_gift_boxes, name='show_gift_boxes'),
+	path('breakfasts/', 	show_breakfasts, name='show_breakfasts'),
+
 
 			]
 

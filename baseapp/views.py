@@ -166,4 +166,73 @@ def show_set_lunch(request):
 			pass
 
 
-	return  render(request, 'baseapp/set_lunch.html', context)	
+	return  render(request, 'baseapp/set_lunch.html', context)
+
+
+def show_gift_boxes(request):
+	
+
+
+	context = {
+
+		'cart': get_cart(request),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
+
+	}
+
+	if request.user.is_authenticated: 
+
+		try:
+
+			buyer = Buyer.objects.get(user=request.user)
+
+			context.update({
+
+				'buyer': buyer,
+
+				})
+
+		except Buyer.DoesNotExist:
+
+			pass
+
+	return  render(request, 'baseapp/gift_boxes.html', context)
+
+
+def show_breakfasts(request):
+	
+	bestsellsers = []
+
+	for good in Bestseller.objects.all().order_by('?'):
+		bestsellsers.append(good.good)
+	
+
+	context = {
+
+		'cart': get_cart(request),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
+		'bestsellers' : get_items_with_pictures(bestsellsers),
+
+	}
+
+	if request.user.is_authenticated: 
+
+		try:
+
+			buyer = Buyer.objects.get(user=request.user)
+
+			context.update({
+
+				'buyer': buyer,
+
+				})
+
+		except Buyer.DoesNotExist:
+
+			pass
+
+	return  render(request, 'baseapp/breakfasts.html', context)	

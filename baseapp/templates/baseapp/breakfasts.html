@@ -1,0 +1,158 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block social %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container right-sidebar style3 margin-bottom-30">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_breakfasts' %}">Завтраки</a>
+			Меню
+		</nav>
+		<div class="row">
+			<div class="col-sm-12 col-md-8 main-content margin-top-10">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-thumb">
+							<div class="images kt-images">
+								<div class="kt-main-image">
+									<a class="zoom" href="{% static 'images/banners/breakfasts.jpg' %}"><img src="{% static 'images/banners/breakfasts.jpg' %}" alt=""></a>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="post-info">
+							<h3 class="post-title"><a style="font-size: 110%;">Всех, без исключения, ждём к себе в гости!</a></h3>
+							<div class="blog-content">
+								<p>
+									Мы просто обожаем вас, таких разных, наших гостей: стремительно завтракающих, чтобы успеть завоевать этот день; или неспешно жующих свой любимый завтрак и мечтающих о чем-то прекрасном, разглядывая просыпающийся город в окошко; или в шумной компании подружек обсуждающих прошедший бурный вечер; или забавную детвору звонким голосом требующую добавки наших пончиков.
+								</p>
+								<blockquote style="font-size: 110%;">С бодрящим кофе по утрам или бокалом искристого сидра в выходные. Любителей авокадо тостов и почитателей сырников.</blockquote>
+							</div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
+				<div class="inner">
+					<div class="widget widget_related_product">
+						<h2 class="widget-title">Популярные сидры</h2>
+						<ul class="owl-carousel nav-center nav-style-2" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":"1"},"768":{"items":"1"},"992":{"items":"1"}}'>
+							{% for item in bestsellers %}
+							{% if item.good.is_cidre %}
+							<li class="product-item">
+								<div class="product-inner">
+									<div class="thumb has-second-image">
+										<a href="{% url 'show_good' slug=item.good.slug %}">
+											{% if item.image %}
+											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+											{% else %}
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+											{% endif %}
+										</a>
+										<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+										</form>
+										<div class="group-button">
+											{% if item.good.quantity >= 1 %}
+											{% if item.good.in_barrel %}
+											{% if item.good in barrels %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+											{% endif %}
+											{% else %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+											{% endif %}
+											{% endif %}
+										</div>
+										<div class="flash">
+										</div>
+									</div>
+									<div class="info">
+										<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
+										{% if item.good.price %}
+										{% if item.good.old_price %}
+										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
+										{% else %}
+										<span class="price">&#8381 {{ item.good.price }}</span>
+										{% endif %}
+										{% else %}
+										<span class="price">&#8381 0</span>
+										{% endif %}
+									</div>
+								</div>
+							</li>
+							{% endif %}
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="widget widget_related_product">
+						<h2 class="widget-title">Популярные блюда</h2>
+						<ul class="owl-carousel nav-center nav-style-2" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":"1"},"768":{"items":"1"},"992":{"items":"1"}}'>
+							{% for item in bestsellers %}
+							{% if not item.good.is_cidre %}
+							<li class="product-item">
+								<div class="product-inner">
+									<div class="thumb has-second-image">
+										<a href="{% url 'show_good' slug=item.good.slug %}">
+											{% if item.image %}
+											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+											{% else %}
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+											{% endif %}
+										</a>
+										<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+										</form>
+										<div class="group-button">
+											{% if item.good.quantity >= 1 %}
+											{% if item.good.in_barrel %}
+											{% if item.good in barrels %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+											{% endif %}
+											{% else %}
+											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
+											{% endif %}
+											{% endif %}
+										</div>
+										<div class="flash">
+										</div>
+									</div>
+									<div class="info">
+										<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
+										{% if item.good.price %}
+										{% if item.good.old_price %}
+										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
+										{% else %}
+										<span class="price">&#8381 {{ item.good.price }}</span>
+										{% endif %}
+										{% else %}
+										<span class="price">&#8381 0</span>
+										{% endif %}
+									</div>
+								</div>
+							</li>
+							{% endif %}
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}

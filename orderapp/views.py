@@ -288,6 +288,7 @@ def order_add(request):
 			input_email 	= buyer_form.cleaned_data['input_email']
 			quantity 		= buyer_form.cleaned_data['quantity']
 			comment 		= buyer_form.cleaned_data['comment']
+			good_id 		= buyer_form.cleaned_data['good_id']
 
 			if street:
 				address =  "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(locality, street, house, apartments, porch, floor)
@@ -352,7 +353,7 @@ def order_add(request):
 
 			new_order.save()
 
-			if quantity:
+			if good_id == 'lunch' :
 
 				set_lunch_good = Good.objects.filter(name="Дружеский обед").first()
 
@@ -363,6 +364,21 @@ def order_add(request):
 					quantity = Decimal(quantity),
 					price = set_lunch_good.price,
 					summ = set_lunch_good.price*Decimal(quantity),
+
+					)
+				order_item.save()
+
+			elif good_id == 'gift' :
+
+				gift_good = Good.objects.filter(name="Подарочная коробка").first()
+
+				order_item = Order_Item(
+
+					order = new_order,
+					good = gift_good,
+					quantity = Decimal(quantity),
+					price = gift_good.price,
+					summ = gift_good.price*Decimal(quantity),
 
 					)
 				order_item.save()

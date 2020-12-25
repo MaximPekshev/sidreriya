@@ -26,7 +26,7 @@ from decimal import Decimal
 from background_task import background
 
 
-@background(schedule=2)
+@background(schedule=1)
 def sand_mail_to_me():
 
 	HOST = "mail.hosting.reg.ru"
@@ -69,7 +69,7 @@ def sand_mail_to_me():
 	server.quit()
 
 @background(schedule=1)
-def send_mail_on_bar(order_id):
+def bg_send_mail_on_bar(order_id):
 
 	try:
 		order = Order.objects.get(pk=order_id)
@@ -158,7 +158,7 @@ def send_mail_on_bar(order_id):
 
 
 @background(schedule=1)
-def send_mail_to_buyer(order_id, buyer_email):
+def bg_send_mail_to_buyer(order_id, buyer_email):
 
 	try:
 		order = Order.objects.get(id=order_id)
