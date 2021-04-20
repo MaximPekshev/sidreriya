@@ -193,12 +193,9 @@ def show_catalog(request):
 
 	goods = Good.objects.filter(is_active=True).order_by('price')
 	
-	table = get_items_with_pictures(goods)
-
-
 	page_number = request.GET.get('page', 1)
 
-	paginator = Paginator(table, goods_count)	
+	paginator = Paginator(goods, goods_count)	
 
 	page = paginator.get_page(page_number)
 
@@ -233,7 +230,7 @@ def show_catalog(request):
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 		'filters_a' : get_filters_a(goods),
-		'bestsellers' : get_items_with_pictures(query_set_to_list(Bestseller.objects.all().order_by('?'))),
+		'bestsellers' : Bestseller.objects.all().order_by('?'),
 	}
 	
 	return render(request, template_name, context)
@@ -291,7 +288,6 @@ def show_good(request, slug):
 	context = {
 	
 		'good': good, 'pictures': pictures, 'main_pictures': main_pictures, 'opv': opv,
-		'upsell_products' : get_items_with_pictures(good.upsell_products.all()),
 		'country':country,
 		'strength':strength,
 		'sugar':sugar,
@@ -301,7 +297,7 @@ def show_good(request, slug):
 		'filtration':filtration,
 		'inside': inside,
 		'is_cidre': good.is_cidre,
-		'cart': current_cart,
+		'cart': get_cart_(request),
 		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'barrels': barrels,
@@ -352,7 +348,7 @@ def show_category(request, slug):
 
 		if category.name == 'Сидр':
 			filters_a = get_filters_a(goods)
-			bestsellers = get_items_with_pictures(query_set_to_list(Bestseller.objects.all().order_by('?')))
+			bestsellers = Bestseller.objects.all().order_by('?')
 		else:
 			filters_a = None
 			bestsellers = None

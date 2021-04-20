@@ -1,14 +1,13 @@
 {% extends 'baseapp/index.html' %}
 
-{% load static %}
-
 {% block header %}
 {{ block.super }}
 {% endblock %}
 
 {% block social %}
-{{ block.super }}
 {% endblock %}
+
+{% load static %}
 
 {% block content %}
 
@@ -16,24 +15,77 @@
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
 			<a href="{% url 'show_index' %}">На главную</a>
-			<a href="{% url 'show_breakfasts' %}">Завтраки</a>
-			Меню
+			<a href="{% url 'show_сertificate' %}">Сертификаты</a>
 		</nav>
 		<div class="row">
-			<div class="col-sm-12 col-md-8 main-content margin-top-10">
+			<div class="col-sm-8 col-md-8 main-content">
 				<div class="blog-single">
 					<div class="post-item">
 						<div class="post-thumb">
-							<div class="images kt-images">
-								<div class="kt-main-image">
-									<a class="zoom" href="{% static 'images/banners/breakfasts.jpg' %}"><img src="{% static 'images/banners/breakfasts.jpg' %}" alt=""></a>
-								</div>
+							<img src="{{ category.picture.url }}" alt="Первая Сидрерия в Белгороде">
+						</div>
+						<div class="post-info">
+							<h3 class="post-title"><a>Ну вы только посмотрите какие у нас хорошенькие подарочные сертификаты.</a></h3>
+							<div class="blog-content">
+								<blockquote>Подарок на день рождения друзей, приятный комплимент коллегам и партнёрам или просто без повода порадовать своих близких — для всего этого наш сертификат будет отличным выбором.</blockquote>
+								<p>Эстетически прекрасные и легко конвертируемые в вкуснейший сидр и закуски — ну идеально же!))</p>
+								<blockquote>Номиналы имеем различные: 1000 Р, 3000 Р и 5000 Р.</blockquote>
+								<p>Вам остаётся только позвонить нам и все! А далее дело за нами: либо заботливо вам передадим, либо упакуем и привезём, торжественно адресату вручим, открытку от вашего имени подпишем.</p>
+								<p>Идеальная схема, мы считаем.</p>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class="col-sm-12 main-content">
+					<div class="shop-page-bar">
+						<ul class="products product-list-grid desktop-columns-3 tablet-columns-3 mobile-columns-1">
+							{% for item in goods %}
+							<li class="product-item col-md-4 col-sm-4 col-xs-12">
+								<div class="product-inner">
+									<div class="thumb has-second-image">
+										<a href="{% url 'show_good' slug=item.slug %}">
+											{% if item.get_main_image %}
+											<img src="{{ item.get_main_image.images.url }}" alt="{{ item.name }}{% if item.name_en %} / {{ item.name_en }}{% endif %}">
+											{% else %}
+											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.name }}{% if item.name_en %} / {{ item.name_en }}{% endif %}">
+											{% endif %}
+										</a>
+										<form id="{{ item.slug }}addtocart" action="{% url 'cart_add_item' slug=item.slug %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="quantity" value="1">
+										</form>
+										<div class="group-button">
+											{% if item.quantity >= 1 %}
+											{% if item.in_barrel %}
+											{% if item in barrels %}
+											<button form="{{ item.slug }}addtocart" type="submit" class="">В корзину</button>
+											{% endif %}
+											{% else %}
+											<button form="{{ item.slug }}addtocart" type="submit" class="">В корзину</button>
+											{% endif %}
+											{% endif %}
+										</div>
+									</div>
+									<div class="info">
+										<h3 class="product-name short"><a href="{% url 'show_good' slug=item.slug %}">{{ item.name }}{% if item.name_en %} / {{ item.name_en }} {% endif %}</a></h3>
+										{% if item.price %}
+										{% if item.old_price %}
+										<span class="price"><ins>&#8381 {{ item.price }} </ins><del>&#8381 {{ item.old_price }}</del></span>
+										{% else %}
+										<span class="price">&#8381 {{ item.price }}</span>
+										{% endif %}
+										{% else %}
+										<span class="price">&#8381 0</span>
+										{% endif %}
+									</div>
+								</div>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>		
 			</div>
-			<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
+			<div class="col-sm-4 col-md-4 sidebar border blog-sidebar">
 				<div class="inner">
 					<div class="widget widget_related_product">
 						<h2 class="widget-title">Популярные сидры</h2>
@@ -138,10 +190,11 @@
 						</ul>
 					</div>
 				</div>
-			</div>		
+			</div>
 		</div>
 	</div>
 </div>
+		
 
 {% endblock %}
 

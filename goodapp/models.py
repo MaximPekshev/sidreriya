@@ -60,7 +60,15 @@ class Good(models.Model):
 
 		super(Good, self).save(*args, **kwargs)
 			
-	
+	def get_main_image(self):
+
+		main_image = Picture.objects.filter(good=self, main_image=True).first()
+		if main_image:
+			return main_image
+		else:
+			return Picture.objects.filter(good=self).first()	
+
+
 	class Meta:
 		verbose_name = 'Товар'
 		verbose_name_plural = 'Товары'

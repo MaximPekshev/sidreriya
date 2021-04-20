@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from goodapp.models import Category, In_Barrels, Picture, Set_Lunch
+from goodapp.models import Category, In_Barrels, Picture, Set_Lunch, Good
 from goodapp.models import Bestseller
 from cartapp.models import Cart, Cart_Item
 from wishlistapp.models import Wishlist, Wishlist_Item
@@ -203,19 +203,13 @@ def show_gift_boxes(request):
 
 def show_breakfasts(request):
 	
-	bestsellsers = []
-
-	for good in Bestseller.objects.all().order_by('?'):
-		bestsellsers.append(good.good)
-	
-
 	context = {
 
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
-		'bestsellers' : get_items_with_pictures(bestsellsers),
+		'bestsellers' : Bestseller.objects.all().order_by('?'),
 
 	}
 
@@ -236,3 +230,23 @@ def show_breakfasts(request):
 			pass
 
 	return  render(request, 'baseapp/breakfasts.html', context)	
+
+def show_сertificate(request):
+
+	category = Category.objects.filter(name='Сертификаты').first()
+
+	goods = Good.objects.filter(category=category, is_active=True)
+
+	context = {
+
+		'cart': get_cart(request),
+		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
+		'in_bar': get_in_barrels(),
+		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
+		'goods': goods,
+		'category': category,
+		'bestsellers' : Bestseller.objects.all().order_by('?'),
+
+	}
+
+	return  render(request, 'baseapp/certificate.html', context)	

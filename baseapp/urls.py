@@ -13,6 +13,7 @@ from .views import show_promo
 from .views import show_set_lunch
 from .views import show_gift_boxes
 from .views import show_breakfasts
+from .views import show_сertificate
 
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
 	path('lunch-set/', 		show_set_lunch, name='show_set_lunch'),
 	path('gift-boxes/', 	show_gift_boxes, name='show_gift_boxes'),
 	path('breakfasts/', 	show_breakfasts, name='show_breakfasts'),
+	path('сertificate/', 	show_сertificate, name='show_сertificate'),
 
 
 			]
