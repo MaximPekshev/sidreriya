@@ -8372,6 +8372,26 @@ HOME SLIDER
     padding-right: 110px;
 }
 
+/*annasoft*/
+
+.slide-home3 .as_title{
+    font-size: 40px;
+    font-weight: 900;
+    color: #ffffff;
+}
+.slide-home3 .as_subtitle{
+    font-size: 30px;
+    color: #ffffff;
+    font-family: 'Bebas';
+}
+
+.slide-home3 .as_span{
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: 900;
+}
+
+/*annasoft*/
 
 .slide-home4 .subtitle{
     font-size: 18px;
