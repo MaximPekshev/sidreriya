@@ -41,6 +41,15 @@
 				<div class="logo">
 					<a href="{% url 'show_index' %}"><img src="{% static 'images/logos/Sidreria_logo_bely.png' %}" width="150" alt=""></a>
 				</div>
+				<div class="form-search-wapper">
+					<h3 style="
+					color: white; 
+					font-family: 'Arimo',sans-serif;;
+					font-weight: 700;
+
+					">Новая Сидрерия уже открыта!</h3>
+					<p>Ждем Вас в гости по адресу: <span style="color: white;">Левобережная 22а</span></p>
+				</div>
 			</div>
 
 			<div class="top-bar-right">
@@ -136,7 +145,7 @@
 		<div class="content-slide">
 			<div class="container container-slide">
 				<div class="inner">
-					<span data-animate="fadeInDown" class="caption subtitle">акции при самовывозе</span>
+					<span data-animate="fadeInDown" class="caption subtitle">карантинные предложения</span>
 					<h2 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h2>
 					<a data-animate="fadeInDown" class="caption link" href="{% url 'show_delivery' %}">Подробнее...</a>
 				</div>
@@ -173,9 +182,58 @@
 	</div>
 </div>
 <!-- Banner -->
+
+
+<div class="section-banner margin-top-30">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-6">
+				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/food.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+					<a href="{% url 'show_category' slug='4127154760' %}" class="bg-image">Banner Bg</a>
+					<div class="content text-right">
+						<a href="{% url 'show_category' slug='4127154760' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ЕДА</h4></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-6">
+				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/cidre.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+					<a href="{% url 'show_category' slug='2717255153' %}" class="bg-image">Banner Bg</a>
+					<div class="content text-right">
+						<a href="{% url 'show_category' slug='2717255153' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="section-banner">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-6">
+				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/delivery.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+					<a href="{% url 'show_delivery' %}" class="bg-image">Banner Bg</a>
+					<div class="content text-right">
+						<a href="{% url 'show_delivery' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ДОСТАВКА</h4></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-6">
+				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/atmo.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+					<a href="{% url 'show_atmosphere' %}" class="bg-image">Banner Bg</a>
+					<div class="content text-right">
+						<a href="{% url 'show_atmosphere' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">АТМОСФЕРА</h4></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 {% if bestsellers %}
 <!-- Tab product -->
-<div class="margin-top-30">
+<div class="margin-top-30 margin-bottom-100">
 	<div class="container">
 		<div class="kt-tabs style1 kt-tab-fadeeffect">
 			<div class="tab-head">
@@ -304,55 +362,6 @@
 </div>
 <!-- Tab product -->
 {% endif %}
-
-
-
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/food.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug='4127154760' %}" class="bg-image">Banner Bg</a>
-					<div class="content text-right">
-						<a href="{% url 'show_category' slug='4127154760' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ЕДА</h4></a>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/cidre.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug='2717255153' %}" class="bg-image">Banner Bg</a>
-					<div class="content text-right">
-						<a href="{% url 'show_category' slug='2717255153' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="section-banner" style="margin-bottom: 120px;">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/delivery.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_delivery' %}" class="bg-image">Banner Bg</a>
-					<div class="content text-right">
-						<a href="{% url 'show_delivery' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ДОСТАВКА</h4></a>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/atmo.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_atmosphere' %}" class="bg-image">Banner Bg</a>
-					<div class="content text-right">
-						<a href="{% url 'show_atmosphere' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">АТМОСФЕРА</h4></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
 
 
 {% endblock %}

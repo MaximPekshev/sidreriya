@@ -230,7 +230,7 @@ def show_catalog(request):
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 		'filters_a' : get_filters_a(goods),
-		'bestsellers' : Bestseller.objects.all().order_by('?'),
+		# 'bestsellers' : Bestseller.objects.all().order_by('?'),
 	}
 	
 	return render(request, template_name, context)

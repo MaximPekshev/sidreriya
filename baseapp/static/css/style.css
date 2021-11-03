@@ -776,10 +776,17 @@ HEADER
     display: table;
     float: left;
 }
-.top-bar-left .logo,
-.top-bar-left .form-search-wapper{
+.top-bar-left .logo {
     display: table-cell;
     padding: 37px 0;
+    border-left-width:1px;
+    border-left-style: solid;
+    border-left-color: rgba(56,56,56,0.6);
+}
+.top-bar-left .form-search-wapper{
+    display: table-cell;
+    line-height: 1em;
+    /*padding: 37px 0;*/
     border-left-width:1px;
     border-left-style: solid;
     border-left-color: rgba(56,56,56,0.6);

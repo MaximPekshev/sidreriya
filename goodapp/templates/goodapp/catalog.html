@@ -7,81 +7,6 @@
 
 {% block content %}
 
-{% if bestsellers %}
-<!-- Tab product -->
-<div class="margin-top-30">
-	<div class="container">
-		<div class="kt-tabs style1 kt-tab-fadeeffect">
-			<div class="tab-head">
-				<h3 class="tab-title">РЕКОМЕНДУЕМ</h3>
-			</div>
-			<div class="tab-container">
-				<div id="tab-3" class="tab-panel active">
-					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":1},"480":{"items":2},"768":{"items":3},"1000":{"items":4}}'>
-						{% for item in bestsellers %}
-						{% if item.good.is_cidre %}
-						<li class="product-item style3">
-							<div class="product-inner">
-								<div class="thumb">
-									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.good.get_main_image %}
-											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-										{% else %}
-											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-										{% endif %}
-									</a>
-									<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
-											{% csrf_token %}
-											<input type="hidden" name="quantity" value="1">
-									</form>
-									<div class="group-button">
-										{% if item.good.quantity >= 1 %}
-										{% if item.good.in_barrel %}
-										{% if item.good in barrels %}
-											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
-										{% endif %}
-										{% else %}
-										<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
-										{% endif %}
-										{% endif %}
-									</div>
-									<div class="flash">
-										{% if not item.good.quantity %}
-										<span class="sale">Все выпили</span>
-										{% endif %}
-										{% if item.good.in_barrel %}
-										<span class="new">Розлив</span>
-										{% endif %}
-									</div>
-								<div class="info">
-									<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
-									{% if item.good.price %}
-										{% if item.good.old_price %}
-										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
-										{% else %}
-										<span class="price">&#8381 {{ item.good.price }}</span>
-										{% endif %}
-									{% else %}
-									<span class="price">&#8381 0</span>
-									{% endif %}
-								</div>
-							</div>
-						</li>
-						{% endif %}
-						{% endfor %}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- Tab product -->
-{% endif %}
-
-
-
-
-
 <div class="main-container {% if not subcategories %} left-sidebar {% endif %} {% if filters %} left-sidebar {% endif %}">
 	<div class="container">
 		<div class="row">
@@ -128,7 +53,7 @@
 			{% endif %}
 			{% endif %}
 			<div class="{% if filters_a %} col-sm-8 col-md-9 {% else %} col-sm-12 col-md-12 {% endif %} main-content">
-				<div class="shop-page-bar">
+				<div class="shop-page-bar margin-0">
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
 						{% if not filters_a and not subcategories and not manufacturer %}
@@ -153,7 +78,7 @@
 					</div> -->
 				</div>
 				{% if subcategories %}
-				<div class="margin-top-30">
+				<div class="margin-top-10">
 					<div class="container">
 						<div class="row">
 							{% for cat in subcategories %}
@@ -166,6 +91,29 @@
 								</div>
 							</div>
 							{% endfor %}
+						</div>
+						<div class="heading-section text-center margin-top-60 wow fadeInRight">
+							<h3 class="title">Меню ресторана</h3>
+						</div>
+						<div class="row">
+							<div class="col-12 col-sm-12 col-md-6 padding-top-30">
+								<div class="images kt-images">
+									<div class="kt-main-image" align="center">
+										<a class="zoom" href="{% static 'images/banners/static_menu_1.jpg' %}">
+											<img src="{% static 'images/banners/static_menu_1.jpg' %}" alt=""/>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-sm-12 col-md-6 padding-top-30">
+								<div class="images kt-images">
+									<div class="kt-main-image" align="center">
+										<a class="zoom" href="{% static 'images/banners/static_menu_2.jpg' %}">
+											<img src="{% static 'images/banners/static_menu_2.jpg' %}" alt=""/>
+										</a>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>		
