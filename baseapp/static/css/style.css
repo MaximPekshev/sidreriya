@@ -797,7 +797,8 @@ HEADER
     background-color: #1d1d1d;
 }
 .top-bar-left .form-search-wapper{
-    padding-left: 60px;
+   /* padding-left: 60px;*/
+    padding-left: 40px;
     padding-right: 20px;
 }
 .top-bar-left .form-search{
