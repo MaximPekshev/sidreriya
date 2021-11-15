@@ -1,0 +1,23 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="main-container no-sidebar">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 main-content">
+				<div class="text-center page-404">
+					<h1 class="heading">505</h1>
+					<h2 class="title">Ошибка сервера</h2>
+					<p>Возможны неполадки на сервере, попробуйте повторить запрос позже</p>
+					<a class="button primary" href="{% url 'show_index' %}">На главную</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

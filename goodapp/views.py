@@ -195,7 +195,9 @@ def show_catalog(request):
 	
 	page_number = request.GET.get('page', 1)
 
-	paginator = Paginator(goods, goods_count)	
+	table = get_items_with_pictures(goods)
+
+	paginator = Paginator(table, goods_count)
 
 	page = paginator.get_page(page_number)
 
@@ -219,6 +221,7 @@ def show_catalog(request):
 
 	current_cart = 	get_cart_(request)
 
+	print(page.object_list)
 
 	template_name = 'goodapp/catalog.html'
 	context = {

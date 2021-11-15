@@ -135,15 +135,8 @@ def cart_checkout(request):
 
 	now = datetime.datetime.now()
 
-	if weekday == 4:
-		min_time = '12:00'
-		max_time = '2:30'
-
-		min_time_datetime = now.replace(hour=12, minute=0)
-		max_time_datetime = now.replace(hour=23, minute=59, second=59)
-
-	elif weekday == 5:
-		min_time = '15:00'
+	if weekday == 5 or weekday == 4:
+		min_time = '09:00'
 		max_time = '2:30'
 
 		if  now.replace(hour=0, minute=0) < now < now.replace(hour=2, minute=30):
@@ -153,23 +146,8 @@ def cart_checkout(request):
 
 		else:	
 
-			min_time_datetime = now.replace(hour=15, minute=0)
+			min_time_datetime = now.replace(hour=9, minute=0)
 			max_time_datetime = now.replace(hour=23, minute=59, second=59)
-
-	elif weekday == 6:
-		min_time = '15:00'
-		max_time = '23:30'
-
-		if  now.replace(hour=0, minute=0) < now < now.replace(hour=2, minute=30):
-
-			min_time_datetime = now.replace(hour=0, minute=0)
-			max_time_datetime = now.replace(hour=2, minute=30)
-
-		else:
-
-			min_time_datetime = now.replace(hour=15, minute=0)
-			max_time_datetime = now.replace(hour=23, minute=30)
-
 	else:
 		min_time = '12:00'
 		max_time = '23:30'
@@ -185,8 +163,6 @@ def cart_checkout(request):
 			min_time = (now + datetime.timedelta(minutes=30)).strftime('%H:%M')
 		else:
 			min_time = max_time	
-
-
 
 	cart  = get_cart(request)
 
