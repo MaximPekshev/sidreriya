@@ -29,7 +29,14 @@
 								<h2 class="widget-title margin-bottom-0">{{ key }}</h2>
 								<ul>
 									{% for val in value %}
-									<li><a><input onclick="Click()" type="checkbox" name="{{ key }}" value="{{ val.0 }}" {% if val.0 in active_filters %} checked {% else %} {% endif %}> {{ val.0 }}<span class="count"></span></a></li>
+									<li>
+										<a onclick="checkboxOnOff(this)" style="cursor: pointer;"> {{ val.0 }}
+											<span class="count" >
+												<input hidden onclick="event.preventDefault()" style="cursor: pointer;" type="checkbox" name="{{ key }}" value="{{ val.0 }}" {% if val.0 in active_filters %} checked {% else %} {% endif %}>
+												<input type="checkbox" {% if val.0 in active_filters %} checked {% else %} {% endif %} style="cursor: pointer;">
+											</span>
+										</a>
+									</li>
 									{% endfor %}
 									
 								</ul>
@@ -57,7 +64,7 @@
 					<nav class="woocommerce-breadcrumb breadcrumbs">
 						<a href="{% url 'show_index' %}">На главную</a>
 						{% if not filters_a and not subcategories and not manufacturer %}
-						<a href="{% url 'show_category' slug='2717255153' %}">Еда</a>
+						<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
 						{% endif %}
 						{% if category %}
 						<a href="{% url 'show_category' slug=category.slug %}">{{ category.name }}</a>
@@ -84,7 +91,7 @@
 							{% for cat in subcategories %}
 							<div class="col-sm-4">
 								<div class="kt-banner block-banner-text style3 margin-top-30" data-height="334" data-reponsive='{"320":320,"480":480,"768":220,"1024":293}' data-background="{% if cat.picture %}{{ cat.picture.url }} {% else %} {% static 'images/products/no-photo.png' %} {% endif %}" data-positionright="0px" data-positionleft="0px" data-verticalmiddle="middle">
-									<a href="{% url 'show_category' slug=cat.slug %}" class="bg-image">Banner Bg</a>
+									<a href="{% url 'show_category' slug=cat.slug %}" class="bg-image"></a>
 									<div class="content text-center">
 										<a href="{% url 'show_category' slug=cat.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">{{ cat.name }}</h4> </a>
 									</div>
@@ -210,4 +217,23 @@
 {% endblock %}
 
 {% block magnific_popup %}
+{% endblock %}
+
+{% block custom_script %}
+<script>
+
+	window.onload = init;
+
+	function init() {
+
+		document.body.classList.add('loaded');
+		if (window.innerWidth > 480) {
+			let filters = document.getElementById('collapseAll');
+			if (filters) {
+				filters.classList.add('in');
+			}
+		}
+	}
+
+</script>
 {% endblock %}

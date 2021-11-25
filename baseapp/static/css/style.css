@@ -797,8 +797,8 @@ HEADER
     background-color: #1d1d1d;
 }
 .top-bar-left .form-search-wapper{
-   /* padding-left: 60px;*/
-    padding-left: 20px;
+    padding-left: 60px;
+    /*padding-left: 20px;*/
     /* padding-right: 20px; */
 }
 .top-bar-left .form-search{
@@ -5046,7 +5046,7 @@ SHORTCODE
     -webkit-transition: all 1s ease;
     -o-transition: all 1s ease;
     position: relative;
-    filter: blur(2px);
+    /*filter: blur(2px);*/
 }
 .bg-image:before{
     content: '';
@@ -6687,7 +6687,7 @@ BLOG
     background-color: #f2ddb0;
     padding: 30px 50px;
     overflow: hidden;
-    display: table;
+    /*display: table;*/
 }
 .author-bio .author-avatar{
    display: table-cell;
@@ -9537,8 +9537,9 @@ RESPONSIVE
     }
 
     .slide-home3 .inner{
-        background: rgba(0,0,0,.2);
-        backdrop-filter: grayscale(1) contrast(1) blur(1px);
+        background: rgba(0,0,0,.1);
+        /*backdrop-filter: grayscale(1) contrast(1) blur(1px);*/
+        backdrop-filter: contrast(1) blur(1px);
     }
 
     .slide-home2 .content-slide .subtitle{
@@ -10061,8 +10062,8 @@ RESPONSIVE
     }
 
     .block-banner-text .content{
-        left: 15px!important;
-        right: 15px!important;
+       /* left: 15px!important;
+        right: 15px!important;*/
         text-align: center!important;
     }
     .slide-home2 .content-slide .title{

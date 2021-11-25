@@ -1,6 +1,5 @@
 from django.db import models
 
-
 import os
 
 from django.conf import settings
@@ -66,7 +65,17 @@ class Good(models.Model):
 		if main_image:
 			return main_image
 		else:
-			return Picture.objects.filter(good=self).first()	
+			return Picture.objects.filter(good=self).first()
+
+
+	def get_pictures(self):
+
+		try:
+			pictures = Picture.objects.filter(good=self)
+		except:
+			return None
+			
+			return pictures		
 
 
 	class Meta:

@@ -1,0 +1,60 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block social %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container margin-bottom-30">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'show_festival_list' %}">Фестивали</a>
+			{{ festival }}
+		</nav>
+		<!-- <div class="heading-section text-center wow fadeInRight">
+			<h3 class="title">{{ festival }}</h3>
+		</div> -->
+		<div class="row" align="center">
+			<div class="col-sm-12 col-md-12 main-content">
+				<div class="blog-single">
+					<div class="post-item">
+						<div class="post-info">
+							<div class="heading-section text-center wow fadeInRight">
+								<h1 class="title">{{ festival }}</h1>
+							</div>
+							{% if festival.description %}
+							<div class="blog-content" style="border-style: solid;">
+								<p>{{ festival.description | linebreaksbr }}</p>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="heading-section text-center wow fadeInRight margin-top-30">
+			<h3 class="title">Меню фестиваля</h3>
+		</div>
+		<div class="row">
+			<div class="col-12 col-sm-12 col-md-12">
+				<div class="images kt-images">
+					<div class="kt-main-image" align="center">
+						<a class="zoom" href="{{ festival.menu_img.url }}">
+							<img src="{{ festival.menu_img.url }}" alt=""/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>			
+	</div>	
+</div>
+
+{% endblock %}

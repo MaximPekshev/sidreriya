@@ -20,6 +20,9 @@ from .serializers import GoodSerializer
 
 from filterapp.models import PropertiesFilter
 
+from django.db.models import Q
+
+
 def get_goods_of_object_property_values(property_values, goods_table):
 
 	f_goods = []
@@ -221,8 +224,6 @@ def show_catalog(request):
 
 	current_cart = 	get_cart_(request)
 
-	print(page.object_list)
-
 	template_name = 'goodapp/catalog.html'
 	context = {
 		'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
@@ -233,7 +234,6 @@ def show_catalog(request):
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
 		'wishlist' : wishlist,
 		'filters_a' : get_filters_a(goods),
-		# 'bestsellers' : Bestseller.objects.all().order_by('?'),
 	}
 	
 	return render(request, template_name, context)
@@ -736,3 +736,65 @@ def show_product_with_filters(request):
 		}
 
 		return render(request, template_name, context) 
+
+def show_search_result(request):
+	
+	if request.method == 'GET':
+
+		query = request.GET.get('q')
+
+		goods = Good.objects.filter(
+
+			Q(name__icontains=query) |
+			Q(name__icontains=query.upper()) |
+			Q(name__icontains=query.lower()) |
+			Q(name__icontains=query.capitalize()) |
+			Q(name_en__icontains=query) |
+			Q(name_en__icontains=query.upper()) |
+			Q(name_en__icontains=query.lower()) |
+			Q(name_en__icontains=query.capitalize()),
+			is_active=True
+
+			)
+
+		goods_count=18
+
+		page_number = request.GET.get('page', 1)
+
+		paginator = Paginator(goods, goods_count)
+
+		page = paginator.get_page(page_number)
+
+		is_paginated = page.has_other_pages()
+
+		if page.has_previous():
+			prev_url = '?page={}'.format(page.previous_page_number())
+		else:
+			prev_url = ''	
+
+		if page.has_next():
+			next_url = '?page={}'.format(page.next_page_number())
+		else:
+			next_url = ''			
+
+		current_wishlist = get_wishlist(request)
+
+		wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+		barrels = query_set_to_list(In_Barrels.objects.all())
+
+		current_cart = 	get_cart_(request)
+
+		template_name = 'goodapp/search.html'
+		context = {
+			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
+			'cart': current_cart,
+			'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
+			'in_bar': get_in_barrels(),
+			'barrels': barrels,
+			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
+			'wishlist' : wishlist,
+			'filters_a' : get_filters_a(goods),
+			'q' : query,
+		}
+		
+		return render(request, template_name, context)

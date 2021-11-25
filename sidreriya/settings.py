@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'ajax_select',
     'background_task',
     'django_crontab',
+    'festapp',
 
 ]
 

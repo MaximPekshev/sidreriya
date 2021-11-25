@@ -195,22 +195,33 @@
 
 		<script>
 
-
-			window.onload = init;
-
-			function init() {
-
-				document.body.classList.add('loaded');
-				if (window.innerWidth > 480) {
-					document.getElementById('collapseAll').classList.add('in');
-				}
-
-			}
-
 			function Click(){
 				document.getElementById("filter_form").submit()
 			}
 
+			function checkboxOnOff(e){
+
+				checkboxes = e.getElementsByTagName('input');
+
+				// for (let i=0; i<checkboxes.length; i++) {
+				var inputChk = checkboxes[0];
+				var viewChk = checkboxes[1];
+					// break
+				// }
+
+				if (!inputChk.checked) {
+					inputChk.checked = true;
+					viewChk.checked = true;
+				} else {
+					inputChk.checked = false;
+					viewChk.checked = false;
+				}
+
+				document.getElementById("filter_form").submit();
+			}
+
 		</script>
+		{% block custom_script %}
+		{% endblock %}
 </body>
 </html>
