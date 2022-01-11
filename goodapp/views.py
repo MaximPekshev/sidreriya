@@ -337,6 +337,56 @@ def show_category(request, slug):
 			'wishlist' : wishlist,
 
 		}
+	elif slug == '440621953':
+
+		goods_count=18
+
+		try:
+			category = Category.objects.get(slug=slug)
+		except:
+			category = None	
+
+		goods = Good.objects.filter(category=category)
+
+		table = get_items_with_pictures(goods)
+
+		page_number = request.GET.get('page', 1)
+
+		paginator = Paginator(table, goods_count)	
+
+		page = paginator.get_page(page_number)
+
+
+		is_paginated = page.has_other_pages()
+
+		if page.has_previous():
+			prev_url = '?page={}'.format(page.previous_page_number())
+		else:
+			prev_url = ''	
+
+		if page.has_next():
+			next_url = '?page={}'.format(page.next_page_number())
+		else:
+			next_url = ''			
+
+		current_wishlist = 	get_wishlist(request)
+
+		wishlist = query_set_to_list(Wishlist_Item.objects.filter(wishlist=current_wishlist))
+		barrels = query_set_to_list(In_Barrels.objects.all())
+
+		current_cart = get_cart_(request)
+
+		template_name = 'goodapp/catalog.html'
+
+		context = {
+			'page_object': page, 'prev_url': prev_url, 'next_url': next_url, 'is_paginated': is_paginated,
+			'category': category,
+			'cart': current_cart,
+			'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
+			'in_bar': get_in_barrels(),
+			'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=current_wishlist)), 
+			'wishlist' : wishlist,
+		}
 		
 	else:
 

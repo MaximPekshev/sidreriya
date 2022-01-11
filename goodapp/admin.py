@@ -148,7 +148,8 @@ class CategoryAdmin(admin.ModelAdmin):
 					'rank',
 					)
 	
-	exclude = ('slug', 'cpu_slug')
+	# exclude = ('slug', 'cpu_slug')
+	exclude = ('cpu_slug',)
 
 	search_fields = ('name', )
 
