@@ -44,8 +44,8 @@ def send_mail_on_bar(order_id):
 			
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
-	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
-	# receiver_email = ['m.pekshev@annasoft.ru',]
+	# receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
+	receiver_email = ['m.pekshev@annasoft.ru',]
 	password = config('MAIL_PASSWORD')
 
 	message = MIMEMultipart("alternative")
@@ -289,11 +289,18 @@ def order_add(request):
 			quantity 		= buyer_form.cleaned_data['quantity']
 			comment 		= buyer_form.cleaned_data['comment']
 			good_id 		= buyer_form.cleaned_data['good_id']
+			input_location 	= buyer_form.cleaned_data['input_location']
 
 			if street:
 				address =  "{}, {} ул., д. {}, кв. {}, подъезд {}, этаж {}".format(locality, street, house, apartments, porch, floor)
 			else:
-				address = "Самовывоз - ул. Костюкова 36Г, Белгород"
+				if input_location == '1':
+
+					address = "Самовывоз - ул. Костюкова 36Г, Белгород"
+
+				elif input_location == '2':
+
+					address = "Самовывоз - ул. Левобережная 22А, Белгород"
 
 	
 			try:
