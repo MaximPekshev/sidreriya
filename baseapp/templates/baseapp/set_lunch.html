@@ -113,11 +113,11 @@
 										</div>
 									</div>
 
-									<div class="custom-control custom-radio" style="margin-left: 30px">
+									<div class="custom-control custom-radio" style="margin-left: 10px">
 										<input type="radio" id="customRadio1" name="input_cook_time" class="custom-control-input"  value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
 										<label class="custom-control-label" for="customRadio1">Как можно скорее</label>
 									</div>
-									<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
+									<div class="custom-control custom-radio wishlist-form" style="margin-left: 10px;">
 										<input type="radio" id="customRadio2" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
 										<label class="custom-control-label" for="customRadio2">Выбрать время</label>
 										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
@@ -168,15 +168,28 @@
 											<p><input id="phoneInput" name="input_phone" type="text" placeholder="Телефон" value="{{ buyer.phone }}" required></p>
 										</div>
 									</div>
-
-									<div class="custom-control custom-radio" style="margin-left: 30px">
-										<input type="radio" id="customRadio1_self" name="input_cook_time" class="custom-control-input" checked value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
-										<label class="custom-control-label" for="customRadio1_self">Как можно скорее</label>
-									</div>
-									<div class="custom-control custom-radio wishlist-form" style="margin-left: 30px;">
-										<input type="radio" id="customRadio2_self" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
-										<label class="custom-control-label" for="customRadio2_self">Выбрать время</label>
-										<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="custom-control custom-radio" style="margin-left: 10px">
+												<input type="radio" id="customRadio1_self" name="input_cook_time" class="custom-control-input" checked value="now" {% if now_active %} checked {% else %} disabled  {% endif %}>
+												<label class="custom-control-label" for="customRadio1_self">Как можно скорее</label>
+											</div>
+											<div class="custom-control custom-radio wishlist-form" style="margin-left: 10px;">
+												<input type="radio" id="customRadio2_self" name="input_cook_time" class="custom-control-input" style="margin-bottom: 30px;" value="by_time" {% if now_active %}{% else %} checked {% endif %}>
+												<label class="custom-control-label" for="customRadio2_self">Выбрать время</label>
+												<input type="time" id="deliv_time" name="input_time" class="select-option" style="margin-left: 30px" min="{{ min_time }}" max="{{ max_time }}" value="{{ min_time }}">
+											</div>
+										</div>
+										<div class="col-sm-12">
+											<div class="custom-control custom-radio" style="padding-left: 10px">
+												<input type="radio" id="location1" name="input_location" class="custom-control-input" checked value="1">
+												<label class="custom-control-label" for="location1">Заберу из Сидрерии на Костюкова</label>
+											</div>
+											<div class="custom-control custom-radio" style="padding-left: 10px">
+												<input type="radio" id="location2" name="input_location" class="custom-control-input" value="2">
+												<label class="custom-control-label" for="location2">Заберу из Сидрерии на Везелке</label>
+											</div>
+										</div>
 									</div>
 
 									<div class="block-form-footer text-center">
