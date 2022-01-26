@@ -65,6 +65,7 @@ def show_cart(request):
 			cr_item.summ = item.summ
 		
 			cr_item.good = item.good
+			cr_item.cart_item = item
 			
 			images = Picture.objects.filter(good=item.good, main_image=True).first()
 

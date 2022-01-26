@@ -8,6 +8,8 @@ import uuid
 
 from uuslug import slugify
 
+from decimal import Decimal
+
 def get_uuid():
 	return str(uuid.uuid4().fields[0])
 
@@ -66,6 +68,16 @@ class Good(models.Model):
 			return main_image
 		else:
 			return Picture.objects.filter(good=self).first()
+
+	def get_discount_price(self):
+		if self.is_cidre:	
+			s = self.price - self.price*Decimal(0.25)
+		else:
+			if self.category.name == "Сертификаты":
+				s = self.price
+			else:
+				s = self.price - self.price*Decimal(0.2)
+		return s.quantize(Decimal("1"))
 
 
 	def get_pictures(self):

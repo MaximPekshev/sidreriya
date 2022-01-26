@@ -42,7 +42,7 @@
 											{% if item.old_price %}
 											<span class="price"><ins>&#8381 {{ item.price }} </ins><del>&#8381 {{ item.old_price }}</del></span>
 											{% else %}
-											<span class="price">&#8381 {{ item.price }}</span>
+											<span class="price">&#8381 {{ item.price }} / </span><span class="price discount-price">&#8381 * {{ item.get_discount_price }}</span>
 											{% endif %}
 										{% else %}
 										<span class="price">&#8381 0</span>
@@ -112,6 +112,15 @@
 
 			</div>
 			
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-12" style="padding: 10px 15px;" align="right">
+			<p>
+				* цена при самовывозе
+			</p>	
 		</div>
 	</div>
 </div>

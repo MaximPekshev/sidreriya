@@ -34,6 +34,7 @@
 							<th>Дата заказа</th>
 							<th>Кол-во</th>
 							<th>Сумма заказа</th>
+							<th>С собой</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -43,6 +44,7 @@
 							<td>{{ item.0.date }}</td>
 							<td>{{ item.1 }}</td>
 							<td>{{ item.0.summ }}</td>
+							<td>{{ item.0.get_discount_summ }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

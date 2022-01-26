@@ -180,7 +180,7 @@
 					Совершая заказ вы соглашаетесь с <a href="{% url 'show_delivery' %}">условиями  доставки</a>.<br> 
 				</p>
 				<p style="margin-left: 20px;">	
-					Часы работы:<br>Вс-Чт : 09:00/0:00<br> Пт-Сб : 09-00/3-00
+					Часы работы:<br>Вс-Чт : 09:00/0:00<br> Пт-Сб : 09-00/2-00
 				</p>
 				<p style="margin-left: 20px;">	
 					За 30 минут до закрытия заведения прием заказов прекращается!
@@ -198,7 +198,8 @@
 							<tr>
 								<th class="product-name">Товар</th>
 								<th class="product-total"></th>
-								<th class="product-total">Сумма</th>
+								<th class="product-total" style="text-align: right;">Сумма</th>
+								<th class="product-total">С собой</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -206,7 +207,12 @@
 							<tr>
 								<td class="product-name">{{ item.good }} </td>
 								<td class="product-total"><span class="amount">x {{ item.quantity }}</span></td>
+								<td class="product-total" style="text-align: right;"><span class="amount">&#8381 {{ item.summ }}</span></td>
+								{% if item.good.category.name == 'Сертификаты' %}
 								<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
+								{% else %}
+								<td class="product-total"><span class="amount">&#8381 {{ item.get_item_discount_summ }}</span></td>
+								{% endif %}
 							</tr>
 							{% endfor %}
 						</tbody>
@@ -214,14 +220,15 @@
 							<tr class="order-total">
 								<th>Итого</th>
 								<th></th>
-								<td><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
+								<td style="text-align: right;"><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
+								<td><strong><span class="amount">&#8381 {{ cart.get_discount_summ }}</span></strong></td>
 							</tr>
 						</tfoot>
 					</table>
 				</div>
-				<p>
+				{% comment %} <p>
 					Стоимость вашего заказа указана без скидок!
-				</p>
+				</p> {% endcomment %}
 				<p>	
 					На данный момент действуют акции при самовывозе:<br> -25% на весь сидр<br> -20% на основное меню<br>
 				</p>

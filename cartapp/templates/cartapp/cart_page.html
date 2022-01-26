@@ -38,6 +38,7 @@
 								<th>Наличие</th>
 								<th>Кол-во</th>
 								<th>Сумма</th>
+								<th>С собой</th>
 								<th>Удалить</th>
 							</tr>
 						</thead>
@@ -49,7 +50,11 @@
 									<img class="product-thumb" src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 									<div class="product-info">
 										<h3 class="product-name"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}</a></h3>
-										<span class="product-price">&#8381 {{ item.price }}</span>
+										{% if item.good.category.name == 'Сертификаты' %}
+										<span class="product-price">&#8381 {{ item.good.price }}</span>
+										{% else %}
+										<span class="product-price">&#8381 {{ item.good.price }} / <span class="product-price discount-price">&#8381 {{ item.cart_item.get_discount_price }} *</span>
+										{% endif %}
 									</div>
 								</td>
 								<td class="stock">
@@ -75,14 +80,25 @@
 								<td class="product-subtotal">
 									<span class="amount">&#8381 {{ item.summ }}</span>
 								</td>
+								<td class="product-subtotal">
+									{% if item.good.category.name == 'Сертификаты' %}
+									<span class="amount">&#8381 {{ item.summ }}</span>
+									{% else %}
+									<span class="amount">&#8381 {{ item.cart_item.get_item_discount_summ }}</span>
+									{% endif %}
+								</td>
 								<td class="product-remove">
 									<a class="remove" href="{% url 'cart_del_item' slug=item.good.slug %}"><i class="fa fa-close"></i></a>
 								</td>
 							</tr>
 							{% endfor %}
 							<tr>
-								<td colspan="3"></td>
-								<td colspan="2" class="order-total">Итого:   &#8381 {{ cart.summ }}</td>
+								<td colspan="4"></td>
+								<td colspan="2" class="order-total" >Итого:   &#8381 {{ cart.summ }}</td>
+							</tr>
+							<tr>
+								<td colspan="4"></td>
+								<td colspan="2" class="order-total" >C собой:   &#8381 {{ cart.get_discount_summ }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -102,6 +118,15 @@
 				{% endif %}
 				
 			</div>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-12" style="padding: 10px 15px;" align="right">
+			<p>
+				* цена при самовывозе
+			</p>	
 		</div>
 	</div>
 </div>

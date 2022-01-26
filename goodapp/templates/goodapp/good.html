@@ -43,7 +43,7 @@
 								<h1 class="product_title entry-title">{{ good.name }} {% if good.name_en %} / {{ good.name_en }} {% endif %}</h1>
 								{% if good.price %}
 
-								<span class="price">&#8381 {{ good.price }}</span>
+								<span class="price">&#8381 {{ good.price }} / </span><span class="price discount-price"> &#8381 {{ good.get_discount_price }} *</span>
 								{% else %}
 								<span class="price">&#8381 0</span>
 								{% endif %}
@@ -219,7 +219,7 @@
 										{% if item.old_price %}
 											&#8381 {{ item.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.price }}</span>
+										<span class="price">&#8381 {{ item.price }} / &#8381 * {{ item.get_discount_price }}</span>
 										{% endif %}
 									{% else %}
 										<span class="price">&#8381 0</span>
@@ -234,6 +234,16 @@
 				{% endif %}
 
 			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-12" style="padding: 10px 15px;" align="right">
+			<p>
+				* цена при самовывозе
+			</p>	
 		</div>
 	</div>
 </div>

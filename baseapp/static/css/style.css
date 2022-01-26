@@ -3103,6 +3103,14 @@ HEADER
     font-size: 14px;
 }
 
+.product-item .discount-price{
+    background-color: #eec15b;
+    border-radius: 10px;
+    padding: 0 10px 0 10px;
+    font-family: 'Montserrat';
+    font-size: 14px;
+}
+
 .product-item .price ins{
     float: left;
     margin-right: 5px;
@@ -3130,8 +3138,15 @@ HEADER
     padding-top: 10px;
 }
 .product-item.style3 .price{
-    display: table;
+    /* display: table; */
     margin: 0 auto;
+}
+.product-item.style3 .discount-price{
+    /* display: table; */
+    /* margin: 0 auto; */
+    background-color: #eec15b;
+    border-radius: 10px;
+    padding: 0 10px 0 10px;
 }
 .product-item.style3 .product-inner{
     padding: 10px;
@@ -4257,6 +4272,11 @@ SINGLE PRODUCT
     margin-bottom: 5px;
     display: inline-block;
 }
+.single-product .summary .discount-price{
+    background-color: #eec15b;
+    border-radius: 10px;
+    padding: 0 10px 0 10px;
+}
 .single-product .summary .stock{
     margin-bottom: 10px;
 }
@@ -4613,6 +4633,11 @@ table.cart .product-subtotal,
 table.cart .order-total{
     font-family: 'Montserrat';
     color: #333;
+}
+table.cart .discount-price{
+    background-color: #eec15b;
+    border-radius: 10px;
+    padding: 0 10px 0 10px;
 }
 table.cart .order-total{
     font-size: 18px;

@@ -28,7 +28,7 @@ def show_index(request):
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
-		'bestsellers' : get_items_with_pictures(bestsellsers),
+		'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 
 	}
 
@@ -210,7 +210,7 @@ def show_breakfasts(request):
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
-		'bestsellers' : Bestseller.objects.all().order_by('?'),
+		'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 
 	}
 
@@ -246,7 +246,7 @@ def show_сertificate(request):
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
 		'goods': goods,
 		'category': category,
-		'bestsellers' : Bestseller.objects.all().order_by('?'),
+		'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 
 	}
 

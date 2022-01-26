@@ -61,7 +61,7 @@ def send_mail_on_bar(order_id):
 
 	if order:
 		for item in Order_Item.objects.filter(order=order):
-			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td)
+			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.get_item_discount_summ())
 
 
 
@@ -89,6 +89,7 @@ def send_mail_on_bar(order_id):
 						<th style="border-bottom: 1px solid #ececec; padding: 14px 0; text-align: left">Товар</th>
 						<th style="border-bottom: 1px solid #ececec; padding: 14px 0;">Кол-во</th>
 						<th style="border-bottom: 1px solid #ececec; padding: 14px 0;">Сумма</th>
+						<th style="border-bottom: 1px solid #ececec; padding: 14px 0;">С собой</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -97,8 +98,15 @@ def send_mail_on_bar(order_id):
 				<tfoot>
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
+						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
 						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
+					</tr>
+					<tr >
+						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
+						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
+						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">С собой</th>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {10}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	
@@ -107,7 +115,7 @@ def send_mail_on_bar(order_id):
 			</div>
 	      </body>
 	    </html>
-	    """.format(order.order_number, order.phone, order.address, order.cook_time, order_items, order.summ, order.first_name, order.last_name, order.email, order.comment)
+	    """.format(order.order_number, order.phone, order.address, order.cook_time, order_items, order.summ, order.first_name, order.last_name, order.email, order.comment, order.get_discount_summ())
 
 	part1 = MIMEText(text, "plain")
 	part2 = MIMEText(html, "html")
@@ -148,7 +156,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 
 	if order:
 		for item in Order_Item.objects.filter(order=order):
-			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td)
+			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.get_item_discount_summ())
 
 
 
@@ -173,6 +181,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 						<th style="border-bottom: 1px solid #ececec; padding: 14px 0; text-align: left">Товар</th>
 						<th style="border-bottom: 1px solid #ececec; padding: 14px 0;">Кол-во</th>
 						<th style="border-bottom: 1px solid #ececec; padding: 14px 0;">Сумма</th>
+						<th style="border-bottom: 1px solid #ececec; padding: 14px 0;">С собой</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -181,17 +190,21 @@ def send_mail_to_buyer(order_id, buyer_email):
 				<tfoot>
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
+						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
 						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
+					</tr>
+					<tr >
+						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
+						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
+						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">С собой</th>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {6}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	
 
 	        <p></p>
 
-	        <p>
-				Стоимость вашего заказа указана без скидок!
-			</p>
 			<p>	
 				На данный момент действуют акции:<br> -25% на весь сидр «с собой»<br> -20% на основное меню при самовывозе<br>
 			</p>
@@ -203,13 +216,14 @@ def send_mail_to_buyer(order_id, buyer_email):
 			</p>
 			<p></p>
 			<p> С Уважением, Сидрерия </p>
+		
 			<p>	
-				Часы работы:<br> Пн-Чт : 11:00/0:00<br>Пт : 11-00/3-00<br>Сб : 14-00/3-00<br>Вс : 14-00/0-00
+				Часы работы:<br> Вс-Чт : 09:00/0:00<br>Пт-Сб : 09-00/2-00
 			</p>
 			</div>
 	      </body>
 	    </html>
-	    """.format(order.first_name, order.order_number, order.address, order.cook_time, order_items, order.summ)
+	    """.format(order.first_name, order.order_number, order.address, order.cook_time, order_items, order.summ, order.get_discount_summ())
 
 	part1 = MIMEText(text, "plain")
 	part2 = MIMEText(html, "html")

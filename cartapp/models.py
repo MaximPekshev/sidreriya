@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings
 
 from goodapp.models import Good
-
+from decimal import Decimal
 
 def cart_calculate_summ(cart):
 
@@ -19,22 +19,13 @@ def cart_calculate_summ(cart):
 		cart.save()
 
 
-class Cart(models.Model):
-
-	summ		= models.DecimalField('Сумма корзины', default = 0, blank = True, max_digits = 15, decimal_places = 0, editable = False)
-	user 		= models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)		
-
-	def __str__(self):
-		return str(self.id)
-
 class Cart_Item(models.Model):
 
-	cart 		= models.ForeignKey(Cart, on_delete = models.CASCADE)
+	cart 		= models.ForeignKey('Cart', on_delete = models.CASCADE)
 	good 		= models.ForeignKey(Good, on_delete = models.PROTECT)
 	quantity	= models.DecimalField(max_digits = 15, decimal_places = 1)
 	price		= models.DecimalField(max_digits = 15, decimal_places = 0)
 	summ		= models.DecimalField(max_digits = 15, decimal_places = 0)
-
 
 	def __str__(self):
 		return str(self.id)
@@ -45,3 +36,32 @@ class Cart_Item(models.Model):
 		super(Cart_Item, self).save(*args, **kwargs)
 		cart_calculate_summ(self.cart)	
 
+	def get_discount_price(self):
+
+		if self.good.is_cidre:	
+			s = self.price - self.price*Decimal(0.25)
+		else:
+			if self.good.category.name == "Сертификаты":
+				s = self.price
+			else:
+				s = self.price - self.price*Decimal(0.2)
+
+		return s.quantize(Decimal("1"))
+
+	def get_item_discount_summ(self):
+		s = self.quantity*self.get_discount_price()
+		return s.quantize(Decimal("1"))
+
+class Cart(models.Model):
+
+	summ		= models.DecimalField('Сумма корзины', default = 0, blank = True, max_digits = 15, decimal_places = 0, editable = False)
+	user 		= models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)		
+
+	def get_discount_summ(self):
+		summ = Decimal(0)
+		for item in Cart_Item.objects.filter(cart=self):
+			summ += item.quantity*item.get_discount_price()
+		return summ.quantize(Decimal("1"))
+
+	def __str__(self):
+		return str(self.id)

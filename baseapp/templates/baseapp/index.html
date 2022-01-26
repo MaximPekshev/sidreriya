@@ -26,7 +26,7 @@
 				</li>
 				{% endif %}
 				<li class="menu-item-has-children box-setting">
-					<a href="tel:84722412416"><span class="menu-icon pe-7s-headphones"></span> Тел: 412-416</a>
+					<a href="tel:+74722412416"><span class="menu-icon pe-7s-headphones"></span> Тел: 412-416</a>
 				</li>
 			</ul>
 		</div>
@@ -60,7 +60,7 @@
 			<div class="top-bar-right">
 				<ul class="kt-nav top-bar-menu">
 					<li class="menu-item-has-children">
-						<a href="https://www.instagram.com/sidreriya_bel/"><i class="fa fa-instagram"></i></a>
+						<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
 					</li>
 					<li class="menu-item-has-children box-setting">
 						<a href="{% url 'show_wishlist' %}">
@@ -287,8 +287,8 @@
 							<div class="product-inner">
 								<div class="thumb">
 									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.image %}
-											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% if item.good.get_main_image %}
+											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% else %}
 											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% endif %}
@@ -322,7 +322,7 @@
 										{% if item.good.old_price %}
 										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.good.price }}</span>
+										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.get_discount_price }} *</span>
 										{% endif %}
 									{% else %}
 									<span class="price">&#8381 0</span>
@@ -344,8 +344,8 @@
 							<div class="product-inner">
 								<div class="thumb">
 									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.image %}
-											<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% if item.good.get_main_image %}
+											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% else %}
 											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% endif %}
@@ -379,7 +379,7 @@
 										{% if item.good.old_price %}
 										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.good.price }}</span>
+										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.get_discount_price }} *</span>
 										{% endif %}
 									{% else %}
 									<span class="price">&#8381 0</span>
@@ -391,6 +391,13 @@
 						{% endfor %}
 					</ul>
 				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12" style="padding: 10px 15px;" align="right">
+				<p>
+					* цена при самовывозе
+				</p>	
 			</div>
 		</div>
 	</div>
