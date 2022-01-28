@@ -208,7 +208,7 @@
 								<td class="product-name">{{ item.good }} </td>
 								<td class="product-total"><span class="amount">x {{ item.quantity }}</span></td>
 								<td class="product-total" style="text-align: right;"><span class="amount">&#8381 {{ item.summ }}</span></td>
-								{% if item.good.category.name == 'Сертификаты' %}
+								{% if item.good.category.name == 'Сертификаты' or item.good.name == 'Дружеский обед' %}
 								<td class="product-total"><span class="amount">&#8381 {{ item.summ }}</span></td>
 								{% else %}
 								<td class="product-total"><span class="amount">&#8381 {{ item.get_item_discount_summ }}</span></td>
