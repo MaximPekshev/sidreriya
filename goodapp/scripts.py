@@ -2,7 +2,7 @@ import xlrd
 import os
 from .models import Good, Manufacturer, Category, Properties, Property_value, Object_property_values
 from django.core.exceptions import ObjectDoesNotExist
-
+from decimal import Decimal
 
 def import_base():
 	
@@ -49,6 +49,26 @@ def import_base():
 		else:
 			print('не найден товар с УИД' , uid)
 
+
+def import_price():
+	
+	wb = xlrd.open_workbook(os.path.join('tempfiles', 'price.xlsx'))
+	sheet = wb.sheet_by_index(0)
+
+	for rownum in range(sheet.nrows):
+		uid = sheet.cell(rownum, 2).value
+
+		good 				= Good.objects.filter(good_uid=uid).first()
+
+		if good:
+
+			# print(Decimal(sheet.cell(rownum, 4).value))
+			good.price 	= Decimal(sheet.cell(rownum, 4).value)
+			good.save()
+			# print('изменен товар ', good, 'с УИД' , uid)
+			# print('---------------------------------------------------------------')
+		else:
+			print('не найден товар с УИД' , uid, ' наименование:', sheet.cell(rownum, 3).value)
 
 def get_opv(good, prop, opv):
 
