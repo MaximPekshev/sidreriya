@@ -68,7 +68,7 @@ def import_price():
 			# print('изменен товар ', good, 'с УИД' , uid)
 			# print('---------------------------------------------------------------')
 		else:
-			print('не найден товар с УИД' , uid, ' наименование:', sheet.cell(rownum, 3).value)
+			print('не найден товар с УИД' , uid, ' наименование:', sheet.cell(rownum, 3).value, ' цена:' ,sheet.cell(rownum, 4).value)
 
 def get_opv(good, prop, opv):
 
