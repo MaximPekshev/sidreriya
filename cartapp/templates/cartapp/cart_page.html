@@ -50,7 +50,8 @@
 									<img class="product-thumb" src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 									<div class="product-info">
 										<h3 class="product-name"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}</a></h3>
-										{% if item.good.category.name == 'Сертификаты' or item.good.name == 'Дружеский обед' %}
+										{% comment %} {% if item.good.category.name == 'Сертификаты' or item.good.name == 'Дружеский обед' %} {% endcomment %}
+										{% if item.good.category.name == 'Сертификаты' or item.good.category.name == 'Куличи' or item.good.name == 'Дружеский обед' %}
 										<span class="product-price">&#8381 {{ item.good.price }}</span>
 										{% else %}
 										<span class="product-price">&#8381 {{ item.good.price }} / <span class="product-price discount-price">&#8381 {{ item.cart_item.get_discount_price }} *</span>
@@ -81,7 +82,8 @@
 									<span class="amount">&#8381 {{ item.summ }}</span>
 								</td>
 								<td class="product-subtotal">
-									{% if item.good.category.name == 'Сертификаты' %}
+									{% comment %} {% if item.good.category.name == 'Сертификаты' %} {% endcomment %}
+									{% if item.good.category.name == 'Сертификаты' or item.good.category.name == 'Куличи' %}
 									<span class="amount">&#8381 {{ item.summ }}</span>
 									{% else %}
 									<span class="amount">&#8381 {{ item.cart_item.get_item_discount_summ }}</span>

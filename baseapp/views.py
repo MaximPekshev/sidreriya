@@ -23,6 +23,7 @@ def show_index(request):
 
 
 	context = {
+		'kulichi': Category.objects.filter(name='Куличи').first(),
 		'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],

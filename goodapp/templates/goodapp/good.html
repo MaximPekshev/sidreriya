@@ -43,7 +43,7 @@
 								<h1 class="product_title entry-title">{{ good.name }} {% if good.name_en %} / {{ good.name_en }} {% endif %}</h1>
 								{% if good.price %}
 
-								<span class="price">&#8381 {{ good.price }} / </span><span class="price discount-price"> &#8381 {{ good.get_discount_price }} *</span>
+								<span class="price">&#8381 {{ good.price }} {% if good.category.name != "Куличи" %} / </span><span class="price discount-price"> &#8381 {{ good.get_discount_price }} *</span> {% endif %}
 								{% else %}
 								<span class="price">&#8381 0</span>
 								{% endif %}

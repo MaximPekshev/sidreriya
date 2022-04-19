@@ -148,7 +148,8 @@
 											{% if item.good.old_price %}
 											<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 											{% else %}
-											<span class="price">&#8381 {{ item.good.price }}</span> / <span class="price discount-price">&#8381 {{ item.good.get_discount_price }} * </span>
+											
+											<span class="price">&#8381 {{ item.good.price }}</span>{% if item.good.category.name != "Куличи" %} / <span class="price discount-price">&#8381 {{ item.good.get_discount_price }} * </span>{% endif %}
 											{% endif %}
 										{% else %}
 										<span class="price">&#8381 0</span>
