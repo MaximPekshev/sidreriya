@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'background_task',
     'django_crontab',
     'festapp',
+    'music_week_app',
 
 ]
 
@@ -136,9 +137,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = config('MAIL_USER')
 
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

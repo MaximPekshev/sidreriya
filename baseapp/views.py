@@ -9,6 +9,7 @@ from goodapp.views import Item, get_in_barrels
 from goodapp.views import get_items_with_pictures
 from django.db.models import Sum
 from festapp.models import Festival
+from music_week_app.models import MusicWeek
 
 import datetime
 from authapp.models import Buyer
@@ -25,12 +26,12 @@ def show_index(request):
 	context = {
 		'kulichi': Category.objects.filter(name='Куличи').first(),
 		'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
+		'music_week': MusicWeek.objects.filter(date__gte=datetime.datetime.now()).order_by('date').first(),
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))),
 		'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
-
 	}
 
 	return  render(request, 'baseapp/index.html', context)

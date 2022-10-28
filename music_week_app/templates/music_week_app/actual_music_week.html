@@ -1,0 +1,40 @@
+{% extends 'baseapp/index.html' %}
+
+{% load static %}
+
+{% block header %}
+{{ block.super }}
+{% endblock %}
+
+{% block social %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="main-container margin-bottom-30">
+	<div class="container">
+		<nav class="woocommerce-breadcrumb breadcrumbs">
+			<a href="{% url 'show_index' %}">На главную</a>
+		</nav>
+		<div class="row">
+			<div class="col-12 col-sm-12 col-md-12">
+				<div class="images kt-images">
+					<div class="kt-main-image" align="center">
+						{% if music_week %}
+						<a class="zoom" href="{{ music_week.image.url }}">
+							<img src="{{ music_week.image.url }}" alt=""/>
+						</a>
+						{% else %}
+						<a class="zoom" href="{% static 'images/banners/music_week_default.jpg' %}">
+							<img src="{% static 'images/banners/music_week_default.jpg' %}" alt=""/>
+						</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>			
+	</div>	
+</div>
+
+{% endblock %}

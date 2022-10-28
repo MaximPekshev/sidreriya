@@ -282,6 +282,23 @@
 </div>
 {% endif %}
 
+{% if music_week %}
+<div class="section-banner">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-12">
+				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="350" data-background="{% static 'images/banners/music_week.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+					<a href="{% url 'show_actual_music_week' %}" class="bg-image"></a>
+					<div class="content text-right">
+						<a href="{% url 'show_actual_music_week' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Афиша музыкальных концертов</h4></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
 
 {% if bestsellers %}
 <!-- Tab product -->
