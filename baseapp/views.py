@@ -26,7 +26,7 @@ def show_index(request):
 	context = {
 		'kulichi': Category.objects.filter(name='Куличи').first(),
 		'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
-		'music_week': MusicWeek.objects.filter(date__gte=datetime.datetime.now()).order_by('date').first(),
+		'music_week': MusicWeek.objects.filter(date__lte=datetime.datetime.now()).order_by('date').last(),
 		'cart': get_cart(request),
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
