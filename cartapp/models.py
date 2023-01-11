@@ -41,7 +41,7 @@ class Cart_Item(models.Model):
 		if self.good.is_cidre:	
 			s = self.price - self.price*Decimal(0.25)
 		else:
-			if self.good.category.name == "Сертификаты" or self.good.name == 'Дружеский обед' or self.good.category.name == "Куличи":
+			if self.good.category.name == "Сертификаты" or self.good.name == 'Дружеский обед' or self.good.category.name == "Куличи" or self.good.category.name == "Вареники":
 				s = self.price
 			else:
 				s = self.price - self.price*Decimal(0.2)
