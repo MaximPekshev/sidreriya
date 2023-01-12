@@ -8,6 +8,7 @@ from django.db.models import Sum
 from wishlistapp.views import get_wishlist
 from wishlistapp.models import Wishlist, Wishlist_Item
 from decimal import Decimal
+from django.db.models import Q
 
 import datetime
 
@@ -72,7 +73,7 @@ def show_cart(request):
 			images = images if images else Picture.objects.filter(good=item.good).first()
 
 			cr_item.image = images
-		 	
+
 			table.append(cr_item)
 
 
@@ -168,11 +169,14 @@ def cart_checkout(request):
 	cart  = get_cart(request)
 
 	if cart != None:
-
-		cart_items 	 = Cart_Item.objects.filter(cart = cart)
+		free_cart_items = []
+		cart_items = Cart_Item.objects.filter(cart = cart)
+		for item in cart_items:
+			if item.good.quantity != 0:
+				free_cart_items.append(item)
 
 	context = {
-		'cart_items': cart_items, 
+		'cart_items': free_cart_items, 
 		'cart': cart , 
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),

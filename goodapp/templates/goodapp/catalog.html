@@ -173,7 +173,11 @@
 										</div>
 										<div class="flash">
 										{% if not item.good.quantity %}
+										{% if item.good.category.name == "Куличи" or item.good.category.name == "Вареники" %}
+										<span class="sale">Закончились</span>
+										{% else %}
 										<span class="sale">Все выпили</span>
+										{% endif %}
 										{% endif %}
 										{% if item.good.in_barrel %}
 										<span class="new">Розлив</span>

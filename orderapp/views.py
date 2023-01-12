@@ -400,17 +400,17 @@ def order_add(request):
 				cart_items = Cart_Item.objects.filter(cart=get_cart(request))
 
 				for item in cart_items:
+					if item.good.quantity !=0:
+						order_item = Order_Item(
 
-					order_item = Order_Item(
+							order = new_order,
+							good = item.good,
+							quantity = item.quantity,
+							price = item.price,
+							summ = item.summ,
 
-						order = new_order,
-						good = item.good,
-						quantity = item.quantity,
-						price = item.price,
-						summ = item.summ,
-
-						)
-					order_item.save()
+							)
+						order_item.save()
 
 				cart_to_clear = get_cart(request)
 

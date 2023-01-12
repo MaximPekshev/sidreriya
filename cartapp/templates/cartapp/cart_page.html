@@ -70,7 +70,11 @@
 										<span class="in-stock">в наличии</span>
 										{% endif %}
 									{% else %}
+									{% if item.good.is_cidre %}
 									<span class="in-stock" style="color: orange;">все выпили</span>
+									{% else %}
+									<span class="in-stock" style="color: orange;">закончились</span>
+									{% endif %}
 									{% endif %}
 								</td>
 								<td>

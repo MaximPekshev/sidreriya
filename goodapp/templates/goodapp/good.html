@@ -48,7 +48,16 @@
 								<span class="price">&#8381 0</span>
 								{% endif %}
 								{% if is_cidre %}
-								<p class="stock out-of-stock"><label>в Сидрерии:</label> {% if good.quantity > 0 %}<i class="fa fa-check"></i> в наличии </p> {% else %}<i class="fa fa-times" style="color: orange;"></i> все выпили </p> {% endif %}
+								<p class="stock out-of-stock"><label>в Сидрерии:</label>
+									{% if good.quantity > 0 %}
+									<i class="fa fa-check"></i> в наличии </p>
+									{% else %}
+									{% if item.good.category.name == "Куличи" or item.good.category.name == "Вареники" %}
+									<i class="fa fa-times" style="color: orange;"></i> закончились </p>
+									{% else %}
+									<i class="fa fa-times" style="color: orange;"></i> все выпили </p>
+									{% endif %}
+									{% endif %}
 								{% else %}
 								<p class="stock out-of-stock"><label>вес, гр: {% if good.weight %} {{ good.weight }} {% endif %}</label>
 								{% endif %}

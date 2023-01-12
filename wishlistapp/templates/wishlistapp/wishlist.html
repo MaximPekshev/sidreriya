@@ -47,7 +47,7 @@
 									<img class="product-thumb" src="{{ item.image.images.url }}" alt="" style="width: 50px;">
 									<div class="product-info">
 										<h3 class="product-name"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}</a></h3>
-										<span class="product-price">&#8381 {{ item.price }} / &#8381 * {{ item.good.get_discount_price }}</span>
+										<span class="product-price">&#8381 {{ item.price }}{% if item.good.category.name == "Куличи" or item.good.category.name == "Вареники" %}{% else %} / &#8381 * {{ item.good.get_discount_price }}{% endif %}</span>
 									</div>
 								</td>
 								<td class="stock">
@@ -62,7 +62,11 @@
 										<span class="in-stock">в наличии</span>
 										{% endif %}
 									{% else %}
+									{% if item.good.is_cidre %}
 									<span class="in-stock" style="color: orange;">все выпили</span>
+									{% else %}
+									<span class="in-stock" style="color: orange;">закончились</span>
+									{% endif %}
 									{% endif %}
 								</td>
 								<td>
