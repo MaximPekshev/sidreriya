@@ -13,8 +13,7 @@ def cart_calculate_summ(cart):
 		summ_of_cart = 0
 
 		for item in cart_items:
-			if item.good.quantity !=0:
-				summ_of_cart += item.summ
+			summ_of_cart += item.summ
 
 		cart.summ = summ_of_cart
 		cart.save()
@@ -61,8 +60,7 @@ class Cart(models.Model):
 	def get_discount_summ(self):
 		summ = Decimal(0)
 		for item in Cart_Item.objects.filter(cart=self):
-			if item.good.quantity != 0:
-				summ += item.quantity*item.get_discount_price()
+			summ += item.quantity*item.get_discount_price()
 		return summ.quantize(Decimal("1"))
 
 	def __str__(self):

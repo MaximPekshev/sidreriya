@@ -17,12 +17,6 @@ from authapp.models import Buyer
 
 def show_index(request):
 
-	bestsellsers = []
-
-	for good in Bestseller.objects.all().order_by('?'):
-		bestsellsers.append(good.good)
-
-
 	context = {
 		'kulichi': Category.objects.filter(name='Куличи').first(),
 		'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
