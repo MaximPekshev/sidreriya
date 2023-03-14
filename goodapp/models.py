@@ -21,6 +21,9 @@ class Good(models.Model):
 	description 		= models.TextField(max_length=2048, verbose_name='Описание', blank=True)
 
 	gastronomy			= models.TextField(max_length=512, verbose_name='Гастрономия', blank=True, default='')
+	color				= models.TextField(max_length=512, verbose_name='Цвет', blank=True, default='')
+	fragrance			= models.TextField(max_length=512, verbose_name='Аромат', blank=True, default='')
+	taste				= models.TextField(max_length=512, verbose_name='Вкус', blank=True, default='')
 
 	meta_name 			= models.CharField(max_length=150, verbose_name='meta name', blank=True, null=True)
 	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
@@ -31,6 +34,7 @@ class Good(models.Model):
 	is_active			= models.BooleanField(verbose_name='Активен', default=False)
 
 	is_cidre			= models.BooleanField(verbose_name='Сидр', default=False)
+	is_vine				= models.BooleanField(verbose_name='Вино', default=False)
 
 	quantity			= models.DecimalField(verbose_name='Остаток', max_digits=15, decimal_places=0, blank=True, null=True)
 	weight				= models.CharField(max_length = 36, verbose_name='Вес', blank=True, null=True, default='')
@@ -87,7 +91,7 @@ class Good(models.Model):
 		except:
 			return None
 			
-			return pictures		
+		return pictures		
 
 
 	class Meta:
@@ -196,6 +200,7 @@ class Picture(models.Model):
 class Properties(models.Model):
 
 	title 					= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
+	display_title 			= models.CharField(max_length=150, verbose_name='Наименование для отображения', blank=True)
 	slug 					= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
 
 	def __str__(self):
@@ -206,6 +211,8 @@ class Properties(models.Model):
 		
 		if self.slug == "":
 			self.slug = get_uuid()
+		if self.display_title == "":
+			self.display_title = self.title		
 
 		super(Properties, self).save(*args, **kwargs)
 
@@ -252,7 +259,7 @@ class Object_property_values(models.Model):
 		verbose_name = 'Значение свойств объекта'
 		verbose_name_plural = 'Значения свойств объекта'
 
-		unique_together = (('good', '_property'),)
+		# unique_together = (('good', '_property'),)
 		
 
 class In_Barrels(models.Model):

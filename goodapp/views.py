@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Good, Picture, Object_property_values, Properties, Property_value
 from .models import Category, Manufacturer, In_Barrels, Bestseller
+from django.db.models import Q
 
 from django.http import HttpResponse
 
@@ -88,13 +89,27 @@ def get_in_barrels():
 
 	return table
 
+def get_all_property_values_of_goods(goods):
+	property_value_list = []
+	for good in goods:
+		opv = Object_property_values.objects.filter(good=good)
+		if opv:
+			for item in opv:
+				try:
+					title = item.property_value.title
+				except:
+					title = None
+				if title not in property_value_list:
+					property_value_list.append(title)
+	return property_value_list			
 
-def get_filters_a(goods_table=[]):
-
+def get_filters_a(goods, category=None):
+	all_property_values_of_goods = get_all_property_values_of_goods(goods)
 	filters = []
-
-	properties_filter = PropertiesFilter.objects.all().order_by('-pk')
-
+	if category:
+		properties_filter = PropertiesFilter.objects.filter(Q(category=category) | Q(category=None))
+	else:	
+		properties_filter = PropertiesFilter.objects.all().order_by('-pk')
 	if properties_filter:
 
 		for pf in properties_filter:
@@ -107,40 +122,27 @@ def get_filters_a(goods_table=[]):
 
 				for pv in property_value:
 
-					opv = Object_property_values.objects.filter(property_value=pv)
-
-					# goods_with_opv = []
-
-					# for item in opv:
-					# 	if item.good.is_active == True and item.good in goods_table:
-					# 		goods_with_opv.append(item.good)
-
-
-					# filter_values.append([pv.title, len(goods_with_opv)])
-					filter_values.append([pv.title, 1])
-
-				dict_filters_values = dict.fromkeys([pf.p_filter.title], filter_values)
-				
-				filters.append(dict_filters_values)
-
-	# filters.append(dict.fromkeys(
-	# 	['Крепость'],
-	# 	 [['безалкогольный', len(get_goods_of_single_object_property_value(Property_value.objects.get(pk=27), goods_table))],
-	# 	  ['до 3%', len(get_goods_of_object_property_values(Property_value.objects.filter(pk__in=[28,29,30,31,68]), goods_table))],
-	# 	  ['больше 3%', len(get_goods_of_object_property_values(Property_value.objects.filter(pk__in=[32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53]), goods_table))]
-	# 	  ]
-	# 	  )
-	# )
-	filters.append(dict.fromkeys(
-		['Крепость'],
-		 [['безалкогольный', 1],
-		  ['до 3%', 2],
-		  ['больше 3%', 3]
-		  ]
-		  )
-	)
-
-	manufacturers = Manufacturer.objects.all()
+					# opv = Object_property_values.objects.filter(property_value=pv)
+					if pv.title in all_property_values_of_goods:
+						filter_values.append([pv.title, 1])
+				if filter_values:
+					dict_filters_values = dict.fromkeys([pf.p_filter.display_title if pf.p_filter.display_title else pf.p_filter.title ], filter_values)
+					filters.append(dict_filters_values)
+	if category:				
+		if category.name == 'Сидр':
+			filters.append(dict.fromkeys(
+				['Крепость'],
+				[['безалкогольный', 1],
+				['до 3%', 2],
+				['больше 3%', 3]
+				]
+				)
+			)
+	manufacturers = []
+	for item in goods:
+		if item.manufacturer:
+			if item.manufacturer not in manufacturers:
+				manufacturers.append(item.manufacturer)
 
 	if manufacturers:
 		filter_values = []
@@ -192,7 +194,7 @@ def query_set_to_list(q_set):
 
 def show_catalog(request):
 
-	goods_count=18
+	goods_count=32
 
 	goods = Good.objects.filter(is_active=True).order_by('price')
 	
@@ -239,19 +241,20 @@ def show_catalog(request):
 	return render(request, template_name, context)
 
 
-def get_object_property_value(opv, slug):
+def get_object_property_value(opv, title):
 
-	value = opv.filter(_property=Properties.objects.filter(slug=slug).first()).first()
+	value = opv.filter(_property=Properties.objects.filter(title=title).first()).first()
 
 	if value:
 		value = value.property_value
 	else:
 		value = ''
 
-	return value		
+	return value
 
-
-
+def get_object_property_values(opv, title):
+	print(opv.filter(_property=Properties.objects.filter(title=title).first()))
+	return opv.filter(_property=Properties.objects.filter(title=title).first())
 
 def show_good(request, slug):
 
@@ -260,24 +263,37 @@ def show_good(request, slug):
 	pictures = Picture.objects.filter(good=good).order_by('-main_image')
 	main_pictures = pictures.first()
 
-
 	opv = Object_property_values.objects.filter(good=good)
-	# Страна
-	country = get_object_property_value(opv, '728193372')
-	# Крепость
-	strength = get_object_property_value(opv, '202312845')
-	# Сахар
-	sugar = get_object_property_value(opv, '2193900133')
-	# Объем
-	volume = get_object_property_value(opv, '3824689493')
-	# Газация
-	gas = get_object_property_value(opv, '1240764269')
-	# Пастеризация
-	pasteuriz = get_object_property_value(opv, '2448919171')
-	# Фильтрация
-	filtration = get_object_property_value(opv, '1716778945')
-	# Что внутри?
-	inside = get_object_property_value(opv, '552212307')
+	if good.is_cidre:
+		# Сахар
+		sugar = get_object_property_value(opv, 'Сладость')
+		# Пастеризация
+		pasteuriz = get_object_property_value(opv, 'Пастеризация')
+		# Фильтрация
+		filtration = get_object_property_value(opv, 'Фильтрация')
+		# Что внутри?
+		inside = get_object_property_value(opv, 'Что внутри?')
+		# Крепость
+		strength = get_object_property_value(opv, 'Крепость')
+		# Объем
+		volume = get_object_property_value(opv, 'Объем бутылочки')
+		# Газация
+		gas = get_object_property_value(opv, 'Пузырьки')
+		# Страна
+		country = get_object_property_value(opv, 'Страна')
+	if good.is_vine:	
+		# Бренд
+		brand = get_object_property_value(opv, 'Бренд')
+		# Тип
+		type = get_object_property_value(opv, 'Тип вина')
+		# Виноград
+		grapes = get_object_property_values(opv, 'Виноград')
+		# Крепость
+		strength = get_object_property_value(opv, 'Крепость')
+		# Объем
+		volume = get_object_property_value(opv, 'Объем бутылочки')
+		# Регион
+		country = get_object_property_value(opv, 'Регион')
 
 	current_wishlist = 	get_wishlist(request)
 
@@ -289,16 +305,10 @@ def show_good(request, slug):
 	template_name = 'goodapp/good.html'
 
 	context = {
-	
-		'good': good, 'pictures': pictures, 'main_pictures': main_pictures, 'opv': opv,
-		'country':country,
 		'strength':strength,
-		'sugar':sugar,
 		'volume':volume,
-		'gas':gas,
-		'pasteuriz':pasteuriz,
-		'filtration':filtration,
-		'inside': inside,
+		'country':country,
+		'good': good, 'pictures': pictures, 'main_pictures': main_pictures, 'opv': opv,
 		'is_cidre': good.is_cidre,
 		'cart': get_cart_(request),
 		'cart_count' : Cart_Item.objects.filter(cart=current_cart).aggregate(Sum('quantity'))['quantity__sum'],
@@ -308,12 +318,26 @@ def show_good(request, slug):
 		'wishlist' : wishlist,
 
 	}
+	if good.is_cidre:
+		context.update({
+			'sugar':sugar,
+			'gas':gas,
+			'pasteuriz':pasteuriz,
+			'filtration':filtration,
+			'inside': inside,
+		})
+	elif good.is_vine:
+		context.update({
+			'brand': brand,
+			'type': type,
+			'grapes': grapes,
+		})	
 	return render(request, template_name, context)
 
 def show_category(request, slug):
 
-	if slug == '4127154760':
-
+	if slug == '4127154760': 
+		# Выводим категорию Еда
 		try:
 			category = Category.objects.get(slug=slug)
 		except:
@@ -339,7 +363,7 @@ def show_category(request, slug):
 		}
 		
 	elif slug == '481372718':
-
+		# Выводим категорию Куличи
 		goods_count=18
 
 		try:
@@ -389,7 +413,7 @@ def show_category(request, slug):
 			'wishlist' : wishlist,
 		}	
 	elif slug == '440621953':
-
+		# Выводим категорию Вареники
 		goods_count=18
 
 		try:
@@ -441,7 +465,7 @@ def show_category(request, slug):
 		
 	else:
 
-		goods_count=18
+		goods_count=32
 
 		try:
 			category = Category.objects.get(slug=slug)
@@ -450,8 +474,9 @@ def show_category(request, slug):
 
 		goods = Good.objects.filter(category=category, is_active=True).order_by('price')
 
-		if category.name == 'Сидр':
-			filters_a = get_filters_a(goods)
+		if category.name == 'Сидр' or category.name == 'Вино':
+		# if category.name == 'Сидр':
+			filters_a = get_filters_a(goods, category)
 			bestsellers = Bestseller.objects.all().order_by('?')
 		else:
 			filters_a = None
@@ -505,7 +530,7 @@ def show_category(request, slug):
 
 def show_manufacturer(request, cpu_slug):
 
-	goods_count=18
+	goods_count=32
 
 	try:
 		manufacturer = Manufacturer.objects.get(cpu_slug=cpu_slug)
@@ -584,7 +609,7 @@ def show_in_barrels(request):
 
 def show_product_with_tag(request):
 
-	goods_count=18
+	goods_count=32
 
 	property_value = Property_value.objects.get(title=request.GET.get('tag'))
 
@@ -653,7 +678,7 @@ def show_product_with_filters(request):
 	
 	if request.method == 'GET':
 
-		goods_count=18
+		goods_count=32
 
 		table = []
 
@@ -858,7 +883,7 @@ def show_search_result(request):
 
 			)
 
-		goods_count=18
+		goods_count=32
 
 		page_number = request.GET.get('page', 1)
 

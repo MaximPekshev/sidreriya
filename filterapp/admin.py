@@ -7,6 +7,7 @@ class PropertiesFilterAdmin(admin.ModelAdmin):
 
 	list_display = (
 					'p_filter',
+					'category',
 					)
 	
 admin.site.register(PropertiesFilter, PropertiesFilterAdmin)

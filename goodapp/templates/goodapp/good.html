@@ -15,7 +15,7 @@
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
 			<a href="{% url 'show_index' %}">На главную</a>
-			{% if not is_cidre %}
+			{% if not good.is_cidre and not good.is_vine %}
 			<a href="{% url 'show_category' slug='2717255153' %}">Еда</a>
 			{% endif %}
 			<a href="{% url 'show_category' slug=good.category.slug %}">{{ good.category }}</a>
@@ -47,7 +47,7 @@
 								{% else %}
 								<span class="price">&#8381 0</span>
 								{% endif %}
-								{% if is_cidre %}
+								{% if good.is_cidre or good.is_vine %}
 								<p class="stock out-of-stock"><label>в Сидрерии:</label>
 									{% if good.quantity > 0 %}
 									<i class="fa fa-check"></i> в наличии </p>
@@ -79,7 +79,7 @@
 												<a href="{% url 'show_product_with_tag' %}?tag={{ inside }}">{% if inside %}{{ inside }}{% endif %}</a>
 											</div>
 											<div>
-												<label>Страна:</label>
+												<label>Регион:</label>
 												<a href="{% url 'show_product_with_tag' %}?tag={{ country }}">{% if country %}{{ country }}{% endif %}</a>
 											</div>
 											<div>
@@ -123,7 +123,54 @@
 									</div>
 								</div>
 
+								{% elif good.is_vine %}
+								<div class="variation_form_section">
+									<h2 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Характеристики</h2>
+									<div class="row">
+										<div class="col-sm-6 col-md-6">
+											<div>
+												<label>Производитель:</label>
+												<a href="{% if good.manufacturer %} {% url 'show_manufacturer' cpu_slug=good.manufacturer.cpu_slug %} {% endif %}">{% if good.manufacturer %}{{ good.manufacturer }}{% endif %}</a>
+											</div>
+											<div>
+												<label>Регион:</label>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ country }}">{% if country %}{{ country }}{% endif %}</a>
+											</div>
+											<div>
+												<label>Крепость:</label>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ strength }}">{% if strength %}{{ strength }} %{% endif %}</a>
+											</div>
+											<div>
+												<label>Виноград:</label>
+												{% comment %} {{ grapes }} {% endcomment %}
+												{% for item in grapes %}
+												<a href="{% url 'show_product_with_tag' %}?tag={{ item.property_value }}">{% if item.property_value %}{{ item.property_value }}{% endif %}</a>
+												{% endfor %}
+											</div>
+										</div>
+										<div class="col-sm-6 col-md-6">
+											<div>
+												<label>Объем:</label>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ volume }}">{% if volume %}{{ volume }}{% endif %}</a>
+											</div>
+											{% comment %} <div>
+												<label>Пузырьки:</label>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ gas }}">{% if gas %}{{ gas }}{% endif %}</a>
+											</div> {% endcomment %}
+											<div>
+												<label>Тип:</label>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ type }}">{% if type %}{{ type }}{% endif %}</a>
+											</div>
+											<div>
+												<label>Бренд:</label>
+												<a href="{% url 'show_product_with_tag' %}?tag={{ brand }}">{% if brand %}{{ brand }}{% endif %}</a>
+											</div>
+										</div>
+									</div>
+
+								</div>
 								{% endif %}
+								
 								<div class="quantity"></div>
 								<div class="wishlist-item">
 									<form id="quantityform" action="{% url 'cart_add_item' slug=good.slug %}" method="POST">
@@ -158,6 +205,7 @@
 								
 							</div>
 						</div>
+						
 					</div>
 					{% if opv %}
 					<div class="row">
@@ -181,6 +229,57 @@
 					</div>
 					{% endif %}	
 				</div> 
+					{% if good.is_vine  %}
+					<div class="heading-section style2 text-center margin-top-30 margin-bottom-10 padding-left-10" >
+						<h3 class="title" style="font-weight: 600;">Дегустация</h3>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 col-md-6" style="padding: 20px 30px;">
+							<div class="variation_form_section">
+								<h2 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Цвет</h2>
+								<div class="short-descript">
+								<p align="justify">{{ good.color|linebreaksbr }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-6" style="padding: 20px 30px;">
+							<div class="variation_form_section">
+								<h2 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Аромат</h2>
+								<div class="short-descript">
+								<p align="justify">{{ good.fragrance|linebreaksbr }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-6" style="padding: 20px 30px;">
+							<div class="variation_form_section">
+								<h2 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Вкус</h2>
+								<div class="short-descript">
+								<p align="justify">{{ good.taste|linebreaksbr }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-6" style="padding: 20px 30px;">
+							<div class="variation_form_section">
+								<h2 class="product_title entry-title" style="font-size: 100%; font-weight: 600">Гастрономия</h2>
+								<div class="short-descript">
+								<p align="justify">{{ good.gastronomy|linebreaksbr }}</p>
+								</div>
+							</div>
+						</div>
+						{% if good.manufacturer %}
+						<div class="col-12" style="padding: 20px 30px;">
+							<div class="variation_form_section">
+								<h2 class="product_title entry-title" style="font-size: 100%; font-weight: 600">О производителе</h2>
+								<div class="short-descript">
+								<p align="justify">{{ good.manufacturer.description|linebreaksbr }}</p>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</div>
+					{% endif %}
+				{% comment %} </div>	 {% endcomment %}
+
 				{% if upsell_products %}
 				<div class="related products">	
 					<div class="heading-section text-center">
