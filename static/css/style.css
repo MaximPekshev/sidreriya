@@ -8808,6 +8808,18 @@ MARGIN
 /*----------------
 PADDING
 ----------------*/
+.padding-left-40{
+    padding-left: 40px!important;
+}
+.padding-left-30{
+    padding-left: 30px!important;
+}
+.padding-left-20{
+    padding-left: 20px!important;
+}
+.padding-left-10{
+    padding-left: 10px!important;
+}
 .padding-top-10{
     padding-top: 10px!important;
 }
@@ -9131,6 +9143,12 @@ RESPONSIVE
 }
 
 @media (max-width: 991px){
+    .header .main-menu{
+        display: none;
+    }
+    .mobile-navigation{
+        display: inline-block;
+    }
     .hidden-sm{
         display: none;
     }
@@ -9634,12 +9652,12 @@ RESPONSIVE
     .product-item.list .thumb, .product-item.list .info{
         display: block;
     }
-    .header .main-menu{
+    /* .header .main-menu{
         display: none;
-    }
-    .mobile-navigation{
+    } */
+    /* .mobile-navigation{
         display: inline-block;
-    }
+    } */
     .header.style5 .top-bar-menu{
         text-align: center;
     }
