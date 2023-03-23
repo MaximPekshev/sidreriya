@@ -281,7 +281,9 @@ def show_good(request, slug):
 		gas = get_object_property_value(opv, 'Пузырьки')
 		# Страна
 		country = get_object_property_value(opv, 'Страна')
-	if good.is_vine:	
+	if good.is_vine:
+		# Сахар
+		sugar = get_object_property_value(opv, 'Сладость')
 		# Бренд
 		brand = get_object_property_value(opv, 'Бренд')
 		# Тип
@@ -302,12 +304,14 @@ def show_good(request, slug):
 
 	current_cart = get_cart_(request)
 
-	template_name = 'goodapp/good.html'
+	if good.is_vine:
+		template_name = 'goodapp/good_vine.html'
+	elif good.is_cidre:
+		template_name = 'goodapp/good_cidre.html'
+	else:
+		template_name = 'goodapp/good.html'				
 
 	context = {
-		'strength':strength,
-		'volume':volume,
-		'country':country,
 		'good': good, 'pictures': pictures, 'main_pictures': main_pictures, 'opv': opv,
 		'is_cidre': good.is_cidre,
 		'cart': get_cart_(request),
@@ -320,6 +324,9 @@ def show_good(request, slug):
 	}
 	if good.is_cidre:
 		context.update({
+			'strength':strength,
+			'volume':volume,
+			'country':country,
 			'sugar':sugar,
 			'gas':gas,
 			'pasteuriz':pasteuriz,
@@ -328,6 +335,10 @@ def show_good(request, slug):
 		})
 	elif good.is_vine:
 		context.update({
+			'strength':strength,
+			'volume':volume,
+			'country':country,
+			'sugar':sugar,
 			'brand': brand,
 			'type': type,
 			'grapes': grapes,

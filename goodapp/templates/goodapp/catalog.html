@@ -128,7 +128,7 @@
 				</div>		
 				{% else %}
 				{% if manufacturer %}
-					<p align="justify">{{ manufacturer.description }}</p>
+					<p align="justify">{{ manufacturer.description|linebreaksbr }}</p>
 				{% endif %}
 					{% if page_object.object_list %}
 					<ul class="products product-list-grid {% if filters_a %} desktop-columns-3 {% else %} desktop-columns-4 {% endif %} tablet-columns-3 mobile-columns-2">
