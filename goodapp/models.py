@@ -162,6 +162,10 @@ class Category(models.Model):
 
 		super(Category, self).save(*args, **kwargs)
 
+	def get_category_items(self):
+		goods = Good.objects.filter(is_active=True, category=self)
+		return goods	
+
 	class Meta:
 		verbose_name = 'Категория'
 		verbose_name_plural = 'Категории'		
