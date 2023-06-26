@@ -104,6 +104,7 @@ def show_promo(request):
 		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
 		'in_bar': get_in_barrels(),
 		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
+		'set_lunch': Good.objects.filter(name="Дружеский обед").first(),
 
 	}
 
