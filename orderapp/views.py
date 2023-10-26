@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Order, Order_Item
 from authapp.models import Buyer
 from cartapp.views import get_cart
@@ -6,6 +6,7 @@ from cartapp.models import Cart, Cart_Item
 from goodapp.models import Good
 import django.core.exceptions
 from authapp.forms import BuyerSaveForm
+from .forms import OrderCreateForm
 from goodapp.views import get_in_barrels
 import datetime
 
@@ -22,8 +23,8 @@ from decouple import config
 
 from decimal import Decimal
 
-from django.http import HttpResponse
-
+# from django.http import HttpResponse
+from django.http import JsonResponse
 
 # helpers
 def send_mail_on_bar(order_id):
@@ -269,7 +270,92 @@ def show_orders(request):
 
 		return render(request, 'orderapp/orders.html', context)
 
+# новая функция создания заказа с фронта (для дальнейшей доработки)
+def order_create(request, *args, **kwargs):
+	if request.method == 'POST':
+		order_form = OrderCreateForm(request.POST)
+		if order_form.is_valid():
+			# orderType = 1 - Доставка, = 2 - Самовывоз
+			order_type = order_form.cleaned_data['orderType']
+			input_qty = order_form.cleaned_data['input_qty']
+			input_name = order_form.cleaned_data['input_name']
+			input_phone = order_form.cleaned_data['input_phone']
+			input_comment = order_form.cleaned_data['input_comment']
+			input_email = ""
 
+			new_order = Order.objects.create(
+				first_name = input_name,
+				phone = input_phone,
+				comment = input_comment,
+			)
+
+			# slug товара, если товар 1 (обеды или фестивальные позиции)
+			good_slug = order_form.cleaned_data['good_slug']
+			# cookTimeType = 1 - Как можно скорее, = 2 - Выбрать время
+			cook_time_type = order_form.cleaned_data['cookTimeType']
+			# если приготовление ко времени, получаем время приготовления
+			if cook_time_type == '2':
+				input_time = order_form.cleaned_data['inputTime']
+				new_order.cook_time = str(input_time)
+			elif cook_time_type == '1':
+				new_order.cook_time = "Как можно скорее"
+			# если тип заказа Доставка - получаем адрес доставки
+			if order_type == '1':
+				input_address = order_form.cleaned_data['input_address']
+				new_order.address = input_address
+			# если тип заказа Самовывоз - получаем место самовывоза
+			# pickup_type = 1 - Сидрерии на Везелке, pickup_type = 2 - Сидрерии на Костюкова.
+			elif order_type == '2':
+				pickup_type = order_form.cleaned_data['pickupType']
+				if pickup_type == '1':
+					new_order.address = "Самовывоз - ул. Левобережная 22А, Белгород"
+				elif pickup_type == '2':
+					new_order.address = "Самовывоз - ул. Костюкова 36Г, Белгород"	
+			# если пользователь авторизован - добавляем в заказ созданного покупателя.	
+			if request.user.is_authenticated:
+				try:
+					buyer = Buyer.objects.get(user = request.user)
+				except Buyer.DoesNotExist:
+					buyer = Buyer.objects.create(
+						user = request.user,
+						first_name = input_name,
+						phone = input_phone,
+						)
+				new_order.buyer = buyer
+			new_order.save()
+			# если в форме передается идентификатор Товара, то добавляем в заказ только этот товар.
+			if good_slug:
+				try:
+					good = Good.objects.get(slug = good_slug)
+					order_item = Order_Item(
+						order = new_order,
+						good = good,
+						quantity = Decimal(input_qty),
+						price = good.price,
+						summ = good.price*Decimal(input_qty),
+						)
+					order_item.save()
+				except:
+					return JsonResponse(
+						data={'error': 'Не удалось создать заказ!!'},
+						status=400
+					)
+			#если указан email отправляем данные по заказу Покупателю
+			if input_email:
+				send_mail_to_buyer(new_order.id, input_email)
+			# отправляем заказ для обработки сотрудниками.	
+			send_mail_on_bar(new_order.id)	
+			return JsonResponse(
+				data={
+					'data': 'Заказ {} от {} успешно создан!'.format(new_order.order_number, new_order.date.strftime("%d-%m-%y %H:%m")),
+					'message': 'В ближайшее время с Вами свяжется наш сотрудник для уточнения деталей.'
+				},
+				status=200
+			)
+	return JsonResponse(
+		data={'error': 'Не удалось создать заказ!!'},
+		status=400
+	)
 
 def order_add(request):
 	

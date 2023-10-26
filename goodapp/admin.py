@@ -53,7 +53,7 @@ class GoodAdmin(admin.ModelAdmin):
 	list_display = (
 					'name',
 					'name_en',
-					'good_uid',
+					'slug',
 					'price',
 					'quantity',
 					'weight',

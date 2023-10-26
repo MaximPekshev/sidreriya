@@ -143,7 +143,7 @@ def show_set_lunch(request):
 		'max_time': max_time,
 		'now_active': now_active,
 		'set_lunch': set_lunch,
-
+		'good_slug': Good.objects.filter(name="Дружеский обед").first().slug,
 	}
 
 

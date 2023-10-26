@@ -51,6 +51,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/easyzoom.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/Pe-icon-7-stroke.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/bebas_neue.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/as/as-style.css' %}">
 	<link href='https://fonts.googleapis.com/css?family=Arimo:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,300italic,300,700italic,900,900italic' rel='stylesheet' type='text/css'>
@@ -60,7 +61,8 @@
 
 	<link rel="stylesheet" href="{% static 'css/jquery.arcticmodal.css' %}">
 	<link rel="stylesheet" href="{% static 'css/simple.css' %}">
-
+	{% block custom_lib %}
+	{% endblock %}
 
 </head>
 <body class="home">
