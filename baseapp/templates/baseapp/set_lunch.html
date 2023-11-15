@@ -119,7 +119,6 @@
 											<div class="col-sm-12">
 												<span>Телефон *</span>
 												<p><input 
-													name = "test"
 													v-phone
 													@input="checkInputPhone" 
 													:class="{ validationError: inputPhoneError }" 
@@ -207,7 +206,7 @@
 										<label class="custom-control-label" for="cookTimeType1">Как можно скорее</label>
 									</div>
 									<div class="custom-control custom-radio wishlist-form margin-left-10">
-										<input type="radio" v-model="cookTimeType" id="cookTimeType2" class="custom-control-input margin-bottom-30" value="2">
+										<input type="radio" @change="checkInputTime" v-model="cookTimeType" id="cookTimeType2" class="custom-control-input margin-bottom-30" value="2">
 										<label class="custom-control-label" for="cookTimeType2">Выбрать время</label>
 										<input :class="{ validationError : inputTimeError }" :disabled="cookTimeType==1" type="time" @input="checkInputTime" id="deliv_time" name="input_time" class="select-option margin-left-30" :min="minDate" :max="maxDate" v-model="inputTime">
 										<p style="color: #ff7575" v-if="inputTimeError" class="margin-left-20">Выберите корректное время!<br> (c ${ min_time }$ до ${ max_time }$)</p>
@@ -269,7 +268,6 @@
 {% endblock %}
 
 {% block custom_script %}
-<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
 <script type='text/javascript'>
 	axios.defaults.xsrfCookieName = 'csrftoken';
 	axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -485,7 +483,6 @@
 				
 						return val
 					};
-					
 					function replaceNumberForPaste(value) {
 						const r = value.replace(/\D/g, '')
 						let val = r
@@ -494,21 +491,18 @@
 						}
 						return replaceNumberForInput(val)
 					};
-				
 					el.oninput = function(e) {
 						if (!e.isTrusted) {
 							return
 						}
 						this.value = replaceNumberForInput(this.value)
 					};
-				
 					el.onpaste = function() {
 						setTimeout(() => {
 							const pasteVal = el.value
 							this.value = replaceNumberForPaste(pasteVal)
 						})
 					};
-
 				}
 			}
 		},

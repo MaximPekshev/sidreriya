@@ -1,72 +1,57 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Order, Order_Item
-from authapp.models import Buyer
-from cartapp.views import get_cart
-from cartapp.models import Cart, Cart_Item
-from goodapp.models import Good
-import django.core.exceptions
-from authapp.forms import BuyerSaveForm
-from .forms import OrderCreateForm
-from goodapp.views import get_in_barrels
-import datetime
+from django.shortcuts import render
+from django.db.models import Sum
+from django.http import JsonResponse
+from django.db import transaction
 
+import json
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
-from django.db.models import Sum
-
-from wishlistapp.views import get_wishlist
-from wishlistapp.models import Wishlist, Wishlist_Item
-
+from decimal import Decimal
 from decouple import config
 
-from decimal import Decimal
-
-# from django.http import HttpResponse
-from django.http import JsonResponse
+from .models import Order, Order_Item
+from .forms import OrderCreateForm
+from authapp.models import Buyer
+from authapp.forms import BuyerSaveForm
+from cartapp.views import get_cart
+from cartapp.models import Cart_Item
+from cartapp.models import cart_calculate_summ
+from goodapp.models import Good
+from goodapp.views import get_in_barrels
+from wishlistapp.views import get_wishlist
+from wishlistapp.models import Wishlist_Item
 
 # helpers
 def send_mail_on_bar(order_id):
-
 	try:
 		order = Order.objects.get(pk=order_id)
 	except:
 		order = None	
-			
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
 	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
 	# receiver_email = ['m.pekshev@annasoft.ru',]
 	password = config('MAIL_PASSWORD')
-
 	message = MIMEMultipart("alternative")
-	message["Subject"] = "Поступил заказ № {} от {}".format(order.order_number, order.date.strftime("%Y-%m-%d")) 
+	message["Subject"] = "Поступил заказ № {} от {}".format(order.order_number, order.date.strftime("%d-%m-%Y")) 
 	message["From"] = sender_email
 	message["To"] = ','.join(receiver_email)
-
 	order_items = ""
-
 	css_style_td = """\
 	style="border-bottom: 1px solid #ececec; padding: 14px 0; text-align: center;"
 	"""
-
 	if order:
 		for item in Order_Item.objects.filter(order=order):
 			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.get_item_discount_summ())
-
-
-
 		text = """\
 		{}""".format(order_items)
-
-
 		html = """\
 	    <html>
 	      <body>
 	      <div style="max-width: 610px; width:100%">
 	        <H4 style="background-color: #262626; color: #fff; padding: 12px 0; text-align: center; font-size: 14px; margin-bottom: 30px;">Поступил Заказ</H4>
-	        <p>Номер заказа: {0}</p>
+	        <p>Номер заказа: # {0}</p>
 	        <p>Клиент: {6} {7}</p>
 	        <p>Номер телефона: {1}</p>
 	        <p>Email: {8}</p>
@@ -124,38 +109,27 @@ def send_mail_on_bar(order_id):
 
 
 def send_mail_to_buyer(order_id, buyer_email):
-
 	try:
 		order = Order.objects.get(id=order_id)
 	except:
 		order = None
-
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
 	receiver_email = [ buyer_email ]
 	password = config('MAIL_PASSWORD')
-
 	message = MIMEMultipart("alternative")
-	message["Subject"] = "Заказ № {} от {}, Сидрерия".format(order.order_number, order.date.strftime("%Y-%m-%d")) 
+	message["Subject"] = "Заказ № {} от {}, Сидрерия".format(order.order_number, order.date.strftime("%d-%m-%Y")) 
 	message["From"] = sender_email
 	message["To"] = ','.join(receiver_email)
-
 	order_items = ""
-
 	css_style_td = """\
 	style="border-bottom: 1px solid #ececec; padding: 14px 0; text-align: center;"
 	"""
-
 	if order:
 		for item in Order_Item.objects.filter(order=order):
 			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.get_item_discount_summ())
-
-
-
 		text = """\
 		{}""".format(order_items)
-
-
 		html = """\
 	    <html>
 	      <body>
@@ -163,7 +137,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 	        <H4 style="background-color: #262626; color: #fff; padding: 12px 0; text-align: center; font-size: 14px; margin-bottom: 30px;">Заказ принят</H4>
 	        <H4>Здравствуйте, {0}</H4>
 	        <p>Мы получили Ваш заказ.В ближайшее время наши бармены с Вами свяжутся для уточнения деталей</p>
-	        <p>Номер заказа: {1}</p>
+	        <p>Номер заказа: # {1}</p>
 	        <p>Адрес доставки: {2}</p>
 	        <p>Время приготовления: {3}</p>
 	        
@@ -230,9 +204,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 	)
 	server.quit()
 
-
 # views
-
 def show_orders(request):
 
 	context = {
@@ -270,7 +242,23 @@ def show_orders(request):
 
 		return render(request, 'orderapp/orders.html', context)
 
+# функция создает строки Заказа
+def create_order_item(order, order_item_slug, qty, summ):
+	try:
+		good = Good.objects.get(slug = order_item_slug)
+		order_item = Order_Item.objects.create(
+			order = order,
+			good = good,
+			quantity = Decimal(qty),
+			price = Decimal(summ)/Decimal(qty),
+			summ = Decimal(summ),
+			)
+		return order_item
+	except:
+		return None
+
 # новая функция создания заказа с фронта (для дальнейшей доработки)
+@transaction.atomic
 def order_create(request, *args, **kwargs):
 	if request.method == 'POST':
 		order_form = OrderCreateForm(request.POST)
@@ -279,9 +267,10 @@ def order_create(request, *args, **kwargs):
 			order_type = order_form.cleaned_data['orderType']
 			input_qty = order_form.cleaned_data['input_qty']
 			input_name = order_form.cleaned_data['input_name']
+			input_last_name = order_form.cleaned_data['input_last_name']
 			input_phone = order_form.cleaned_data['input_phone']
 			input_comment = order_form.cleaned_data['input_comment']
-			input_email = ""
+			input_email = order_form.cleaned_data['input_email']
 
 			new_order = Order.objects.create(
 				first_name = input_name,
@@ -291,6 +280,8 @@ def order_create(request, *args, **kwargs):
 
 			# slug товара, если товар 1 (обеды или фестивальные позиции)
 			good_slug = order_form.cleaned_data['good_slug']
+			# список товаров, если заказ производится из Корзины
+			order_items_list = order_form.cleaned_data['order_items_list']
 			# cookTimeType = 1 - Как можно скорее, = 2 - Выбрать время
 			cook_time_type = order_form.cleaned_data['cookTimeType']
 			# если приготовление ко времени, получаем время приготовления
@@ -321,9 +312,12 @@ def order_create(request, *args, **kwargs):
 						first_name = input_name,
 						phone = input_phone,
 						)
+					if input_last_name:
+						buyer.last_name = input_last_name
+					buyer.save()	
 				new_order.buyer = buyer
 			new_order.save()
-			# если в форме передается идентификатор Товара, то добавляем в заказ только этот товар.
+			# если в форме передается идентификатор одного Товара, то добавляем в заказ только этот товар.
 			if good_slug:
 				try:
 					good = Good.objects.get(slug = good_slug)
@@ -340,11 +334,31 @@ def order_create(request, *args, **kwargs):
 						data={'error': 'Не удалось создать заказ!!'},
 						status=400
 					)
+			# если на входе получаем список из товаров в заказе, то добавляем товары в цикле
+			elif order_items_list:
+				cart = get_cart(request)
+				cart_items = Cart_Item.objects.filter(cart=cart)
+				order_items_list = json.loads(order_items_list)
+				for order_item in order_items_list:
+					order_item_slug = order_item
+					order_item =  order_items_list.get(order_item)
+					create_order_item(new_order, order_item_slug, order_item.get("qty"), order_item.get("summ"))
+					# удаляем товар, который успешно попал в заказ
+					try:
+						cart_item = cart_items.get(good__slug=order_item_slug)
+						if cart_item.quantity <= Decimal(order_item.get("qty")):
+							cart_item.delete()
+						else:
+							cart_item.quantity -= Decimal(order_item.get("qty"))
+							cart_item.save()
+					except:
+						pass
+					cart_calculate_summ(cart)
 			#если указан email отправляем данные по заказу Покупателю
 			if input_email:
 				send_mail_to_buyer(new_order.id, input_email)
 			# отправляем заказ для обработки сотрудниками.	
-			send_mail_on_bar(new_order.id)	
+			send_mail_on_bar(new_order.id)
 			return JsonResponse(
 				data={
 					'data': 'Заказ {} от {} успешно создан!'.format(new_order.order_number, new_order.date.strftime("%d-%m-%y %H:%m")),
