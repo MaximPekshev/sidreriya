@@ -272,7 +272,7 @@ def order_create(request, *args, **kwargs):
 			input_comment = order_form.cleaned_data['input_comment']
 			input_email = order_form.cleaned_data['input_email']
 
-			new_order = Order.objects.create(
+			new_order = Order(
 				first_name = input_name,
 				phone = input_phone,
 				comment = input_comment,
