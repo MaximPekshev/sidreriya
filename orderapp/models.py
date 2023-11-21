@@ -78,8 +78,15 @@ class Order(models.Model):
 		summ = Decimal(0)
 		for item in Order_Item.objects.filter(order=self):
 			summ += item.quantity*item.get_discount_price()
-		return summ.quantize(Decimal("1")) 		
-
+		return summ.quantize(Decimal("1"))
+	
+	def order_type(self):
+		order_items = Order_Item.objects.filter(order=self)
+		if len(order_items) == 1 and order_items[0].good.name == "Дружеский обед":
+			return "Обед"
+		else:
+			return "Заказ"	
+	
 	class Meta:
 		
 		verbose_name = 'Заказ'

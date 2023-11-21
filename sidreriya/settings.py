@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
     'django.contrib.sites',
+    'rangefilter',
     'baseapp',
     'goodapp',
     'authapp',
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'django_crontab',
     'festapp',
     'music_week_app',
-
 ]
 
 MIDDLEWARE = [
