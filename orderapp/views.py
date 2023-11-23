@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from decimal import Decimal
 from decouple import config
+import time
 
 from .models import Order, Order_Item
 from .forms import OrderCreateForm
@@ -243,19 +244,20 @@ def show_orders(request):
 		return render(request, 'orderapp/orders.html', context)
 
 # функция создает строки Заказа
-def create_order_item(order, order_item_slug, qty, summ):
-	try:
-		good = Good.objects.get(slug = order_item_slug)
-		order_item = Order_Item.objects.create(
-			order = order,
-			good = good,
-			quantity = Decimal(qty),
-			price = Decimal(summ)/Decimal(qty),
-			summ = Decimal(summ),
-			)
-		return order_item
-	except:
-		return None
+# def create_order_item(order, order_item_slug, qty, summ):
+# 	try:
+# 		good = Good.objects.get(slug = order_item_slug)
+# 		order_item = Order_Item(
+# 			order = order,
+# 			good = good,
+# 			quantity = Decimal(qty),
+# 			price = Decimal(summ)/Decimal(qty),
+# 			summ = Decimal(summ),
+# 			)
+# 		order_item.save()
+# 		return order_item
+# 	except:
+# 		return None
 
 # новая функция создания заказа с фронта (для дальнейшей доработки)
 @transaction.atomic
@@ -336,14 +338,31 @@ def order_create(request, *args, **kwargs):
 					)
 			# если на входе получаем список из товаров в заказе, то добавляем товары в цикле
 			elif order_items_list:
-				cart = get_cart(request)
-				cart_items = Cart_Item.objects.filter(cart=cart)
 				order_items_list = json.loads(order_items_list)
 				for order_item in order_items_list:
 					order_item_slug = order_item
 					order_item =  order_items_list.get(order_item)
-					create_order_item(new_order, order_item_slug, order_item.get("qty"), order_item.get("summ"))
-					# удаляем товар, который успешно попал в заказ
+					qty = order_item.get("qty")
+					summ = order_item.get("summ")
+					try:
+						good = Good.objects.get(slug = order_item_slug)
+						order_item = Order_Item(
+							order = new_order,
+							good = good,
+							quantity = Decimal(qty),
+							price = Decimal(summ)/Decimal(qty),
+							summ = Decimal(summ),
+							)
+						order_item.save()
+					except:
+						pass
+					# create_order_item(new_order, order_item_slug, order_item.get("qty"), order_item.get("summ"))
+				# удаляем из корзины товар, который успешно попал в заказ
+				cart = get_cart(request)
+				cart_items = Cart_Item.objects.filter(cart=cart)
+				for order_item in order_items_list:
+					order_item_slug = order_item
+					order_item =  order_items_list.get(order_item)
 					try:
 						cart_item = cart_items.get(good__slug=order_item_slug)
 						if cart_item.quantity <= Decimal(order_item.get("qty")):
@@ -354,18 +373,38 @@ def order_create(request, *args, **kwargs):
 					except:
 						pass
 					cart_calculate_summ(cart)
-			#если указан email отправляем данные по заказу Покупателю
-			if input_email:
-				send_mail_to_buyer(new_order.id, input_email)
-			# отправляем заказ для обработки сотрудниками.	
-			send_mail_on_bar(new_order.id)
-			return JsonResponse(
-				data={
-					'data': 'Заказ {} от {} успешно создан!'.format(new_order.order_number, new_order.date.strftime("%d-%m-%y %H:%m")),
-					'message': 'В ближайшее время с Вами свяжется наш сотрудник для уточнения деталей.'
-				},
-				status=200
-			)
+			elif len(order_items_list) == 0:
+				new_order.delete()
+				return JsonResponse(
+					data={
+						'error': 'Не удалось создать заказ!! Попробуйте позже.',
+					},
+					status=400
+				)
+
+			new_order_items = Order_Item.objects.filter(order=new_order)
+			if new_order_items:
+				#если указан email отправляем данные по заказу Покупателю
+				if input_email:
+					send_mail_to_buyer(new_order.id, input_email)
+				# отправляем заказ для обработки сотрудниками.	
+				send_mail_on_bar(new_order.id)
+				return JsonResponse(
+					data={
+						'data': 'Заказ {} от {} успешно создан!'.format(new_order.order_number, new_order.date.strftime("%d-%m-%y %H:%m")),
+						'message': 'В ближайшее время с Вами свяжется наш сотрудник для уточнения деталей.'
+					},
+					status=200
+					)
+			else:
+				new_order.delete()
+				return JsonResponse(
+					data={
+						'error': 'Не удалось создать заказ!! Попробуйте позже.',
+					},
+					status=400
+				)
+			
 	return JsonResponse(
 		data={'error': 'Не удалось создать заказ!!'},
 		status=400

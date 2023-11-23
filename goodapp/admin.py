@@ -110,7 +110,6 @@ class GoodAdmin(admin.ModelAdmin):
 		writer.writerow(field_names)
 		for obj in queryset:
 			row = writer.writerow([getattr(obj, field) for field in field_names])
-
 		return response
 
 	export_as_csv.short_description = "Выгрузить выбранные"

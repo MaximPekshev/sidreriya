@@ -459,59 +459,59 @@
 			},
 			createOrder: async function(event) {
 				event.preventDefault();
-				console.log("checking order form");
+				//console.log("checking order form");
 				if (!this.orderFormIsValid()) {
 					return;
 				};
-				console.log("trying to create order");
+				//console.log("trying to create order");
 				let orderItems = this.getOrderItems();
-				this.orderCreateMessage = "";
-				this.orderCreateData = "";
-				this.loadingIndicator = true;
-				let data = {
-					"orderType": this.orderType,
-					"input_qty": this.input_qty,
-					"input_comment": this.input_comment,
-					"input_name": this.input_name,
-					"input_last_name": this.input_last_name,
-					"input_phone": this.input_phone,
-					"cookTimeType": this.cookTimeType,
-					"order_items_list": JSON.stringify(orderItems),
-					"input_email": this.input_email,
+				if (Object.keys(orderItems).length > 0) {
+					this.orderCreateMessage = "";
+					this.orderCreateData = "";
+					this.loadingIndicator = true;
+					let data = {
+						"orderType": this.orderType,
+						"input_qty": this.input_qty,
+						"input_comment": this.input_comment,
+						"input_name": this.input_name,
+						"input_last_name": this.input_last_name,
+						"input_phone": this.input_phone,
+						"cookTimeType": this.cookTimeType,
+						"order_items_list": JSON.stringify(orderItems),
+						"input_email": this.input_email,
+					};
+					if (this.orderType==1) {
+						data["input_address"] = this.deliveryAddress;
+					} else if (this.orderType==2) {
+						data["pickupType"] = this.pickupType;
+					};
+					if (this.cookTimeType==2) {
+						data["inputTime"] = this.inputTime;
+					};
+					await axios({
+						method: 'post',
+						mode: 'same-origin',
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+						url: '/order/create/',
+						data: data,
+					}).then((response) => {
+						this.loadingIndicator = false;
+						this.orderCreateData = response.data.data;
+						this.orderCreateMessage = response.data.message;
+						this.showOrderCreateModal= true;
+					}).catch((error) => {
+						console.log(error);
+						this.loadingIndicator = false;
+						if (error.data.error) {
+							this.orderCreateData = error.data.error;
+						} else {
+							this.orderCreateData = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
+						}
+						this.showOrderCreateModal=true;
+					});
 				};
-				if (this.orderType==1) {
-					data["input_address"] = this.deliveryAddress;
-				} else if (this.orderType==2) {
-					data["pickupType"] = this.pickupType;
-				};
-				if (this.cookTimeType==2) {
-					data["inputTime"] = this.inputTime;
-				};
-				console.log(data);
-				await axios({
-					method: 'post',
-					mode: 'same-origin',
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					},
-					url: '/order/create/',
-					data: data,
-				}).then((response) => {
-					console.log(response);
-					this.loadingIndicator = false;
-					this.orderCreateData = response.data.data;
-					this.orderCreateMessage = response.data.message;
-					this.showOrderCreateModal= true;
-				}).catch((error) => {
-					console.log(error);
-					this.loadingIndicator = false;
-					if (error.data.error) {
-						this.orderCreateData = error.data.error;
-					} else {
-						this.orderCreateData = "Произошло ошибка на сервере, мы уже работаем над ее устранением!"
-					}
-					this.showOrderCreateModal=true;
-				});
 			},
 		},
 		computed: {
