@@ -259,7 +259,7 @@ def show_orders(request):
 # 	except:
 # 		return None
 
-# новая функция создания заказа с фронта (для дальнейшей доработки)
+# новая функция создания заказа с фронта
 @transaction.atomic
 def order_create(request, *args, **kwargs):
 	if request.method == 'POST':
@@ -344,18 +344,15 @@ def order_create(request, *args, **kwargs):
 					order_item =  order_items_list.get(order_item)
 					qty = order_item.get("qty")
 					summ = order_item.get("summ")
-					try:
-						good = Good.objects.get(slug = order_item_slug)
-						order_item = Order_Item(
-							order = new_order,
-							good = good,
-							quantity = Decimal(qty),
-							price = Decimal(summ)/Decimal(qty),
-							summ = Decimal(summ),
-							)
-						order_item.save()
-					except:
-						pass
+					good = Good.objects.filter(slug=order_item_slug).first()
+					order_item = Order_Item(
+						order = new_order,
+						good = good,
+						quantity = Decimal(qty),
+						price = Decimal(summ)/Decimal(qty),
+						summ = Decimal(summ),
+						)
+					order_item.save()
 					# create_order_item(new_order, order_item_slug, order_item.get("qty"), order_item.get("summ"))
 				# удаляем из корзины товар, который успешно попал в заказ
 				cart = get_cart(request)
