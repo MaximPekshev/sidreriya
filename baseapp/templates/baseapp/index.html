@@ -191,20 +191,22 @@
 	</div>
 </div>
 <!-- Banner -->
-{% comment %} <div class="section-banner">
+{% if vareniki.get_category_items %}
+<div class="section-banner">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 col-md-12">
 				<div class="kt-banner block-banner-text style3 margin-top-30 margin-bottom-30" data-height="293" data-background="{% static 'images/banners/vareniki.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug='440621953' %}" class="bg-image"></a>
+					<a href="{% url 'show_category' slug=vareniki.slug %}" class="bg-image"></a>
 					<div class="content text-right">
-						<a href="{% url 'show_category' slug='440621953' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Вареники</h4></a>
+						<a href="{% url 'show_category' slug=vareniki.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Вареники</h4></a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div> {% endcomment %}
+</div>
+{% endif %}
 {% if kulichi.get_category_items %}
 <div class="section-banner">
 	<div class="container">

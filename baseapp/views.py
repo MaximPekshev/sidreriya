@@ -19,6 +19,7 @@ def show_index(request):
 
 	context = {
 		'kulichi': Category.objects.filter(name='Куличи').first(),
+		'vareniki': Category.objects.filter(name='Вареники').first(),
 		'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
 		'music_week': MusicWeek.objects.filter(date__lte=datetime.datetime.now()).order_by('date').last(),
 		'cart': get_cart(request),
