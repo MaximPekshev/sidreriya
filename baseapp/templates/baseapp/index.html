@@ -179,7 +179,7 @@
 	</div> -->
 
 	{% comment %} баннер - сокращенное время работы {% endcomment %}
-	<div class="item-slide" data-background="{% static 'images/banners/wall.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+	{% comment %} <div class="item-slide" data-background="{% static 'images/banners/wall.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
 		<div class="content-slide">
 			<div class="container container-slide">
 				<div class="inner">
@@ -189,7 +189,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> {% endcomment %}
 	{% comment %} баннер - сокращенное время работы {% endcomment %}
 	
 	<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner2.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
@@ -470,9 +470,10 @@
 			<div class="footer-social">
 				<div class="social">
 					<label>Наши соцсети</label>
-					<a href="https://www.facebook.com/sidreriyabel"><i class="fa fa-facebook" target="_blank"></i></a>
+					{% comment %} <a href="https://www.facebook.com/sidreriyabel"><i class="fa fa-facebook" target="_blank"></i></a> {% endcomment %}
+					<a href="https://t.me/sidreriya_bel" target="_blank"><i class="fa fa-telegram"></i></a>
 					<a href="https://vk.com/sidreriya_bel" target="_blank"><i class="fa fa-vk"></i></a>
-					<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
+					{% comment %} <a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a> {% endcomment %}
 				</div>
 			</div>
 		</div>
