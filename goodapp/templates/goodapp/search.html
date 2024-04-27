@@ -42,7 +42,8 @@
 											{% if item.old_price %}
 											<span class="price"><ins>&#8381 {{ item.price }} </ins><del>&#8381 {{ item.old_price }}</del></span>
 											{% else %}
-											<span class="price">&#8381 {{ item.price }} / </span><span class="price discount-price">&#8381 * {{ item.get_discount_price }}</span>
+											<span class="price">&#8381 {{ item.price }}</span>{% if item.category.name == "Куличи" or item.category.name == "Вареники" %}{% else %} / <span class="price discount-price">&#8381 {{ item.get_discount_price }} * </span>{% endif %}
+											{% comment %} <span class="price">&#8381 {{ item.price }} / </span><span class="price discount-price">&#8381 * {{ item.get_discount_price }}</span> {% endcomment %}
 											{% endif %}
 										{% else %}
 										<span class="price">&#8381 0</span>
