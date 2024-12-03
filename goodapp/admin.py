@@ -166,11 +166,34 @@ class In_BarrelsAdmin(admin.ModelAdmin):
 	
 admin.site.register(In_Barrels, In_BarrelsAdmin)
 
+from .models import First_Course, Second_Course, Third_Course
+
+class First_Course_Form(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(First_Course_Form, self).__init__(*args, **kwargs)
+		self.fields['good'].queryset = Good.objects.filter(category__name="Первое блюдо")
+
+class First_CourseInline(admin.TabularInline):
+	form = First_Course_Form
+	model = First_Course
+	extra = 0
+
+class Second_CourseInline(admin.TabularInline):
+	# form = Object_property_valuesInlineForm
+	model = Second_Course
+	extra = 0
+
+class Third_CourseInline(admin.TabularInline):
+	# form = Object_property_valuesInlineForm
+	model = Third_Course
+	extra = 0
+
 class Set_LunchAdmin(admin.ModelAdmin):
 	list_display = (
 					'date',
 					'image',
 					)
+	inlines 	 = [First_CourseInline, Second_CourseInline, Third_CourseInline]
 	
 admin.site.register(Set_Lunch, Set_LunchAdmin)
 

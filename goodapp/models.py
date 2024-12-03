@@ -294,6 +294,32 @@ class Set_Lunch(models.Model):
 		verbose_name = 'Комплексный обед'
 		verbose_name_plural = 'Комплексные обеды'
 
+class First_Course(models.Model):
+
+	set_lunch = models.ForeignKey('Set_Lunch', verbose_name='Комплексный обед', on_delete=models.CASCADE)
+	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE, blank=True, null=True)
+
+	class Meta:
+		verbose_name = 'Первое блюдо'
+		verbose_name_plural = 'Первые блюда'
+
+class Second_Course(models.Model):
+
+	set_lunch = models.ForeignKey('Set_Lunch', verbose_name='Комплексный обед', on_delete=models.CASCADE)
+	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+
+	class Meta:
+		verbose_name = 'Второе блюдо'
+		verbose_name_plural = 'Вторые блюда'
+
+class Third_Course(models.Model):
+
+	set_lunch = models.ForeignKey('Set_Lunch', verbose_name='Комплексный обед', on_delete=models.CASCADE)
+	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+
+	class Meta:
+		verbose_name = 'Третье блюдо'
+		verbose_name_plural = 'Третьи блюда'			
 
 class Bestseller(models.Model):
 
