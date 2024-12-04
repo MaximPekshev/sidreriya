@@ -1,14 +1,11 @@
 from django.db import models
-
-import os
-
 from django.conf import settings
 
 import uuid
-
 from uuslug import slugify
-
 from decimal import Decimal
+
+from simple_history.models import HistoricalRecords
 
 def get_uuid():
 	return str(uuid.uuid4().fields[0])
@@ -51,6 +48,8 @@ class Good(models.Model):
 	upsell_products 	= models.ManyToManyField('Good', verbose_name='Рекомендуемые товары', blank=True)
 
 	in_barrel 			= models.BooleanField(verbose_name='Розлив', default=False)
+
+	history = HistoricalRecords()
 
 	def __str__(self):
 
