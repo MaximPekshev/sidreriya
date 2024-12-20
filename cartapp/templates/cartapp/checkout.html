@@ -37,7 +37,7 @@
 	<div class="main-container">
 		<div class="container">
 			<nav class="woocommerce-breadcrumb breadcrumbs">
-				<a href="{% url 'show_index' %}">На главную</a>
+				<a href="{% url 'baseapp:index' %}">На главную</a>
 				Новый заказ
 			</nav>
 			
@@ -85,7 +85,7 @@
 									{% if item.good.category.name == 'Сертификаты' or item.good.name == 'Дружеский обед' %}
 									<td class="product-total pickup-summ"><span class="amount">&#8381 {{ item.summ }}</span></td>
 									{% else %}
-									<td class="product-total pickup-summ"><span class="amount">&#8381 {{ item.get_item_discount_summ }}</span></td>
+									<td class="product-total pickup-summ"><span class="amount">&#8381 {{ item.discount_summ }}</span></td>
 									{% endif %}
 								</tr>
 								{% endfor %}
@@ -95,7 +95,7 @@
 									<th>Итого</th>
 									<th></th>
 									<td style="text-align: right;"><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
-									<td><strong><span class="amount">&#8381 {{ cart.get_discount_summ }}</span></strong></td>
+									<td><strong><span class="amount">&#8381 {{ cart.discount_summ }}</span></strong></td>
 								</tr>
 							</tfoot>
 						</table>
@@ -110,7 +110,7 @@
 						Скидка будет применена по факту подтверждения заказа нашими барменами.
 					</p>
 					<p>
-						<a href="{% url 'show_delivery' %}"> О нашей доставке </a>
+						<a href="{% url 'baseapp:delivery' %}"> О нашей доставке </a>
 					</p>
 				</div>
 				<div class="col-sm-6">
@@ -279,7 +279,7 @@
 						</div>
 					</div>
 					<p style="margin-left: 20px;">
-						Совершая заказ вы соглашаетесь с <a href="{% url 'show_delivery' %}">условиями  доставки</a>.<br> 
+						Совершая заказ вы соглашаетесь с <a href="{% url 'baseapp:delivery' %}">условиями  доставки</a>.<br> 
 					</p>
 					<strong><p style="margin-left: 20px;">	
 						Часы работы:
@@ -319,10 +319,10 @@
 										<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
 									</div>
 									<div class="row margin-top-30">
-										<a href={% url 'show_index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
+										<a href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
 									</div>
 								</div>
-								<a href={% url 'show_index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
+								<a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
 							</div>
 						</div>
 					</div> 

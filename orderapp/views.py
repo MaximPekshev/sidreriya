@@ -19,8 +19,6 @@ from cartapp.views import get_cart
 from cartapp.models import Cart_Item
 from cartapp.models import cart_calculate_summ
 from goodapp.models import Good
-from goodapp.views import get_in_barrels
-from wishlistapp.views import get_wishlist
 from wishlistapp.models import Wishlist_Item
 
 # helpers
@@ -31,8 +29,8 @@ def send_mail_on_bar(order_id):
 		order = None	
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
-	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
-	# receiver_email = ['m.pekshev@annasoft.ru',]
+	# receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
+	receiver_email = ['m.pekshev@annasoft.ru',]
 	password = config('MAIL_PASSWORD')
 	message = MIMEMultipart("alternative")
 	message["Subject"] = "Поступил заказ № {} от {}".format(order.order_number, order.date.strftime("%d-%m-%Y")) 
@@ -44,7 +42,7 @@ def send_mail_on_bar(order_id):
 	"""
 	if order:
 		for item in Order_Item.objects.filter(order=order):
-			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.get_item_discount_summ())
+			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.discount_summ())
 		text = """\
 		{}""".format(order_items)
 		html = """\
@@ -93,7 +91,7 @@ def send_mail_on_bar(order_id):
 			</div>
 	      </body>
 	    </html>
-	    """.format(order.order_number, order.phone, order.address, order.cook_time, order_items, order.summ, order.first_name, order.last_name, order.email, order.comment, order.get_discount_summ())
+	    """.format(order.order_number, order.phone, order.address, order.cook_time, order_items, order.summ, order.first_name, order.last_name, order.email, order.comment, order.discount_summ())
 
 	part1 = MIMEText(text, "plain")
 	part2 = MIMEText(html, "html")
@@ -128,7 +126,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 	"""
 	if order:
 		for item in Order_Item.objects.filter(order=order):
-			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.get_item_discount_summ())
+			order_items += "<tr><td {3}>{0}</td> <td {3}>x{1}</td> <td{3}>{2}</td> <td{3}>{4}</td></tr>".format(item.good, item.quantity, item.summ, css_style_td, item.discount_summ())
 		text = """\
 		{}""".format(order_items)
 		html = """\
@@ -199,7 +197,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 			</div>
 	      </body>
 	    </html>
-	    """.format(order.first_name, order.order_number, order.address, order.cook_time, order_items, order.summ, order.get_discount_summ())
+	    """.format(order.first_name, order.order_number, order.address, order.cook_time, order_items, order.summ, order.discount_summ())
 
 	part1 = MIMEText(text, "plain")
 	part2 = MIMEText(html, "html")
@@ -218,12 +216,7 @@ def send_mail_to_buyer(order_id, buyer_email):
 def show_orders(request):
 
 	context = {
-
-		'cart': get_cart(request),
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
-		'in_bar': get_in_barrels(),
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
-
+		
 	}
 
 	try:
@@ -573,13 +566,7 @@ def order_add(request):
 			send_mail_on_bar(new_order.id)
 
 			context = {
-
 				'order': new_order, 'order_items': Order_Item.objects.filter(order=new_order),
-				'cart': get_cart(request),
-				'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
-				'in_bar': get_in_barrels(),
-				'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
-
-				}
+			}
 
 			return render(request, 'orderapp/order_created.html', context)

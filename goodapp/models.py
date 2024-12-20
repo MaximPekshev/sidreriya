@@ -16,63 +16,45 @@ class Good(models.Model):
 	name 				= models.CharField(max_length = 150, verbose_name='Наименование')
 	name_en				= models.CharField(max_length = 150, verbose_name='Наименование на английском', blank=True,)
 	description 		= models.TextField(max_length=2048, verbose_name='Описание', blank=True)
-
 	gastronomy			= models.TextField(max_length=512, verbose_name='Гастрономия', blank=True, default='')
 	color				= models.TextField(max_length=512, verbose_name='Цвет', blank=True, default='')
 	fragrance			= models.TextField(max_length=512, verbose_name='Аромат', blank=True, default='')
 	taste				= models.TextField(max_length=512, verbose_name='Вкус', blank=True, default='')
-
 	meta_name 			= models.CharField(max_length=150, verbose_name='meta name', blank=True, null=True)
 	meta_description 	= models.TextField(max_length=1024, verbose_name='meta description', blank=True, null=True)
-
 	price 				= models.DecimalField(verbose_name='Цена', max_digits=15, decimal_places=0, blank=True, null=True)
 	old_price			= models.DecimalField(verbose_name='Старая цена', max_digits=15, decimal_places=0, blank=True, null=True)
-
 	is_active			= models.BooleanField(verbose_name='Активен', default=False)
-
 	is_cidre			= models.BooleanField(verbose_name='Сидр', default=False)
 	is_vine				= models.BooleanField(verbose_name='Вино', default=False)
-
 	quantity			= models.DecimalField(verbose_name='Остаток', max_digits=15, decimal_places=0, blank=True, null=True)
 	weight				= models.CharField(max_length = 36, verbose_name='Вес', blank=True, null=True, default='')
-	
 	good_uid 			= models.CharField(max_length=36, verbose_name='Код', blank=True, null=True)
 	slug 				= models.SlugField(max_length=36, verbose_name='Url', blank=True, db_index=True)
-
 	cpu_slug			= models.SlugField(max_length=70, verbose_name='ЧПУ_Url', blank=True, db_index=True)
-
 	manufacturer 		= models.ForeignKey('Manufacturer', verbose_name='Производитель', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
-
 	category 			= models.ForeignKey('Category', verbose_name='Категория', on_delete=models.SET_DEFAULT,null=True, blank=True, default=None)
-
 	upsell_products 	= models.ManyToManyField('Good', verbose_name='Рекомендуемые товары', blank=True)
-
 	in_barrel 			= models.BooleanField(verbose_name='Розлив', default=False)
-
 	history = HistoricalRecords()
 
 	def __str__(self):
-
 		return self.name
 
 	def save(self, *args, **kwargs):
-
 		if self.slug == "":
 			self.slug = get_uuid()
-
 		self.cpu_slug = '{}'.format(slugify(self.name_en if self.name_en else self.name))	
-
 		super(Good, self).save(*args, **kwargs)
 			
-	def get_main_image(self):
-
+	def main_image(self):
 		main_image = Picture.objects.filter(good=self, main_image=True).first()
 		if main_image:
 			return main_image
 		else:
 			return Picture.objects.filter(good=self).first()
 
-	def get_discount_price(self):
+	def discount_price(self):
 		if self.is_cidre:	
 			s = self.price - self.price*Decimal(0.25)
 		else:
@@ -81,17 +63,6 @@ class Good(models.Model):
 			else:
 				s = self.price - self.price*Decimal(0.2)
 		return s.quantize(Decimal("1"))
-
-
-	def get_pictures(self):
-
-		try:
-			pictures = Picture.objects.filter(good=self)
-		except:
-			return None
-			
-		return pictures		
-
 
 	class Meta:
 		verbose_name = 'Товар'
@@ -161,9 +132,8 @@ class Category(models.Model):
 
 		super(Category, self).save(*args, **kwargs)
 
-	def get_category_items(self):
-		goods = Good.objects.filter(is_active=True, category=self)
-		return goods	
+	def items(self):
+		return Good.objects.filter(is_active=True, category=self)
 
 	class Meta:
 		verbose_name = 'Категория'
@@ -293,28 +263,45 @@ class Set_Lunch(models.Model):
 		verbose_name = 'Комплексный обед'
 		verbose_name_plural = 'Комплексные обеды'
 
+# Модель для меню комплексного обеда с выбором товаров
+class Set_Meal(models.Model):
+
+	title 	= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
+	date	= models.DateField(unique=True ,auto_now=False, auto_now_add=False)
+
+	class Meta:
+		
+		verbose_name = 'Комплексный обед с товарами'
+		verbose_name_plural = 'Комплексные обеды с товарами'
+
+# Модель для первых блюд комплексного обеда с выбором товаров
 class First_Course(models.Model):
 
-	set_lunch = models.ForeignKey('Set_Lunch', verbose_name='Комплексный обед', on_delete=models.CASCADE)
+	set_meal = models.ForeignKey('Set_Meal', verbose_name='Комплексный обед', on_delete=models.CASCADE, default=None, null=True, blank=True)
 	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE, blank=True, null=True)
+	available = models.BooleanField(verbose_name='В наличии', default=True)
 
 	class Meta:
 		verbose_name = 'Первое блюдо'
 		verbose_name_plural = 'Первые блюда'
 
+# Модель для вторых блюд комплексного обеда с выбором товаров
 class Second_Course(models.Model):
 
-	set_lunch = models.ForeignKey('Set_Lunch', verbose_name='Комплексный обед', on_delete=models.CASCADE)
+	set_meal = models.ForeignKey('Set_Meal', verbose_name='Комплексный обед', on_delete=models.CASCADE, default=None, null=True, blank=True)
 	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+	available = models.BooleanField(verbose_name='В наличии', default=True)
 
 	class Meta:
 		verbose_name = 'Второе блюдо'
 		verbose_name_plural = 'Вторые блюда'
 
+# Модель для третьих блюд комплексного обеда с выбором товаров
 class Third_Course(models.Model):
 
-	set_lunch = models.ForeignKey('Set_Lunch', verbose_name='Комплексный обед', on_delete=models.CASCADE)
+	set_meal = models.ForeignKey('Set_Meal', verbose_name='Комплексный обед', on_delete=models.CASCADE, default=None, null=True, blank=True)
 	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
+	available = models.BooleanField(verbose_name='В наличии', default=True)
 
 	class Meta:
 		verbose_name = 'Третье блюдо'
@@ -324,7 +311,6 @@ class Bestseller(models.Model):
 
 	name 	= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
 	good	= models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
-
 
 	def save(self, *args, **kwargs):
 		

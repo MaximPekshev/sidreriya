@@ -22,7 +22,7 @@
 			<div class="col-sm-12 main-content">
 				<div class="shop-page-bar">
 					<nav class="woocommerce-breadcrumb breadcrumbs">
-						<a href="{% url 'show_index' %}">На главную</a>
+						<a href="{% url 'baseapp:index' %}">На главную</a>
 						<a href="{% url 'show_in_barrels' %}">В бочонках</a>
 					</nav>
 				</div>
@@ -33,8 +33,8 @@
 							<div class="product-inner">
 								<div class="thumb has-second-image">
 									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.image %}
-										<img src="{{ item.image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% if item.good.main_image %}
+										<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% else %}
 										<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% endif %}

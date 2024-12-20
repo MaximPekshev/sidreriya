@@ -1,6 +1,6 @@
 from django.db import models
-
 from django.conf import settings
+from django.db.models import Sum
 
 from goodapp.models import Good
 from decimal import Decimal
@@ -36,7 +36,7 @@ class Cart_Item(models.Model):
 		super(Cart_Item, self).save(*args, **kwargs)
 		cart_calculate_summ(self.cart)	
 
-	def get_discount_price(self):
+	def discount_price(self):
 
 		if self.good.is_cidre:	
 			s = self.price - self.price*Decimal(0.25)
@@ -48,8 +48,8 @@ class Cart_Item(models.Model):
 
 		return s.quantize(Decimal("1"))
 
-	def get_item_discount_summ(self):
-		s = self.quantity*self.get_discount_price()
+	def discount_summ(self):
+		s = self.quantity*self.discount_price()
 		return s.quantize(Decimal("1"))
 
 class Cart(models.Model):
@@ -57,11 +57,17 @@ class Cart(models.Model):
 	summ		= models.DecimalField('Сумма корзины', default = 0, blank = True, max_digits = 15, decimal_places = 0, editable = False)
 	user 		= models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)		
 
-	def get_discount_summ(self):
+	def discount_summ(self):
 		summ = Decimal(0)
 		for item in Cart_Item.objects.filter(cart=self):
-			summ += item.quantity*item.get_discount_price()
+			summ += item.quantity*item.discount_price()
 		return summ.quantize(Decimal("1"))
+	
+	def count(self):
+		return Cart_Item.objects.filter(cart=self).aggregate(Sum('quantity'))['quantity__sum']
+	
+	def items(self):
+		return Cart_Item.objects.filter(cart=self)
 
 	def __str__(self):
 		return str(self.id)

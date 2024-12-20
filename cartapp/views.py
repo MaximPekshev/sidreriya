@@ -1,23 +1,20 @@
-from django.shortcuts import render, redirect
-from .models import Cart, Cart_Item
-from goodapp.models import Good, Picture, In_Barrels
-from .models import cart_calculate_summ
-from authapp.models import Buyer
-from goodapp.views import get_in_barrels
-from django.db.models import Sum
-from wishlistapp.views import get_wishlist
-from wishlistapp.models import Wishlist, Wishlist_Item
+from django.shortcuts import (
+    render, 
+    redirect
+)
 from decimal import Decimal
-from django.db.models import Q
-
 import datetime
 
-
-class Item(object):
-	
-	good 	= Good
-	image 	= Picture
-
+from cartapp.models import (
+    Cart, 
+    Cart_Item,
+	cart_calculate_summ
+)
+from goodapp.models import (
+    Good, 
+    In_Barrels
+)
+from authapp.models import Buyer
 
 def get_cart(request):
 
@@ -47,48 +44,12 @@ def create_cart(request):
 
 def show_cart(request):
 
-	cart  = get_cart(request)
-
-	table = []
-
-	if cart != None:
-
-		cart_items 	 = Cart_Item.objects.filter(cart = cart)
-
-		for item in cart_items:
-
-			cr_item = Item()
-
-			cr_item.price = item.price
-
-			cr_item.quantity = item.quantity
-
-			cr_item.summ = item.summ
-		
-			cr_item.good = item.good
-			cr_item.cart_item = item
-			
-			images = Picture.objects.filter(good=item.good, main_image=True).first()
-
-			images = images if images else Picture.objects.filter(good=item.good).first()
-
-			cr_item.image = images
-
-			table.append(cr_item)
-
-
 	barrels = []
 	for item in In_Barrels.objects.all():
 		barrels.append(item.good)
-
 	context = {
-		'cart_items': table, 
-		'cart': cart , 
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
-		'in_bar': get_in_barrels(),
 		'barrels': barrels,
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
-		}
+	}
 	
 	return render(request, 'cartapp/cart_page.html', context)
 
@@ -177,10 +138,6 @@ def cart_checkout(request):
 
 	context = {
 		'cart_items': free_cart_items, 
-		'cart': cart , 
-		'cart_count' : Cart_Item.objects.filter(cart=get_cart(request)).aggregate(Sum('quantity'))['quantity__sum'],
-		'in_bar': get_in_barrels(),
-		'wishlist_count' : len(Wishlist_Item.objects.filter(wishlist=get_wishlist(request))), 
 		'min_time': min_time,
 		'max_time': max_time,
 		'now_active': now_active,

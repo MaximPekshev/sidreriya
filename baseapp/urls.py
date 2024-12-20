@@ -1,37 +1,34 @@
 from django.urls import path
-from django.contrib import admin
-
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
-from .views import show_index
-from .views import show_delivery
-from .views import show_atmosphere
-from .views import show_about_us
-from .views import show_contact_us
-from .views import show_promo
-from .views import show_set_lunch
-from .views import show_gift_boxes
-from .views import show_breakfasts
-from .views import show_сertificate
+from baseapp.views import (
+    IndexView,
+    DeliveryView,
+    AtmosphereView,
+    AboutUsView,
+    ContactUsView,
+    PromoView,
+    SetLunchView,
+    GiftBoxesView,
+    BreakfastView,
+    CertificateView,
+)
 
+app_name = "baseapp"
 
 urlpatterns = [
-
-	path('', 				show_index, name='show_index'),
-	path('delivery/', 		show_delivery, name='show_delivery'),
-	path('atmosphere/', 	show_atmosphere, name='show_atmosphere'),
-	path('about-us/', 		show_about_us, name='show_about_us'),
-	path('contact-us/', 	show_contact_us, name='show_contact_us'),
-	path('promo/', 			show_promo, name='show_promo'),
-	path('lunch-set/', 		show_set_lunch, name='show_set_lunch'),
-	path('gift-boxes/', 	show_gift_boxes, name='show_gift_boxes'),
-	path('breakfasts/', 	show_breakfasts, name='show_breakfasts'),
-	path('certificate/', 	show_сertificate, name='show_сertificate'),
-
-
-			]
-
+	path('', IndexView.as_view(), name='index'),
+	path('delivery/', DeliveryView.as_view(), name='delivery'),
+	path('atmosphere/', 	AtmosphereView.as_view(), name='atmosphere'),
+	path('about-us/', 		AboutUsView.as_view(), name='about_us'),
+	path('contact-us/', 	ContactUsView.as_view(), name='contact_us'),
+	path('promo/', 			PromoView.as_view(), name='promo'),
+	path('lunch-set/', 		SetLunchView.as_view(), name='set_lunch'),
+	path('gift-boxes/', 	GiftBoxesView.as_view(), name='gift_boxes'),
+	path('breakfasts/', 	BreakfastView.as_view(), name='breakfasts'),
+	path('certificate/', 	CertificateView.as_view(), name='сertificate'),
+]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()
 

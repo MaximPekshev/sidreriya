@@ -22,7 +22,7 @@
 <div class="main-container">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
-			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'baseapp:index' %}">На главную</a>
 			<a href="{% url 'show_orders' %}">Ваши заказы</a>
 		</nav>
 		<div class="row">
@@ -44,7 +44,7 @@
 							<td>{{ item.0.date }}</td>
 							<td>{{ item.1 }}</td>
 							<td>{{ item.0.summ }}</td>
-							<td>{{ item.0.get_discount_summ }}</td>
+							<td>{{ item.0.discount_summ }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>
