@@ -8,8 +8,6 @@ from goodapp.views import (
     CategoryView,
     FilteredGoodsView,
     TagView,
-    # show_product_with_tag,
-    # show_product_with_filters,
 )
 
 urlpatterns = [

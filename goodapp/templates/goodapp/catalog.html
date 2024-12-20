@@ -21,7 +21,7 @@
 				</div>
 				<div id="collapseAll" class="collapse {% if active_filters %} in {% endif %}" aria-labelledby="headingAll" data-parent="#accordion">
 					<div class="card-body">
-						<form id="filter_form" action="{% url 'show_product_with_filters' %}" method="GET" >
+						<form id="filter_form" action="{% url 'show_catalog' %}" method="GET" >
 							{% for filter in filters %}
 							{% if filter.values %}
 							<div class="widget widget_categories margin-bottom-20">
@@ -47,7 +47,7 @@
 						</form>
 						{% if active_filters %}
 						<div class="block-form-footer text-left">
-							<a href="{% url 'show_product_with_filters' %}" ><button class="button primary">Сбросить фильтр</button></a>
+							<a href="{% url 'show_catalog' %}" ><button class="button primary">Сбросить фильтр</button></a>
 						</div>
 						{% endif %}
 					</div>

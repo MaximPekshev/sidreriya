@@ -115,10 +115,12 @@
 					</li>
 					{% endif %}
 					<li>
-						<a href="{% url 'show_category' slug='2717255153' %}">Сидр</a>
+						{% comment %} <a href="{% url 'show_category' slug='2717255153' %}">Сидр</a> {% endcomment %}
+						<a href="{% url 'show_catalog' %}?Категория=Сидр">Сидр</a>
 					</li>
 					<li>
-						<a href="{% url 'show_category' slug='679382604' %}">Вино</a>
+						{% comment %} <a href="{% url 'show_category' slug='679382604' %}">Вино</a> {% endcomment %}
+						<a href="{% url 'show_catalog' %}?Категория=Вино">Вино</a>
 					</li>
 					<li>
 						<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
