@@ -15,8 +15,8 @@
 <div class="main-container right-sidebar style3 margin-bottom-30">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
-			<a href="{% url 'show_index' %}">На главную</a>
-			<a href="{% url 'show_breakfasts' %}">Завтраки</a>
+			<a href="{% url 'baseapp:index' %}">На главную</a>
+			<a href="{% url 'baseapp:breakfasts' %}">Завтраки</a>
 			Меню
 		</nav>
 		<div class="row">
@@ -44,8 +44,8 @@
 								<div class="product-inner">
 									<div class="thumb has-second-image">
 										<a href="{% url 'show_good' slug=item.good.slug %}">
-											{% if item.good.get_main_image %}
-											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+											{% if item.good.main_image %}
+											<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 											{% else %}
 											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 											{% endif %}
@@ -74,7 +74,7 @@
 										{% if item.good.old_price %}
 										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.get_discount_price }} *</span>
+										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.discount_price }} *</span>
 										{% endif %}
 										{% else %}
 										<span class="price">&#8381 0</span>
@@ -95,8 +95,8 @@
 								<div class="product-inner">
 									<div class="thumb has-second-image">
 										<a href="{% url 'show_good' slug=item.good.slug %}">
-											{% if item.good.get_main_image %}
-											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+											{% if item.good.main_image %}
+											<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 											{% else %}
 											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 											{% endif %}
@@ -125,7 +125,7 @@
 										{% if item.good.old_price %}
 										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.good.price }} / </span> <span class="price discount-price">&#8381 {{ item.good.get_discount_price }} *</span>
+										<span class="price">&#8381 {{ item.good.price }} / </span> <span class="price discount-price">&#8381 {{ item.good.discount_price }} *</span>
 										{% endif %}
 										{% else %}
 										<span class="price">&#8381 0</span>

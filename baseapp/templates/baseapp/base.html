@@ -132,17 +132,17 @@
 				Чрезмерное употребление алкоголя вредит Вашему здоровью. Сайт предназначен для лиц старше 18 лет.
 			</div>	
 			<div class="footer-bottom">
-				<div class="row">
-					<div class="col-sm-12 col-md-6">
-						<div class="coppyright">Сидрерия 2020 - {{ actual_year }}. Developed by <a target="_blank" href="https://annasoft.ru/">Annasoft</a></div>
-					</div>
-					<div class="col-sm-12 col-md-6">
-						<div class="payment">
-							<span><img src="{% static 'images/logos/mastercard.png' %}" alt=""></span>
+				<div class="row" style="text-align:center;"> 
+					{% comment %} <div class="col-12"> {% endcomment %}
+					<div class="coppyright">Сидрерия 2020 - {{ actual_year }}. Developed by <a target="_blank" href="https://annasoft.ru/">Annasoft</a></div>
+					{% comment %} </div> {% endcomment %}
+					{% comment %} <div class="col-sm-12 col-md-6">
+						<div class="payment"> {% endcomment %}
+							{% comment %} <span><img src="{% static 'images/logos/mastercard.png' %}" alt=""></span>
 							<span><img src="{% static 'images/logos/visa.png' %}" alt=""></span>
-							<span><img src="{% static 'images/logos/mir.png' %}" alt=""></span>
-						</div>
-					</div>
+							<span><img src="{% static 'images/logos/mir.png' %}" alt=""></span> {% endcomment %}
+						{% comment %} </div>
+					</div> {% endcomment %}
 				</div>
 			</div>
 		</div>

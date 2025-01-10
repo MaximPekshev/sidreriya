@@ -1,6 +1,8 @@
 from django.db import models
 
-from goodapp.models import Properties, Category
+from goodapp.models import (
+    Category
+)
 
 class PropertiesFilter(models.Model):
 	

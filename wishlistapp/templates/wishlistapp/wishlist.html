@@ -24,10 +24,10 @@
 		<div class="row">
 			<div class="col-sm-12 main-content">
 				<nav class="woocommerce-breadcrumb breadcrumbs">
-					<a href="{% url 'show_index' %}">На главную</a>
+					<a href="{% url 'baseapp:index' %}">На главную</a>
 					<a href="{% url 'show_wishlist' %}">Избранное</a>
 				</nav>
-				{% if wishlist_items %}
+				{% if wishlist.items %}
 				<div class="block-form">
 					
 					<table class="shop_table cart">
@@ -40,20 +40,19 @@
 							</tr>
 						</thead>
 						<tbody>
-
-							{% for item in wishlist_items %}
+							{% for item in wishlist.items %}
 							<tr>
 								<td class="product">
-									<img class="product-thumb" src="{{ item.image.images.url }}" alt="" style="width: 50px;">
+									<img class="product-thumb" src="{{ item.main_image.images.url }}" alt="" style="width: 50px;">
 									<div class="product-info">
-										<h3 class="product-name"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}</a></h3>
-										<span class="product-price">&#8381 {{ item.price }}{% if item.good.category.name == "Куличи" or item.good.category.name == "Вареники" %}{% else %} / &#8381 * {{ item.good.get_discount_price }}{% endif %}</span>
+										<h3 class="product-name"><a href="{% url 'show_good' slug=item.slug %}">{{ item.name }}{% if item.name_en %} / {{ item.name_en }}{% endif %}</a></h3>
+										<span class="product-price">&#8381 {{ item.price }}{% if item.category.name == "Куличи" or item.category.name == "Вареники" %}{% else %} / &#8381 * {{ item.discount_price }}{% endif %}</span>
 									</div>
 								</td>
 								<td class="stock">
-									{% if item.good.quantity >= 1 %}
-										{% if item.good.in_barrel %}
-											{% if item.good in barrels %}
+									{% if item.quantity >= 1 %}
+										{% if item.in_barrel %}
+											{% if item in barrels %}
 											<span class="in-stock">в наличии</span>
 											{% else %}
 											<span class="in-stock" style="color: orange;">временно недоступен</span>
@@ -62,22 +61,22 @@
 										<span class="in-stock">в наличии</span>
 										{% endif %}
 									{% else %}
-									{% if item.good.is_cidre %}
+									{% if item.is_cidre %}
 									<span class="in-stock" style="color: orange;">все выпили</span>
 									{% else %}
-									<span class="in-stock" style="color: orange;">закончились</span>
+									<span class="in-stock" style="color: orange;">закончилось</span>
 									{% endif %}
 									{% endif %}
 								</td>
 								<td>
 									<div class="quantity">
-										<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
+										<form id="{{ item.slug }}addtocart" action="{% url 'cart_add_item' slug=item.slug %}" method="POST">
 											{% csrf_token %}
 											<input type="hidden" name="quantity" value="1">
 
-											{% if item.good.quantity >= 1 %}
-											{% if item.good.in_barrel %}
-												{% if item.good in barrels %}
+											{% if item.quantity >= 1 %}
+											{% if item.in_barrel %}
+												{% if item in barrels %}
 												<button type="submit" class="button add_to_cart_button">В корзину</button>
 												{% endif %}
 											{% else %}
@@ -91,7 +90,7 @@
 									</div>
 								</td>
 								<td class="product-remove">
-									<a class="remove" href="{% url 'wishlist_add_item' slug=item.good.slug %}"><i class="fa fa-close"></i></a>
+									<a class="remove" href="{% url 'wishlist_add_item' slug=item.slug %}"><i class="fa fa-close"></i></a>
 								</td>
 							</tr>
 							{% endfor %}

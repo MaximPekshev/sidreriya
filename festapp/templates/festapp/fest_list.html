@@ -15,65 +15,52 @@
 <div class="main-container margin-bottom-30">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
-			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'baseapp:index' %}">На главную</a>
 			Фестивали
 		</nav>
-		
 		<div class="row">
 			{% if festivals %}
-			{% if festivals.0 %}
-			<div class="margin-top-10">
-				<div class="container">
-					<div class="row margin-0">
-						<div class="col-sm-4 padding-0">
-							<div class="kt-banner block-banner-text style4 margin-bottom-10" data-height="411" data-bgcolor="{{ festivals.0.color }}" data-verticalmiddle="middle">
-								<a href="{% url 'show_festival' cpu_slug=festivals.0.cpu_slug %}" class="bg-image"></a>
-								<div class="content text-center">
-									<h3 class="title">{{ festivals.0.name }}</h3>
-									<h4 class="subtitle">{{ festivals.0.description | slice:":150" }}</h4>
-									<a class="link-more" href="{% url 'show_festival' cpu_slug=festivals.0.cpu_slug %}">Подробности</a>
+				{% for festival in festivals %}
+				<div class="margin-top-10">
+					<div class="container">
+						<div class="row margin-0">
+							<div class="col-sm-4 padding-0">
+								<div 
+									class="kt-banner block-banner-text style4 margin-bottom-10" 
+									data-height="411" 
+									data-bgcolor="{% if festival.color %}{{ festival.color }}{% else %}#A9A9A9{% endif %}" 
+									data-verticalmiddle="middle"
+								>
+									<a href="{% url 'show_festival' cpu_slug=festival.cpu_slug %}" class="bg-image"></a>
+									<div class="content text-center">
+										<h3 class="title">{{ festival.name }}</h3>
+										<h4 class="subtitle">{{ festival.description | slice:":150" }}</h4>
+										<a class="link-more" href="{% url 'show_festival' cpu_slug=festival.cpu_slug %}">Подробности</a>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-sm-8 padding-0">
-							<div class="kt-banner block-banner-text style5 margin-bottom-10" data-height="411" data-background="{% if festivals.0.list_img %}{{ festivals.0.list_img.url }}{% endif %}" data-positionright="110px" data-verticalmiddle="middle">
-								<a href="{% url 'show_festival' cpu_slug=festivals.0.cpu_slug %}" class="bg-image"></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			{% endif %}
-			{% if festivals.1 %}
-			<div class="margin-top-62">
-				<div class="container">
-					<div class="row margin-0">
-						<div class="col-sm-8 padding-0">
-							<div class="kt-banner block-banner-text style5 margin-bottom-10" data-height="411" data-background="{% if festivals.1.list_img %}{{ festivals.1.list_img.url }}{% endif %}" data-positionleft="60px" data-verticalmiddle="middle">
-								<a href="{% url 'show_festival' cpu_slug=festivals.1.cpu_slug %}" class="bg-image"></a>
-							</div>
-						</div>
-						<div class="col-sm-4 padding-0">
-							<div class="kt-banner block-banner-text style4 margin-bottom-10" data-height="411" data-bgcolor="{{ festivals.1.color }}" data-verticalmiddle="middle">
-								<a href="{% url 'show_festival' cpu_slug=festivals.1.cpu_slug %}" class="bg-image"></a>
-								<div class="content text-center">
-									<h3 class="title">{{ festivals.1.name }}</h3>
-									<h4 class="subtitle">{{ festivals.1.description | slice:":150" }}</h4>
-									<a class="link-more" href="{% url 'show_festival' cpu_slug=festivals.1.cpu_slug %}">Подробности</a>
+							<div class="col-sm-8 padding-0">
+								<div 
+									class="kt-banner block-banner-text style5 margin-bottom-10"
+									data-height="411" 
+									data-background="{% if festival.list_img %}{{ festival.list_img.url }}{% endif %}" 
+									data-positionright="110px" 
+									data-verticalmiddle="middle"
+								>
+									<a href="{% url 'show_festival' cpu_slug=festival.cpu_slug %}" class="bg-image"></a>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			{% endif %}
+				{% endfor %}
 			{% else %}
 			<div class="col-sm-12">
 				<div class="text-center">
 					<h3 class="title">К сожалению, нет действующих фестивалей.</h3>
 				</div>
 				<div class="text-center padding-top-30">
-					<a class="button primary" href="{% url 'show_index' %}">На главную</a>
+					<a class="button primary" href="{% url 'baseapp:index' %}">На главную</a>
 				</div>
 			</div>
 			{% endif %}	

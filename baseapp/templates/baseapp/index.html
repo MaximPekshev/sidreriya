@@ -39,19 +39,19 @@
 		<div class="container">
 			<div class="top-bar-left">
 				<div class="logo">
-					<a href="{% url 'show_index' %}"><img src="{% static 'images/logos/Sidreria_logo_bely.png' %}" width="150" alt=""></a>
+					<a href="{% url 'baseapp:index' %}"><img src="{% static 'images/logos/Sidreria_logo_bely.png' %}" width="150" alt=""></a>
 				</div>
 				<div class="form-search-wapper">
-					<!-- <h3 style="
-					color: white; 
-					font-family: 'Arimo',sans-serif;
-					font-size: 17px;
-					font-weight: 700;
-
-					" align="center" >Новая Сидрерия уже открыта!</h3>
-					<p align="center" >Ждем Вас в гости по адресу: </br> <span style="color: white;">Левобережная 22а</span></p> -->
-					<form id="search-form" class="form-search" method="GET" action="{% url 'show_search_result' %}">
-						<input class="input" name="q" type="text" placeholder="Поиск по меню...">
+					<form id="search-form" class="form-search" method="GET" action="{% url 'show_catalog' %}">
+						<input 
+							class="input" 
+							name="q" 
+							type="text" 
+							placeholder="Поиск по меню..."
+							{% if q %}
+							value="{{ q }}"
+							{% endif %}
+						>
 						<button type="submit" form="search-form" class="btn-search" style="padding-bottom: 10px;"><span class="flaticon-magnifying-glass34"></span></button>
 					</form>
 				</div>
@@ -65,19 +65,19 @@
 					<li class="menu-item-has-children box-setting">
 						<a href="{% url 'show_wishlist' %}">
 							<span class="menu-icon icon flaticon-heart295"></span>
-							<span class="count">{% if wishlist_count %}{{ wishlist_count }} {% endif %}</span>
+							<span class="count">{% if wishlist.count %}{{ wishlist.count }} {% endif %}</span>
 						</a>
 					</li>
 					<li class="menu-item-has-children mini-cart">
 						<a  href="{% url 'show_cart' %}">
 							<span class="menu-icon  icon flaticon-shopping-cart6"></span>
 							{% if cart %}
-							{% if cart_count > 0 %}
-							<span class="count">{{ cart_count }}</span>
-							<span class="text">шт.</span>
-							<span class="kak">-</span>
-							{% endif %}
-							<span class="subtotal">&#8381 {{ cart.summ }}</span>
+								{% if cart.count > 0 %}
+								<span class="count">{{ cart.count }}</span>
+								<span class="text">шт.</span>
+								<span class="kak">-</span>
+								<span class="subtotal">&#8381 {{ cart.summ }}</span>
+								{% endif %}
 							{% endif %}
 						</a>
 					</li>
@@ -94,11 +94,11 @@
 						<span></span>
 						<span></span>
 					</span>
-					
+					Меню
 				</a>
 				<ul class="kt-nav main-menu clone-main-menu">
 					<li>
-						<a href="{% url 'show_delivery' %}">Доставка</a>
+						<a href="{% url 'baseapp:delivery' %}">Доставка</a>
 					</li>
 					{% if in_bar %}
 					<li class="menu-item-has-children item-megamenu">
@@ -107,7 +107,7 @@
 							<div class="row">
 								{% for item in in_bar %}
 								<div class="col-sm-3 margin-top-10" >
-									<a href="{% url 'show_good' slug=item.good.slug %}"><img style="" src="{{ item.image.images.url }}" alt=""></a>
+									<a href="{% url 'show_good' slug=item.good.slug %}"><img style="" src="{{ item.good.main_image.images.url }}" alt=""></a>
 								</div>
 								{% endfor %}
 							</div>
@@ -115,28 +115,30 @@
 					</li>
 					{% endif %}
 					<li>
-						<a href="{% url 'show_category' slug='2717255153' %}">Сидр</a>
+						{% comment %} <a href="{% url 'show_category' slug='2717255153' %}">Сидр</a> {% endcomment %}
+						<a href="{% url 'show_catalog' %}?Категория=Сидр">Сидр</a>
 					</li>
 					<li>
-						<a href="{% url 'show_category' slug='679382604' %}">Вино</a>
+						{% comment %} <a href="{% url 'show_category' slug='679382604' %}">Вино</a> {% endcomment %}
+						<a href="{% url 'show_catalog' %}?Категория=Вино">Вино</a>
 					</li>
 					<li>
 						<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
 					</li>
 					<li>
-						<a href="{% url 'show_set_lunch' %}">Обеды</a>
+						<a href="{% url 'baseapp:set_lunch' %}">Обеды</a>
 					</li>
 					<li>
-						<a href="{% url 'show_breakfasts' %}">Завтраки</a>
+						<a href="{% url 'baseapp:breakfasts' %}">Завтраки</a>
 					</li>
 					<li>
-						<a href="{% url 'show_сertificate' %}">Сертификаты</a>
+						<a href="{% url 'baseapp:сertificate' %}">Сертификаты</a>
 					</li>
 					<li>
-						<a href="{% url 'show_atmosphere' %}">Атмосфера</a>
+						<a href="{% url 'baseapp:atmosphere' %}">Атмосфера</a>
 					</li>
 					<li>
-						<a href="{% url 'show_about_us' %}">О нас</a>
+						<a href="{% url 'baseapp:about_us' %}">О нас</a>
 					</li>
 				</ul>
 			</div>
@@ -155,7 +157,7 @@
 				<div class="inner">
 					<span data-animate="fadeInDown" class="caption subtitle">актуальные предложения</span>
 					<h2 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h2>
-					<a data-animate="fadeInDown" class="caption link" href="{% url 'show_delivery' %}">Подробнее...</a>
+					<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:delivery' %}">Подробнее...</a>
 				</div>
 			</div>
 		</div>
@@ -198,14 +200,14 @@
 				<div class="inner">
 					<span data-animate="fadeInDown" class="caption subtitle">бесплатная доставка обедов из Сидрерии!</span>
 					<h2 data-animate="zoomIn" class="caption title">От 3-х обедов<br>привезём<br>БЕСПЛАТНО</h2>
-					<a data-animate="fadeInDown" class="caption link" href="{% url 'show_promo' %}">Подробнее...</a>
+					<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:promo' %}">Подробнее...</a>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <!-- Banner -->
-{% if vareniki.get_category_items %}
+{% if vareniki.items %}
 <div class="section-banner">
 	<div class="container">
 		<div class="row">
@@ -221,7 +223,7 @@
 	</div>
 </div>
 {% endif %}
-{% if kulichi.get_category_items %}
+{% if kulichi.items %}
 <div class="section-banner">
 	<div class="container">
 		<div class="row">
@@ -251,9 +253,9 @@
 			</div>
 			<div class="col-sm-12 col-md-6">
 				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/cidre.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug='2717255153' %}" class="bg-image"></a>
+					<a href="{% url 'show_catalog' %}?Категория=Сидр" class="bg-image"></a>
 					<div class="content text-right">
-						<a href="{% url 'show_category' slug='2717255153' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
+						<a href="{% url 'show_catalog' %}?Категория=Сидр"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
 					</div>
 				</div>
 			</div>
@@ -266,17 +268,17 @@
 		<div class="row">
 			<div class="col-sm-12 col-md-6">
 				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/delivery.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_delivery' %}" class="bg-image"></a>
+					<a href="{% url 'baseapp:delivery' %}" class="bg-image"></a>
 					<div class="content text-right">
-						<a href="{% url 'show_delivery' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ДОСТАВКА</h4></a>
+						<a href="{% url 'baseapp:delivery' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ДОСТАВКА</h4></a>
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-12 col-md-6">
 				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/atmo.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_atmosphere' %}" class="bg-image"></a>
+					<a href="{% url 'baseapp:atmosphere' %}" class="bg-image"></a>
 					<div class="content text-right">
-						<a href="{% url 'show_atmosphere' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">АТМОСФЕРА</h4></a>
+						<a href="{% url 'baseapp:atmosphere' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">АТМОСФЕРА</h4></a>
 					</div>
 				</div>
 			</div>
@@ -339,8 +341,8 @@
 							<div class="product-inner">
 								<div class="thumb">
 									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.good.get_main_image %}
-											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% if item.good.main_image %}
+											<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% else %}
 											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% endif %}
@@ -374,7 +376,7 @@
 										{% if item.good.old_price %}
 										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.get_discount_price }} *</span>
+										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.discount_price }} *</span>
 										{% endif %}
 									{% else %}
 									<span class="price">&#8381 0</span>
@@ -396,8 +398,8 @@
 							<div class="product-inner">
 								<div class="thumb">
 									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.good.get_main_image %}
-											<img src="{{ item.good.get_main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
+										{% if item.good.main_image %}
+											<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% else %}
 											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
 										{% endif %}
@@ -431,7 +433,7 @@
 										{% if item.good.old_price %}
 										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
 										{% else %}
-										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.get_discount_price }} *</span>
+										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.discount_price }} *</span>
 										{% endif %}
 									{% else %}
 									<span class="price">&#8381 0</span>

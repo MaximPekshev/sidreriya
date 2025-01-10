@@ -22,7 +22,7 @@
 <div class="main-container">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
-			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'baseapp:index' %}">На главную</a>
 		</nav>
 		<div class="row">
 			<div class="col-sm-3"></div>
@@ -65,9 +65,9 @@
 							<tr>
 								<td class="product-name">{{ item.good }} </td>
 								<td class="product-name">{{ item.price }} </td>
-								<td class="product-name">{{ item.get_discount_price }} </td>
+								<td class="product-name">{{ item.discount_price }} </td>
 								<td class="product-total">{{ item.quantity }}</td>
-								<td class="product-total"><span class="amount">&#8381 {{ item.get_item_discount_summ }}</span></td>
+								<td class="product-total"><span class="amount">&#8381 {{ item.discount_summ }}</span></td>
 							</tr>
 							{% endfor %}
 						</tbody>
@@ -77,7 +77,7 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><strong><span class="amount">&#8381 {{ order.get_discount_summ }}</span></strong></td>
+								<td><strong><span class="amount">&#8381 {{ order.discount_summ }}</span></strong></td>
 							</tr>
 						</tfoot>
 					</table>
@@ -87,7 +87,7 @@
 					</div>
 					{% else %}
 					<div class="text-center">
-					<a href="{% url 'show_index' %}" class="button primary">На главную</a>
+					<a href="{% url 'baseapp:index' %}" class="button primary">На главную</a>
 					</div>
 					{% endif %}
 				</div>		

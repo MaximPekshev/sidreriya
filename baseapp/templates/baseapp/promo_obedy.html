@@ -17,7 +17,7 @@
 <div class="main-container">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
-			<a href="{% url 'show_index' %}">На главную</a>
+			<a href="{% url 'baseapp:index' %}">На главную</a>
 		</nav>
 		<div class="row">
 			<div class="col-sm-2 col-md-2" >	
@@ -31,13 +31,13 @@
 								<p>От 3-х обедов привезём бесплатно, чтобы наши Дружеские обеды оказались в вашем офисе!</p>
 								<blockquote>За полный обед с салатом и напитком просим {{ set_lunch.price }} Р.</blockquote>
 								<p>Готовим из натуральных продуктов, словно мама, с заботой о вас!</p>
-								<blockquote>Обеды по акции можно <a href="{% url 'show_set_lunch' %}">заказать</a> по ссылке ниже.</blockquote>
+								<blockquote>Обеды по акции можно <a href="{% url 'baseapp:set_lunch' %}">заказать</a> по ссылке ниже.</blockquote>
 								<p>Обеды в Сидрерии с 11:00 до 18:00</p>
 							</div>
 						</div>
 						<div class="col-sm-12" >
 							<div class="text-center" style="padding-top: 30px ">
-								<a class="button primary"  href="{% url 'show_set_lunch' %}">Заказать обед</a>
+								<a class="button primary"  href="{% url 'baseapp:set_lunch' %}">Заказать обед</a>
 							</div>
 						</div>
 					</div>

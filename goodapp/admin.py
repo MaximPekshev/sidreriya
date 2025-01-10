@@ -1,20 +1,26 @@
 from django.contrib import admin
 from django import forms
-
+from django.http import HttpResponse
 from django.utils.safestring import mark_safe
 
 import csv
-from django.http import HttpResponse
 
-
-from .models import Good, Picture
-from .models import Properties, Property_value
-from .models import Object_property_values
-from .models import Manufacturer, Category, In_Barrels, Set_Lunch
-from .models import Bestseller
-
-# from ajax_select.admin import AjaxSelectAdmin
-# from ajax_select import make_ajax_form
+from goodapp.models import (
+	Good,
+	Picture,
+	Properties,
+	Property_value,
+	Object_property_values,
+	Manufacturer,
+	Bestseller,
+	Category,
+	In_Barrels,
+	Set_Lunch,
+	Set_Meal,
+	First_Course,
+	Second_Course,
+	Third_Course
+)
 
 
 class Object_property_valuesInlineForm(forms.ModelForm):
@@ -25,8 +31,6 @@ class Object_property_valuesInlineForm(forms.ModelForm):
 		except:
 			self.fields['property_value'].queryset = Property_value.objects
 		
-
-
 class PictureInline(admin.TabularInline):
     model = Picture
 
@@ -47,7 +51,6 @@ class Object_property_valuesInline(admin.TabularInline):
 	form = Object_property_valuesInlineForm
 	model = Object_property_values
 	extra = 0
-
 
 class GoodAdmin(admin.ModelAdmin):
 	list_display = (
@@ -83,13 +86,11 @@ class GoodAdmin(admin.ModelAdmin):
 			kwargs["queryset"] = Category.objects.all()
 			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 		
-
 	def formfield_for_manytomany(self, db_field, request, **kwargs):
 		
 		if db_field.name == "upsell_products":
 			kwargs["queryset"] = Good.objects.filter(is_active=True).order_by('name')
 			return super(GoodAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
 
 	def image(self, obj):
 
@@ -115,9 +116,6 @@ class GoodAdmin(admin.ModelAdmin):
 	export_as_csv.short_description = "Выгрузить выбранные"
 
 admin.site.register(Good, GoodAdmin)
-
-
-
 
 class PropertiesAdmin(admin.ModelAdmin):
 	list_display = (
@@ -165,6 +163,44 @@ class In_BarrelsAdmin(admin.ModelAdmin):
 		return super(In_BarrelsAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 	
 admin.site.register(In_Barrels, In_BarrelsAdmin)
+
+class First_Course_Form(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(First_Course_Form, self).__init__(*args, **kwargs)
+		self.fields['good'].queryset = Good.objects.filter(category__name="Первое блюдо")
+
+class Second_Course_Form(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(Second_Course_Form, self).__init__(*args, **kwargs)
+		self.fields['good'].queryset = Good.objects.filter(category__name="Второе блюдо")
+
+class Third_Course_Form(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(Third_Course_Form, self).__init__(*args, **kwargs)
+		self.fields['good'].queryset = Good.objects.filter(category__name="Третье блюдо")
+
+class First_CourseInline(admin.TabularInline):
+	form = First_Course_Form
+	model = First_Course
+	extra = 0
+
+class Second_CourseInline(admin.TabularInline):
+	form = Second_Course_Form
+	model = Second_Course
+	extra = 0
+
+class Third_CourseInline(admin.TabularInline):
+	form = Third_Course_Form
+	model = Third_Course
+	extra = 0
+
+class Set_MealAdmin(admin.ModelAdmin):
+	list_display = (
+					'date',
+					)
+	inlines 	 = [First_CourseInline, Second_CourseInline, Third_CourseInline]
+
+admin.site.register(Set_Meal, Set_MealAdmin)
 
 class Set_LunchAdmin(admin.ModelAdmin):
 	list_display = (

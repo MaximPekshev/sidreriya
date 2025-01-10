@@ -1,9 +1,10 @@
 from django.urls import path
-from django.urls import include
-from .views import show_festival_list
-from .views import show_festival
+from .views import (
+    FestivalListView,
+    FestivalView,
+)
 
 urlpatterns = [
-	path('', 			show_festival_list, name='show_festival_list'),
-	path('<str:cpu_slug>/', show_festival, name='show_festival'),
+	path('', FestivalListView.as_view(), name='show_festival_list'),
+	path('<str:cpu_slug>/', FestivalView.as_view(), name='show_festival'),
 ]

@@ -1,7 +1,6 @@
 from django.db import models
 
 def get_image_name_without_slug(instance, filename):
-	
 	new_name = ('music_week_' + '%s' + '.' + filename.split('.')[-1]) % instance.date
 	return new_name
 

@@ -1,8 +1,6 @@
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-# from ajax_select import urls as ajax_select_urls
-
 admin.autodiscover()
 
 urlpatterns = [
@@ -15,7 +13,6 @@ urlpatterns = [
     path('fest/'        , include('festapp.urls')),
     path('music-events/'  , include('music_week_app.urls')),
     # path('API/'    		, include('API.urls')),
-    # path('ajax_select/', include(ajax_select_urls)),
     path('admin/'		, admin.site.urls),
 
 ]
