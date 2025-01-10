@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'dealer.contrib.django.Middleware',
 ]
 
 ROOT_URLCONF = 'sidreriya.urls'
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'wishlistapp.context_processor.wishlist',
                 'goodapp.context_processor.cider_in_barrels',
                 'authapp.context_processor.buyer',
+                'dealer.contrib.django.context_processor',
             ],
         },
     },
