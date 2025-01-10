@@ -5,70 +5,119 @@
 {% block social %}
 {% endblock %}
 
+{% block custom_lib %}
+<script src="https://unpkg.com/vue@3.0.1/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/naive-ui@2.40.4/dist/index.prod.js"></script>
+{% endblock %}
+
 {% block content %}
 
-<div class="main-container {% if not subcategories %} left-sidebar {% endif %} {% if filters %} left-sidebar {% endif %}">
+<div
+	class="main-container {% if not subcategories %} left-sidebar {% endif %} {% if filters %} left-sidebar {% endif %}"
+	id="catalogApp"
+>	
+	<n-config-provider :theme-overrides="themeOverrides">
 	<div class="container">
 		<div class="row">
 			{% if not subcategories %}
 			{% if filters %}
-			<div class="col-sm-4 col-md-3 sidebar blog-sidebar margin-bottom-20" id="accordion">
-
-				<div class="widget widget_categories margin-bottom-20">
-					<a style="cursor: pointer;"data-toggle="collapse" data-target="#collapseAll" aria-expanded="true" aria-controls="collapseAll">
-						<h2 class="widget-title margin-bottom-0"><i style="padding-right: 20px;" class="fa fa-exchange" aria-hidden="true"></i>Фильтры</h2> 
+			<div class="col-sm-12 col-md-3 sidebar blog-sidebar margin-bottom-20">
+				<div class="main-menu-wapper">
+					<a @click="showFilterMenu" class="mobile-filter-navigation">
+						<span class="icon">
+							<span></span>
+							<span></span>
+							<span></span>
+						</span>
+						<n-badge :value="activeFiltersLength" :max="15">
+							Фильтры
+						</n-badge>
 					</a>
 				</div>
-				<div id="collapseAll" class="collapse {% if active_filters %} in {% endif %}" aria-labelledby="headingAll" data-parent="#accordion">
+				<div class="as-desktop-filters-header widget widget_categories margin-bottom-20">
+					<a style="cursor: pointer;">
+						<h2 class="widget-title margin-bottom-0">
+							<i style="padding-right: 20px;" class="fa fa-exchange"></i>
+							Фильтры
+						</h2> 
+					</a>
+				</div>
+				<div class="as-desktop-filters">
 					<div class="card-body">
-						<form id="filter_form" action="{% url 'show_catalog' %}" method="GET" >
-							{% for filter in filters %}
-							{% if filter.values %}
-							<div class="widget widget_categories margin-bottom-20">
-								<h2 class="widget-title margin-bottom-0">{{ filter.title }}</h2>
+						<div class="widget widget_categories margin-bottom-20">
+							<h2 class="widget-title margin-bottom-0">Крепость</h2>
+							<div class="n-slider" style="padding-top: 20px;">
+								<n-space vertical>
+								<n-slider 
+									@dragend="renderResult('Крепость', straightValue)" 
+									v-model:max="maxStraight" 
+									v-model:min="minStraight"
+									v-model:value="straightValue" 
+									range 
+									:step="0.1" 
+								/>
+								<n-space>
+									<n-input-number v-model:value="value[0]" size="small" />
+									<n-input-number v-model:value="value[1]" size="small" />
+								</n-space>
+								</n-space>
+							</div>
+						</div>
+						<div
+							v-for="filter in filtersList" :key="filter.id"
+						>
+							<div 
+								v-if="filter.values.length > 0"
+								class="widget widget_categories margin-bottom-20"
+							>
+								<h2 class="widget-title margin-bottom-0" v-html="filter.title"></h2>
 								<ul>
-									{% for val in filter.values %}
-									<li>
-										<a onclick="checkboxOnOff(this)" style="cursor: pointer;"> {{ val.title }}
+									<li v-for="val in filter.values" :key="val.id">
+										<div @click="renderResult(filter.title, val.title)" style="cursor: pointer;">
+											<a v-html="val.title "></a>
 											<span class="count" >
-												<input hidden onclick="event.preventDefault()" style="cursor: pointer;" type="checkbox" name="{{ filter.title }}" value="{{ val.title }}" {% if val.title in active_filters %} checked {% else %} {% endif %}>
-												<input type="checkbox" {% if val.title in active_filters %} checked {% else %} {% endif %} style="cursor: pointer;">
+												<n-checkbox :checked="checkStatus(val.title)" size="large"/>
 											</span>
-										</a>
+										</div>
 									</li>
-									{% endfor %}
 								</ul>
 							</div>
-							{% endif %}
-							{% endfor %}
-							<div class="block-form-footer text-left">
-								<button id="filter_form_button" form="filter_form" class="button primary" style="display: None;" >Показать</button>
-							</div>
-						</form>
-						{% if active_filters %}
-						<div class="block-form-footer text-left">
-							<a href="{% url 'show_catalog' %}" ><button class="button primary">Сбросить фильтр</button></a>
 						</div>
-						{% endif %}
+						<div v-if="activeFilters.length > 0" class="block-form-footer text-left">
+							<a href="{% url 'show_catalog' %}?" ><button class="button primary">Очистить фильтры</button></a>
+						</div>
 					</div>
-				</div>		
-
+				</div>
 			</div>
 			{% endif %}
 			{% endif %}
-			<div class="{% if filters %} col-sm-8 col-md-9 {% else %} col-sm-12 col-md-12 {% endif %} main-content">
-				<div class="shop-page-bar margin-0">
-					<nav class="woocommerce-breadcrumb breadcrumbs">
+			<div class="{% if filters %} col-sm-12 col-md-9 {% else %} col-sm-12 col-md-12 {% endif %} main-content">
+				<n-space justify="space-between">
+					<div class="woocommerce-breadcrumb breadcrumbs" style="margin-bottom: 0px;">
 						<a href="{% url 'baseapp:index' %}">На главную</a>
-						{% if category %}
-						<a href="{% url 'show_category' slug=category.slug %}">{{ category.name }}</a>
-						{% endif %}
-						{% if manufacturer %}
-						<a>Производители</a>
-						<a href="{% url 'show_manufacturer' cpu_slug=manufacturer.cpu_slug %}">{{ manufacturer.name }}</a>
-						{% endif %}
-					</nav>
-				</div>
+						<a href="{% url 'show_catalog' %}">Каталог</a>
+					</div>
+					{% if filters %}
+					<div class="sorting">
+						<n-select v-model:value="sorting" :options="options" @update:value="renderResult('sort', sorting)" />
+					</div>
+					{% endif %}
+				</n-space>
+				<div v-cloak class="as-tag-panel">
+					<n-space :align="center">
+						<n-tag 
+							v-for="item in activeFiltersObject"
+							:key="item.id"
+							size="large"
+							round
+							closable 
+							@close="renderResult(item.title, item.value)"
+						>
+							${ item.value }$
+						</n-tag>
+					</n-space>
+				</div>	
 				{% if subcategories %}
 				<div class="margin-top-10">
 					<div class="container">
@@ -114,9 +163,9 @@
 					<p align="justify">{{ manufacturer.description|linebreaksbr }}</p>
 				{% endif %}
 					{% if page_object.object_list %}
-					<ul class="products product-list-grid {% if filters %} desktop-columns-3 {% else %} desktop-columns-4 {% endif %} tablet-columns-3 mobile-columns-2">
+					<ul class="products product-list-grid {% if filters %} desktop-columns-3 {% else %} desktop-columns-4 {% endif %} tablet-columns-3 mobile-columns-1">
 						{% for item in page_object.object_list %}
-							<li class="product-item {% if filters %} col-md-4 {% else %} col-md-3 {% endif %}col-sm-4 col-xs-6">
+							<li class="product-item {% if filters %} col-md-4 {% else %} col-md-3 {% endif %}col-sm-4 col-xs-12">
 								<div class="product-inner">
 									<div class="thumb has-second-image">
 										<a href="{% url 'show_good' slug=item.slug %}">
@@ -152,15 +201,19 @@
 												<button form="{{ item.slug }}addtocart" type="submit" class="button add_to_cart_button">В корзину</button>
 												{% endif %}
 												{% endif %}
-												<a href="{% url 'wishlist_add_item' slug=item.slug %}" class="wishlist"{% if item in wishlist.items %} style="color: red;" {% endif %}>В Избранное</a>
-											
+												<a 
+													href="{% url 'wishlist_add_item' slug=item.slug %}" 
+													class="wishlist {% if item in wishlist.items %}in-wishlist{% endif %}"
+												>
+													В Избранное
+												</a>
 										</div>
 										<div class="flash">
 										{% if not item.quantity %}
-										{% if item.category.name == "Куличи" or item.category.name == "Вареники" %}
-										<span class="sale">Закончились</span>
-										{% else %}
+										{% if item.is_vine or item.is_cidre %}
 										<span class="sale">Все выпили</span>
+										{% else %}
+										<span class="sale">Закончилось</span>
 										{% endif %}
 										{% endif %}
 										{% if item.in_barrel %}
@@ -201,7 +254,58 @@
 			</div>
 			
 		</div>
-	</div>	
+	</div>
+	{% if not subcategories and filters %}
+	<n-drawer v-cloak v-model:show="mobileMenuShow" :width="mobileMenuWidth" placement="left">
+		<n-drawer-content title="Фильтры" closable>
+			<div class="card-body">
+				<div class="widget widget_categories margin-bottom-20">
+					<h2 class="widget-title margin-bottom-0">Крепость</h2>
+					<div class="n-slider" style="padding-top: 20px;">
+						<n-space vertical>
+						<n-slider 
+							@dragend="renderResult('Крепость', straightValue)" 
+							v-model:max="maxStraight" 
+							v-model:min="minStraight"
+							v-model:value="straightValue" 
+							range 
+							:step="0.1" 
+						/>
+						<n-space>
+							<n-input-number v-model:value="value[0]" size="small" />
+							<n-input-number v-model:value="value[1]" size="small" />
+						</n-space>
+						</n-space>
+					</div>
+				</div>
+				<div
+					v-for="filter in filtersList" :key="filter.id"
+				>
+					<div 
+						v-if="filter.values.length > 0"
+						class="widget widget_categories margin-bottom-20"
+					>
+						<h2 class="widget-title margin-bottom-0" v-html="filter.title"></h2>
+						<ul>
+							<li v-for="val in filter.values" :key="val.id">
+								<div @click="renderResult(filter.title, val.title)" style="cursor: pointer;">
+									<a v-html="val.title "></a>
+									<span class="count" >
+										<n-checkbox :checked="checkStatus(val.title)" size="large"/>
+									</span>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div v-if="activeFilters.length > 0" class="block-form-footer text-left">
+					<a href="{% url 'show_catalog' %}?" ><button class="button primary">Очистить фильтры</button></a>
+				</div>
+			</div>
+		</n-drawer-content>
+	</n-drawer>
+	</n-config-provider>
+	{% endif %}
 </div>
 <div class="container">
 	<div class="row">
@@ -212,26 +316,178 @@
 		</div>
 	</div>
 </div>
+
 {% endblock %}
 
 {% block magnific_popup %}
 {% endblock %}
 
 {% block custom_script %}
-<script>
 
-	window.onload = init;
-
-	function init() {
-
-		document.body.classList.add('loaded');
-		if (window.innerWidth > 480) {
-			let filters = document.getElementById('collapseAll');
-			if (filters) {
-				filters.classList.add('in');
+<script type="text/javascript">
+	const CatalogApp = {
+		data () {
+			const { NConfigProvider } = naive
+			const themeOverrides = {
+				common: {
+				  primaryColor: '#444444',
+				  primaryColorHover: '#444444',
+				},
+				Badge: {
+				  color: '#eec15b',
+				},
 			}
-		}
+			
+			return {
+				NConfigProvider,
+				themeOverrides,
+				straightValue: [0, 10],
+				mobileMenuShow: false,
+				mobileMenuWidth: 502,
+				sorting: null,
+				options: [
+					{
+						label: 'Новинки',
+						value: 'newbies',
+					},
+					{
+						label: 'Дороже',
+						value: 'price_desc'
+					},
+					{
+						label: 'Дешевле',
+						value: 'price_asc'
+					},
+				]
+			}
+		},
+		delimiters: ["${", "}$"],
+		computed: {
+			filtersList () {
+				return {{ filters|safe }}
+			},
+			sortParam () {
+				if (this.allActiveFilters) {
+					let activeFilters = this.allActiveFilters.filter(item => item.title == 'sort')
+					return activeFilters
+				}
+				return []
+			},
+			activeFiltersObject () {
+				if (this.allActiveFilters) {
+					let activeFilters = this.allActiveFilters.filter(item => item.title != 'sort')
+					return activeFilters
+				}
+				return []
+			},
+			allActiveFilters () {
+				return {{ active_filters_obj|safe }}
+			},
+			activeFiltersLength () {
+				return this.activeFilters.length - 1
+			},
+			activeFilters () {
+				return {{ active_filters|safe }}
+			},
+			strActiveFilters () {
+				return "{{ str_active_filters|safe }}".replace('?', '')
+			},
+			filterStraight() {
+				return {{ filter_straight|safe }}
+			},
+			maxStraight() {
+				return {{ max_straight|safe }}
+			},
+			minStraight() {
+				return {{ min_straight|safe }}
+			},
+			goodsMinStraight() {
+				return {{ goods_min_straight|safe }}
+			},
+			goodsMaxStraight() {
+				return {{ goods_max_straight|safe }}
+			},
+		},
+		mounted () {
+			if (this.filterStraight) {
+				this.straightValue = this.filterStraight
+			} else {
+				this.straightValue = [this.goodsMinStraight, this.goodsMaxStraight]
+			}
+			this.mobileMenuWidth = window.innerWidth - 20
+			if ( this.sortParam.length > 0 ) {
+				this.sorting = this.sortParam[0].value
+			} else {
+				this.sorting = 'newbies'
+			}
+		},
+		methods: {
+			showFilterMenu(el) {
+				el.preventDefault()
+				this.mobileMenuShow = !this.mobileMenuShow
+			},
+			checkStatus(value) {
+				return this.activeFilters.includes(value)
+			},
+			renderResult(filter, value) {
+				let searchParams = []
+				//если есть актвные фильтры - получаем массив фиьтров [фильтр=зачение1,значение2,значение3]
+				if (this.strActiveFilters) {
+					searchParams = this.strActiveFilters.slice(0, -1).split('&')
+				}
+				let allQueryParams = {}
+				// разбираем фильтры и значения на объект
+				if (searchParams.length > 0) {
+					for (let param of searchParams) {
+						let [key, values] = param.split('=')
+						allQueryParams[key] = values.split(',')
+					}
+				}
+				// проверяем есть ли такой фильтр в активных фильтрах
+				// если есть - проверяем есть ли такое значение в массиве значений
+				// если такое значение есть - удаляем его из массива, если массив пустой - удаляем фильтр
+				// если такого значения нет - добавляем в массив значний фильтра
+				let filterValues = allQueryParams[filter] ? allQueryParams[filter] : []
+				if (filterValues) {
+					// если фильтр Крепость - просто обновляем значение
+					if (filter == 'Крепость') {
+						if (this.straightValue[0] > this.straightValue[1]) {
+							this.straightValue = [this.straightValue[1], this.straightValue[0]]
+						}
+						filterValues = this.straightValue
+					} else if (filter == 'sort') {
+						filterValues = this.sorting
+					} else {
+					// иначе - проверяем есть ли значение в массиве	
+						if (filterValues.includes(value)) {
+							filterValues.pop(filterValues.indexOf(value))
+							if (filterValues.length == 0) {
+								delete allQueryParams[filter]
+							}
+						} else {
+							filterValues.push(value)
+						}
+					}
+				} else {
+					filterValues = push(value)
+				}
+				// если массив значений фильтра не пустой - добавляем его в объект Все Фильтры
+				if (filterValues.length != 0) {
+					allQueryParams[filter] = filterValues
+				}
+				// формируем строку запроса
+				let url = new URL(window.location.href)
+				// формируем параметры строки запроса
+				let newSearchParams = new URLSearchParams(allQueryParams)
+				url.search = newSearchParams.toString()
+				// переходим по новому адресу
+				window.location.href=url
+			}
+		},
 	}
+	const app = Vue.createApp(CatalogApp)
+	app.use(naive)
+	app.mount('#catalogApp')
+</script>	
 
-</script>
 {% endblock %}

@@ -1,7 +1,6 @@
 from django.shortcuts import (
     render, 
-    get_object_or_404, 
-    redirect
+    get_object_or_404
 )
 from django.views.generic import View
 from django.db.models import Q
@@ -21,13 +20,14 @@ from goodapp.models import (
 from filterapp.models import PropertiesFilter
 
 
-def filters(goods, categories_name = [], manufacturers_name = []):
+def filters(goods, categories_name = [], manufacturers_name = [], active_filters = None):
+	goods_categories = list(dict.fromkeys(goods.values_list('category', flat=True)))
 	filters = []
 	if categories_name:
-		categories = Category.objects.filter(name__in = categories_name)
+		categories = Category.objects.filter(name__in=categories_name, pk__in=goods_categories)
 	else:
 		categories_name = ['Сидр', 'Вино']
-		categories = Category.objects.filter(name__in = categories_name)	
+		categories = Category.objects.filter(name__in=categories_name, pk__in=goods_categories)	
 	filters.append({
 		'title': 'Категория',
 		'values': [{
@@ -35,36 +35,35 @@ def filters(goods, categories_name = [], manufacturers_name = []):
 			'title': item.name
 		} for item in categories if categories]
 	})
-	filters.append(
-		{
-			'title': 'Крепость',
-			'values': [
-				{'id': 1, 'title': 'безалкогольный'},
-				{'id': 2, 'title': 'до 3%'},
-				{'id': 3, 'title': 'больше 3%'}
-			]	
-		}
-	)
 	properties_filter = PropertiesFilter.objects.all().exclude(p_filter__title='Крепость')
+	grape_filters = [item.get('value') for item in list(filter(lambda x: x.get('title') == 'Виноград', active_filters))]
 	for item in properties_filter:
 		props = list(set(Object_property_values.objects.filter(
 				_property=item.p_filter,
 				good__in=goods
 			).order_by('pk').values_list('property_value', flat=True)))
-		props_list = [{
-			"id": Property_value.objects.filter(pk=item).first().pk,
-			"title": Property_value.objects.filter(pk=item).first().title,
-		} for item in props if item != None]
+		if item.p_filter.title == 'Виноград' and grape_filters:
+			props_title_list = Property_value.objects.filter(pk__in=props).values_list('title', flat=True)
+			props_list = [{
+				"id": Property_value.objects.filter(title=item).first().pk,
+				"title": item,
+			} for item in props_title_list if item != None and item in grape_filters]
+		else:
+			props_list = [{
+				"id": item,
+				"title": Property_value.objects.filter(pk=item).first().title,
+			} for item in props if item != None]	
 		filters.append(
 			{ 
 				'title' : item.p_filter.title,
 				'values': props_list
 			}
 		)
+	goods_manufacturers = list(dict.fromkeys(goods.values_list('manufacturer', flat=True)))
 	if 	manufacturers_name:
-		manufacturers = Manufacturer.objects.filter(name__in = manufacturers_name)
+		manufacturers = Manufacturer.objects.filter(name__in = manufacturers_name, pk__in=goods_manufacturers)
 	else:
-		manufacturers = Manufacturer.objects.all()
+		manufacturers = Manufacturer.objects.filter(pk__in=goods_manufacturers)
 	if manufacturers:
 		filters.append(
 			{	
@@ -77,95 +76,135 @@ def filters(goods, categories_name = [], manufacturers_name = []):
 		)
 	return filters
 
-# class CatalogView(View):
-	
-# 	def get(self, request, goods_count=32):
-# 		goods = Good.objects.filter(is_active=True).order_by('pk')
-# 		page_number = request.GET.get('page', 1)
-# 		paginator = Paginator(goods, goods_count)
-# 		page = paginator.get_page(page_number)
-# 		is_paginated = page.has_other_pages()
-# 		if page.has_previous():
-# 			prev_url = '?page={}'.format(page.previous_page_number())
-# 		else:
-# 			prev_url = ''	
-# 		if page.has_next():
-# 			next_url = '?page={}'.format(page.next_page_number())
-# 		else:
-# 			next_url = ''
-# 		barrels = In_Barrels.objects.all()
-# 		context = {
-# 			'page_object': page, 
-# 			'prev_url': prev_url, 
-# 			'next_url': next_url, 
-# 			'is_paginated': is_paginated,
-# 			'barrels': barrels,
-# 			'filters' : filters(goods),
-# 		}
-# 		return render(request, 'goodapp/catalog.html', context)
+def min_and_max_straight_values(goods = None):
+	# Получаем pk всех уникальных значений свойств крепости
+	if goods:
+		straight_list_pk = Object_property_values.objects.filter(_property__title='Крепость', good__in=goods).distinct().values_list('property_value', flat=True)
+	else:
+		straight_list_pk = Object_property_values.objects.filter(_property__title='Крепость').distinct().values_list('property_value', flat=True)	
+	# Получаем все значения свойства крепости
+	straight_values = Property_value.objects.filter(pk__in=straight_list_pk).values_list('title', flat=True)
+	if not straight_values:
+		return {
+			'max_straight': 15,
+			'min_straight': 0,
+		}
+	# Преобразуем их в числа
+	straight_values = list(map(lambda x: Decimal(x.replace(',',  '.')), straight_values))
+	# Получаем максимальное значение крепости
+	max_straight = max(straight_values)
+	# Получаем минимальное значение крепости
+	min_straight = min(straight_values)
+	return {
+		'max_straight': max_straight,
+		'min_straight': min_straight,
+	}
 
 class CatalogView(View):
 
 	def get(self, request, goods_count=33):
+		context = {}
 		active_filters = []
 		str_active_filters = '?'
-		goods = Good.objects.filter(is_active=True)
-		# goods_id_list = []
+		active_filters_obj = []
+		goods = Good.objects.filter(is_active=True, category__name__in=["Сидр", "Вино"]).order_by('-pk')
 		category_values = []
 		manufacturer_values = []
 		for filter in request.GET:
 			if filter == 'page':
 				continue
+			elif filter == 'q':
+				search_query = request.GET.get('q')
+				goods =goods.filter(
+						Q(name__icontains=search_query) |
+						Q(name__icontains=search_query.upper()) |
+						Q(name__icontains=search_query.lower()) |
+						Q(name__icontains=search_query.capitalize()) |
+						Q(name_en__icontains=search_query) |
+						Q(name_en__icontains=search_query.upper()) |
+						Q(name_en__icontains=search_query.lower()) |
+						Q(name_en__icontains=search_query.capitalize())
+					).order_by('pk')
+				str_active_filters += 'q={}&'.format(search_query)
+				active_filters_obj.append({
+					'title': 'q',
+					'value': search_query
+				})
+				context.update({
+					'q': search_query,
+				})
 			elif filter == 'Крепость':
-				stranght_values = Property_value.objects.filter(_property__title=filter)
-				all_values = list(map(lambda x: Decimal(x.replace(',',  '.')), stranght_values.values_list('title', flat=True)))
-				for filter_value in request.GET.getlist('Крепость'):
-					if filter_value == 'до 3%':
-						values = [item for item in all_values if item <= 3]
-						active_filters.append('до 3%')
-						str_active_filters += 'Крепость=до 3%&'
-					if filter_value == 'больше 3%':
-						values = [item for item in all_values if item > 3]
-						active_filters.append('больше 3%')
-						str_active_filters += 'Крепость=больше 3%&'
-					if filter_value == 'безалкогольный':
-						values = [item for item in all_values if item == 0]
-						active_filters.append('безалкогольный')
-						str_active_filters += 'Крепость=безалкогольный&'
+				# получаем значения крепости (min и max)
+				straight_values = request.GET.getlist('Крепость')[0].split(',')
+				min_straight = Decimal(straight_values[0].replace(',',  '.'))
+				max_straight = Decimal(straight_values[1].replace(',',  '.'))
+				# получаем все наименования значений крепости
+				stranght_values = Property_value.objects.filter(_property__title=filter).values_list('title', flat=True)
+				# преобразуем их в числа
+				all_values = list(map(lambda x: Decimal(x.replace(',',  '.')), stranght_values))
+				# получаем все значения крепости с учетом фильтра
+				values = [item for item in all_values if item >= min_straight and item <= max_straight]
+				# преобразуем их в строку для дальнейшего поиска по значениям свойств объекта
 				values = [str(item).replace('.', ',') for item in values]
-				opv = Object_property_values.objects.filter(_property__title=filter, property_value__title__in=values)
-				goods = Good.objects.filter(pk__in=opv.values_list('good', flat=True))
-				# goods_id_list.append(opv.values_list('good', flat=True))
+				# получаем объекты свойств объекта с учетом фильтра (уникальные)
+				opv = Object_property_values.objects.filter(_property__title=filter, property_value__title__in=values).distinct()
+				# фильтруем товары по полученным объектам свойств объекта
+				goods = goods.filter(pk__in=opv.values_list('good', flat=True))
+				context.update({	
+					'filter_straight': straight_values,
+				})
+				str_active_filters += 'Крепость={},{}&'.format(straight_values[0], straight_values[1])
+				active_filters.append(straight_values)
 			elif filter == 'Производитель':
-				manufacturer_values = request.GET.getlist('Производитель')
+				manufacturer_values = request.GET.getlist('Производитель')[0].split(',')
+				if len(manufacturer_values) == 1 and len(request.GET) == 1:
+					context.update({
+						'manufacturer': Manufacturer.objects.filter(name=manufacturer_values[0]).first()
+					})
 				for filter_value in manufacturer_values:
 					active_filters.append(filter_value)
-					# filtered_goods = 
-					# goods_id_list.append(filtered_goods)
 					str_active_filters += 'Производитель={}&'.format(filter_value)
-				# print(manufacturer_values)
-				goods = Good.objects.filter(pk__in=Good.objects.filter(manufacturer__name__in=manufacturer_values).values_list('pk', flat=True))	
+					active_filters_obj.append({
+						'title': 'Производитель',
+						'value': filter_value
+					})	
+				goods = goods.filter(pk__in=Good.objects.filter(manufacturer__name__in=manufacturer_values).values_list('pk', flat=True))	
 			elif filter == 'Категория':
-				category_values = request.GET.getlist(filter)
+				category_values = request.GET.getlist(filter)[0].split(',')
 				for item in category_values:
 					active_filters.append(item)
 					str_active_filters += 'Категория={}&'.format(item)
-				# goods_id_list.append()
-				goods = Good.objects.filter(pk__in=Good.objects.filter(category__name__in=category_values).values_list('pk', flat=True))
+					active_filters_obj.append({
+						'title': 'Категория',
+						'value': item
+					})		
+				goods = goods.filter(pk__in=Good.objects.filter(category__name__in=category_values).values_list('pk', flat=True))
+			elif filter == 'sort':
+				sort = request.GET.get('sort')
+				if sort == 'price_asc':
+					goods = goods.order_by('price')
+				elif sort == 'price_desc':
+					goods = goods.order_by('-price')
+				elif sort == 'newbies':
+					goods = goods.order_by('-pk')
+				str_active_filters += 'sort={}&'.format(sort)
+				active_filters_obj.append({
+					'title': 'sort',
+					'value': sort
+				})
 			else:
-				filter_values = request.GET.getlist(filter)
+				filter_values = request.GET.getlist(filter)[0].split(',')
 				for item in filter_values:
 					active_filters.append(item)
 					str_active_filters += '{}={}&'.format(filter, item)
-				opv = Object_property_values.objects.filter(_property__title=filter, property_value__title__in=filter_values)
-				goods = Good.objects.filter(pk__in=opv.values_list('good', flat=True))
-				# goods_id_list.append(opv.values_list('good', flat=True))
-		# if active_filters:
-		# 	goods = Good.objects.filter(pk__in=goods_id_list, is_active=True).order_by('pk')
-		# else:
-		# 	goods = Good.objects.filter(is_active=True).order_by('pk')
+					active_filters_obj.append({
+						'title': filter,
+						'value': item
+					})	
+				opv = Object_property_values.objects.filter(_property__title=filter, property_value__title__in=filter_values).distinct()
+				goods = goods.filter(pk__in=opv.values_list('good', flat=True))
 		page_number = request.GET.get('page', 1)
-		paginator = Paginator(goods.order_by('pk'), goods_count)	
+		paginator = Paginator(goods, goods_count)	
 		page = paginator.get_page(page_number)
 		is_paginated = page.has_other_pages()
 		if page.has_previous():
@@ -177,25 +216,38 @@ class CatalogView(View):
 		else:
 			next_url = ''			
 		barrels = In_Barrels.objects.all()
-		context = {
+		context.update({
 			'page_object': page, 
 			'prev_url': prev_url, 
 			'next_url': next_url, 
 			'is_paginated': is_paginated,
 			'barrels': barrels,
-			'filters' : filters(goods, category_values, manufacturer_values),
+			'filters' : filters(goods, category_values, manufacturer_values, active_filters_obj),
 			'active_filters': active_filters,
 			'str_active_filters': str_active_filters,
+			'active_filters_obj': active_filters_obj,
 			'bestsellers' : Bestseller.objects.all().order_by('?'),
-		}
+			'max_straight': min_and_max_straight_values().get('max_straight'),
+			'min_straight': min_and_max_straight_values().get('min_straight'),
+			'goods_min_straight': min_and_max_straight_values(goods).get('min_straight'),
+			'goods_max_straight': min_and_max_straight_values(goods).get('max_straight')
+		})
 		return render(request, 'goodapp/catalog.html', context)
 
 
 def get_object_property_value(opv, title):
-	value = opv.filter(_property=Properties.objects.filter(title=title).first()).first()
-	if value:
-		return value.property_value
-	return None
+	if title == 'Виноград':
+		values = opv.filter(_property=Properties.objects.filter(title=title).first())
+		return [{
+			'value': value.property_value,
+			'property': value._property.title
+		} for value in values]
+	else:
+		value = opv.filter(_property=Properties.objects.filter(title=title).first()).first()
+		return {
+			'value': value.property_value,
+			'property': value._property.title,
+		} if value else None
 
 class GoodView(View):
 
@@ -236,16 +288,9 @@ class GoodView(View):
 			country = get_object_property_value(opv, 'Регион')
 		barrels = In_Barrels.objects.all()
 
-		if good.is_vine:
-			template_name = 'goodapp/good_vine.html'
-		elif good.is_cidre:
-			template_name = 'goodapp/good_cidre.html'
-		else:
-			template_name = 'goodapp/good.html'				
-
 		context = {
 			'good': good, 
-			'opv': opv,
+			'opv': opv.exclude(_property__title='Крепость'),
 			'is_cidre': good.is_cidre,
 			'barrels': barrels,
 
@@ -271,7 +316,7 @@ class GoodView(View):
 				'type': type,
 				'grapes': grapes,
 			})	
-		return render(request, template_name, context)	
+		return render(request, 'goodapp/good.html', context)	
 
 class CategoryView(View):
 
@@ -314,35 +359,6 @@ class CategoryView(View):
 			})
 		return render(request, 'goodapp/catalog.html', context)
 
-class ManufacturerView(View):
-
-	def get(self, request, cpu_slug, goods_count = 32):
-		manufacturer = get_object_or_404(Manufacturer, cpu_slug=cpu_slug)
-		goods = Good.objects.filter(manufacturer=manufacturer, is_active=True).order_by('pk')
-		page_number = request.GET.get('page', 1)
-		paginator = Paginator(goods, goods_count)
-		page = paginator.get_page(page_number)
-		is_paginated = page.has_other_pages()
-		if page.has_previous():
-			prev_url = '?page={}'.format(page.previous_page_number())
-		else:
-			prev_url = ''	
-
-		if page.has_next():
-			next_url = '?page={}'.format(page.next_page_number())
-		else:
-			next_url = ''
-		barrels = In_Barrels.objects.all()
-		context = {
-			'page_object': page, 
-			'prev_url': prev_url, 
-			'next_url': next_url, 
-			'is_paginated': is_paginated,
-			'manufacturer': manufacturer,
-			'barrels': barrels,
-		}
-		return render(request, 'goodapp/catalog.html', context)
-
 class InBarrelsView(View):
 
 	def get(self, request):
@@ -351,150 +367,3 @@ class InBarrelsView(View):
 			'barrels': barrels,
 		}
 		return render(request, 'goodapp/in_barrels.html', context)
-
-class TagView(View):
-
-	def get(self, request, goods_count = 32):
-		input_tag = request.GET.get('tag')
-		opv = Object_property_values.objects.filter(property_value__title=input_tag)
-		goods = [ Good.objects.filter(pk=item).first() for item in opv.values_list('good', flat=True)]
-		page_number = request.GET.get('page', 1)
-		paginator = Paginator(goods, goods_count)	
-		page = paginator.get_page(page_number)
-		is_paginated = page.has_other_pages()
-		if page.has_previous():
-			prev_url = '?tag={1}&page={0}'.format(page.previous_page_number(), input_tag)
-		else:
-			prev_url = ''	
-		if page.has_next():
-			next_url = '?tag={1}&page={0}'.format(page.next_page_number(), input_tag)
-		else:
-			next_url = ''			
-		barrels = In_Barrels.objects.all()
-		context = {
-			'page_object': page, 
-			'prev_url': prev_url, 
-			'next_url': next_url, 
-			'is_paginated': is_paginated,
-			'barrels': barrels,
-			'property_value': input_tag,
-		}
-
-		return render(request, 'goodapp/tags.html', context)
-
-class FilteredGoodsView(View):
-
-	def get(self, request, goods_count=32):
-		active_filters = []
-		str_active_filters = '?'
-		goods_id_list = []
-		category_values = []
-		manufacturer_values = []
-		for filter in request.GET:
-			if filter == 'page':
-				continue
-			elif filter == 'Крепость':
-				stranght_values = Property_value.objects.filter(_property__title=filter)
-				all_values = list(map(lambda x: Decimal(x.replace(',',  '.')), stranght_values.values_list('title', flat=True)))
-				for filter_value in request.GET.getlist('Крепость'):
-					if filter_value == 'до 3%':
-						values = [item for item in all_values if item <= 3]
-						active_filters.append('до 3%')
-						str_active_filters += 'Крепость=до 3%&'
-					if filter_value == 'больше 3%':
-						values = [item for item in all_values if item > 3]
-						active_filters.append('больше 3%')
-						str_active_filters += 'Крепость=больше 3%&'
-					if filter_value == 'безалкогольный':
-						values = [item for item in all_values if item == 0]
-						active_filters.append('безалкогольный')
-						str_active_filters += 'Крепость=безалкогольный&'
-				values = [str(item).replace('.', ',') for item in values]
-				opv = Object_property_values.objects.filter(_property__title=filter, property_value__title__in=values)
-				goods_id_list.append(opv.values_list('good', flat=True))
-			elif filter == 'Производители':
-				manufacturer_values = request.GET.getlist('Производители')
-				for filter_value in manufacturer_values:
-					active_filters.append(filter_value)
-					filtered_goods = Good.objects.filter(manufacturer__name=manufacturer_values).values_list('pk', flat=True)
-					goods_id_list.append(filtered_goods)
-					str_active_filters += 'Производители={}&'.format(filter_value)
-			elif filter == 'Категория':
-				category_values = request.GET.getlist(filter)
-				for item in category_values:
-					active_filters.append(item)
-					str_active_filters += 'Категория={}&'.format(item)
-				goods_id_list.append(Good.objects.filter(category__name__in=category_values).values_list('pk', flat=True))
-			else:
-				filter_values = request.GET.getlist(filter)
-				for item in filter_values:
-					active_filters.append(item)
-					str_active_filters += '{}={}&'.format(filter, item)
-				opv = Object_property_values.objects.filter(_property__title=filter, property_value__title__in=filter_values)
-				goods_id_list.append(opv.values_list('good', flat=True))
-
-		goods = Good.objects.filter(pk__in=goods_id_list, is_active=True).order_by('pk')
-
-		page_number = request.GET.get('page', 1)
-		paginator = Paginator(goods, goods_count)	
-		page = paginator.get_page(page_number)
-		is_paginated = page.has_other_pages()
-		if page.has_previous():
-			prev_url = '{1}page={0}'.format(page.previous_page_number(), str_active_filters)
-		else:
-			prev_url = ''	
-		if page.has_next():
-			next_url = '{1}page={0}'.format(page.next_page_number(), str_active_filters)
-		else:
-			next_url = ''			
-		barrels = In_Barrels.objects.all()
-		context = {
-			'page_object': page, 
-			'prev_url': prev_url, 
-			'next_url': next_url, 
-			'is_paginated': is_paginated,
-			'barrels': barrels,
-			'filters' : filters(goods, category_values, manufacturer_values),
-			'active_filters': active_filters,
-			'str_active_filters': str_active_filters,
-			'bestsellers' : Bestseller.objects.all().order_by('?'),
-		}
-		return render(request, 'goodapp/catalog.html', context)
-
-class SearchView(View):
-
-	def get(self, request, goods_count=32):
-		query = request.GET.get('q')
-		goods = Good.objects.filter(
-			Q(name__icontains=query) |
-			Q(name__icontains=query.upper()) |
-			Q(name__icontains=query.lower()) |
-			Q(name__icontains=query.capitalize()) |
-			Q(name_en__icontains=query) |
-			Q(name_en__icontains=query.upper()) |
-			Q(name_en__icontains=query.lower()) |
-			Q(name_en__icontains=query.capitalize()),
-			is_active=True
-			).order_by('pk')
-		page_number = request.GET.get('page', 1)
-		paginator = Paginator(goods, goods_count)
-		page = paginator.get_page(page_number)
-		is_paginated = page.has_other_pages()
-		if page.has_previous():
-			prev_url = '?q={}&page={}'.format(query, page.previous_page_number())
-		else:
-			prev_url = ''	
-		if page.has_next():
-			next_url = '?q={}&page={}'.format(query, page.next_page_number())
-		else:
-			next_url = ''			
-		barrels = list(In_Barrels.objects.all())
-		context = {
-			'page_object': page, 
-			'prev_url': prev_url, 
-			'next_url': next_url, 
-			'is_paginated': is_paginated,
-			'barrels': barrels,
-			'q' : query,
-		}
-		return render(request, 'goodapp/search.html', context)

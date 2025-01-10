@@ -42,16 +42,16 @@
 					<a href="{% url 'baseapp:index' %}"><img src="{% static 'images/logos/Sidreria_logo_bely.png' %}" width="150" alt=""></a>
 				</div>
 				<div class="form-search-wapper">
-					<!-- <h3 style="
-					color: white; 
-					font-family: 'Arimo',sans-serif;
-					font-size: 17px;
-					font-weight: 700;
-
-					" align="center" >Новая Сидрерия уже открыта!</h3>
-					<p align="center" >Ждем Вас в гости по адресу: </br> <span style="color: white;">Левобережная 22а</span></p> -->
-					<form id="search-form" class="form-search" method="GET" action="{% url 'show_search_result' %}">
-						<input class="input" name="q" type="text" placeholder="Поиск по меню...">
+					<form id="search-form" class="form-search" method="GET" action="{% url 'show_catalog' %}">
+						<input 
+							class="input" 
+							name="q" 
+							type="text" 
+							placeholder="Поиск по меню..."
+							{% if q %}
+							value="{{ q }}"
+							{% endif %}
+						>
 						<button type="submit" form="search-form" class="btn-search" style="padding-bottom: 10px;"><span class="flaticon-magnifying-glass34"></span></button>
 					</form>
 				</div>
@@ -94,7 +94,7 @@
 						<span></span>
 						<span></span>
 					</span>
-					
+					Меню
 				</a>
 				<ul class="kt-nav main-menu clone-main-menu">
 					<li>
@@ -253,9 +253,9 @@
 			</div>
 			<div class="col-sm-12 col-md-6">
 				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/cidre.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug='2717255153' %}" class="bg-image"></a>
+					<a href="{% url 'show_catalog' %}?Категория=Сидр" class="bg-image"></a>
 					<div class="content text-right">
-						<a href="{% url 'show_category' slug='2717255153' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
+						<a href="{% url 'show_catalog' %}?Категория=Сидр"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
 					</div>
 				</div>
 			</div>

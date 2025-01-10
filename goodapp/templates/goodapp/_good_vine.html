@@ -15,7 +15,7 @@
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
 			<a href="{% url 'baseapp:index' %}">На главную</a>
-			<a href="{% url 'show_category' slug=good.category.slug %}">{{ good.category }}</a>
+			<a href="{% url 'show_catalog' %}?Категория={{ good.category }}">{{ good.category }}</a>
 			<a href="{% url 'show_good'  slug=good.slug %}">{{ good.name }} {% if good.name_en %} / {{ good.name_en }}{% endif %}</a>
 		</nav>
         <div class="row">
@@ -75,9 +75,9 @@
 											</div>
 											<div>
 												<label>Виноград:</label>
-												{% comment %} {% for item in grapes %} {% endcomment %}
-												<a href="{% url 'show_product_with_tag' %}?tag={{ grapes }}">{% if grapes %}{{ grapes }}{% endif %}</a>
-												{% comment %} {% endfor %} {% endcomment %}
+												{% for item in grapes %}
+												<a href="{% url 'show_product_with_tag' %}?tag={{ item.property_value }}">{% if item.property_value %}{{ item.property_value }}{% endif %}</a>
+												{% endfor %}
 											</div>
 											<div>
 												<label>Бренд:</label>

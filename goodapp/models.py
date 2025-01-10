@@ -232,6 +232,9 @@ class Object_property_values(models.Model):
 		verbose_name = 'Значение свойств объекта'
 		verbose_name_plural = 'Значения свойств объекта'
 
+	def property_name(self):
+		return self._property.title
+
 		# unique_together = (('good', '_property'),)
 		
 

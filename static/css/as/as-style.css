@@ -1,3 +1,22 @@
+.wishlist.in-wishlist {
+    background-color: #eec15b !important;
+}
+.sorting {
+    min-width: 200px;
+    padding: 3px 0px;
+}
+.as-tag-panel {
+    padding-top: 15px; 
+    padding-bottom: 15px;
+}
+.as-tag-panel .tagcloud a {
+    margin: 3px 3px; 
+}
+.as-festival-post .blog-content{
+    border-top: solid 2px; 
+    border-bottom: solid 2px; 
+    padding: 10px;
+}
 .as-align-center {
     height: 100%;
     display: flex;
@@ -109,9 +128,27 @@
     display: none;
 }
 
+.n-badge-sup {
+    margin-left: 10px;
+}
 
 @media (max-width: 391px){
     .n-space {
-        justify-content: center !important;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 991px){
+    .as-desktop-filters-header {
+        display: none;
+    }
+    .as-desktop-filters {
+        display: none;
+    }
+    .widget .widget-title{
+        font-weight: 600;
+    }
+    .sorting {
+        min-width: 150px;
     }
 }
