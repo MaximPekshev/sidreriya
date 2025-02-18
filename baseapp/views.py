@@ -8,6 +8,9 @@ from goodapp.models import (
 	Good,
 	Bestseller
 )
+from baseapp.models import (
+	Breakfast 
+)
 from festapp.models import Festival
 from music_week_app.models import MusicWeek
 
@@ -85,9 +88,10 @@ class BreakfastView(View):
 
 	def get(self, request):
 		context = {
+			'breakfast_menu': Breakfast.objects.all().first(),
 			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
-		return  render(request, 'baseapp/breakfasts.html', context)	
+		return render(request, 'baseapp/breakfasts.html', context)	
 
 class CertificateView(View):
 
