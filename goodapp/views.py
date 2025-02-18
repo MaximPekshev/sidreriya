@@ -17,6 +17,9 @@ from goodapp.models import (
 	In_Barrels,
 	Bestseller
 )
+from baseapp.models import (
+    Menu 
+)
 from filterapp.models import PropertiesFilter
 
 
@@ -329,6 +332,7 @@ class CategoryView(View):
 		if subcategories:
 			context.update({
 				'subcategories': subcategories,
+				'menu': Menu.objects.first(),
 			})
 		else:
 			goods = Good.objects.filter(category=category, is_active=True).order_by('pk')
