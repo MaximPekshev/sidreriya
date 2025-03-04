@@ -133,16 +133,7 @@
 			</div>	
 			<div class="footer-bottom">
 				<div class="row" style="text-align:center;"> 
-					{% comment %} <div class="col-12"> {% endcomment %}
 					<div class="coppyright">Сидрерия 2020 - {{ actual_year }}. Developed by <a target="_blank" href="https://annasoft.ru/">Annasoft</a></div>
-					{% comment %} </div> {% endcomment %}
-					{% comment %} <div class="col-sm-12 col-md-6">
-						<div class="payment"> {% endcomment %}
-							{% comment %} <span><img src="{% static 'images/logos/mastercard.png' %}" alt=""></span>
-							<span><img src="{% static 'images/logos/visa.png' %}" alt=""></span>
-							<span><img src="{% static 'images/logos/mir.png' %}" alt=""></span> {% endcomment %}
-						{% comment %} </div>
-					</div> {% endcomment %}
 				</div>
 			</div>
 		</div>
@@ -155,7 +146,6 @@
 				<div class="kt-popup-newsletter">
 					<div class="popup-title">
 						<img src="{% static 'images/logos/Sidreria_logo_cherny.png' %}" width="200" alt=""></a>
-						<!-- <h3 style="font-family: 'Bebas'; font-size: 50px">Сидрерия</h3> -->
 						<p class="notice">Сайт содержит информацию о продуктах, предназначенных лицам старше 18 лет.</p>
 					</div>
 					<button class="button">Мне менее 18</button>
@@ -189,8 +179,6 @@
 	    <script type="text/javascript" src="{% static 'js/masonry.js' %}?{{ REVISION }}"></script>
 		<script type="text/javascript" src="{% static 'js/functions.js' %}?{{ REVISION }}"></script>
 
-
-
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="{% static 'js/jquery.arcticmodal.js' %}?{{ REVISION }}"></script>
 		<script src="{% static 'js/config.js' %}?{{ REVISION }}"></script>
@@ -213,12 +201,8 @@
 			function checkboxOnOff(e){
 
 				checkboxes = e.getElementsByTagName('input');
-
-				// for (let i=0; i<checkboxes.length; i++) {
 				var inputChk = checkboxes[0];
 				var viewChk = checkboxes[1];
-					// break
-				// }
 
 				if (!inputChk.checked) {
 					inputChk.checked = true;

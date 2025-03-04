@@ -34,10 +34,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
-    'API',
     'filterapp',
     'ajax_select',
-    'django_crontab',
     'festapp',
     'music_week_app',
 ]
