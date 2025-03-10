@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import show_actual_music_week
+from .views import MusicWeekView
 
 urlpatterns = [
-	path('', show_actual_music_week, name='show_actual_music_week'),
+	path('', MusicWeekView.as_view(), name='show_actual_music_week'),
 ]

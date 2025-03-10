@@ -11,7 +11,7 @@ urlpatterns = [
     path('order/'       , include('orderapp.urls')),
     path('wishlist/'    , include('wishlistapp.urls')),
     path('fest/'        , include('festapp.urls')),
-    path('music-events/'  , include('music_week_app.urls')),
+    path('music-events/', include('music_week_app.urls')),
     path('admin/'		, admin.site.urls),
 
 ]
