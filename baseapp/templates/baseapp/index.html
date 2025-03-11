@@ -65,7 +65,7 @@
 					<li class="menu-item-has-children box-setting">
 						<a href="{% url 'show_wishlist' %}">
 							<span class="menu-icon icon flaticon-heart295"></span>
-							<span class="count">{% if wishlist.count %}{{ wishlist.count }} {% endif %}</span>
+							<span class="count">{% if wishlist %}{{ wishlist.count }} {% endif %}</span>
 						</a>
 					</li>
 					<li class="menu-item-has-children mini-cart">
@@ -115,11 +115,9 @@
 					</li>
 					{% endif %}
 					<li>
-						{% comment %} <a href="{% url 'show_category' slug='2717255153' %}">Сидр</a> {% endcomment %}
 						<a href="{% url 'show_catalog' %}?Категория=Сидр">Сидр</a>
 					</li>
 					<li>
-						{% comment %} <a href="{% url 'show_category' slug='679382604' %}">Вино</a> {% endcomment %}
 						<a href="{% url 'show_catalog' %}?Категория=Вино">Вино</a>
 					</li>
 					<li>

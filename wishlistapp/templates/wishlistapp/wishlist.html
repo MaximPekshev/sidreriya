@@ -27,7 +27,7 @@
 					<a href="{% url 'baseapp:index' %}">На главную</a>
 					<a href="{% url 'show_wishlist' %}">Избранное</a>
 				</nav>
-				{% if wishlist.items %}
+				{% if wishlist_object.items %}
 				<div class="block-form">
 					
 					<table class="shop_table cart">
@@ -40,7 +40,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for item in wishlist.items %}
+							{% for item in wishlist_object.items %}
 							<tr>
 								<td class="product">
 									<img class="product-thumb" src="{{ item.main_image.images.url }}" alt="" style="width: 50px;">
