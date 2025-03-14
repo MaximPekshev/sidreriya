@@ -1,4 +1,17 @@
-.wishlist.in-wishlist {
+.group-button .wishlist .n-spin-body {
+    padding-top: 3px;
+}
+.group-button .add_to_cart_button .n-spin-body {
+    padding-top: 3px;
+}
+.single-product .wishlist-item .n-spin-body {
+    padding-top: 3px;
+}
+.fa-cart-plus {
+    font-size: 18px;
+    margin-top: 11px !important;
+}
+.wishlist.inWishlist {
     background-color: #eec15b !important;
 }
 .sorting {

@@ -10,7 +10,6 @@ def wishlist_object(request: HttpRequest) -> Wishlist:
 	return wishlist
 
 def create_wishlist(request: HttpRequest) -> Wishlist:
-	# wishlist_id 	= request.session.get("wishlist_id")
 	wishlist		= Wishlist()
 	if request.user.is_authenticated:
 		wishlist.user = request.user

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'ajax_select',
     'festapp',
     'music_week_app',
+    'rest_framework',
+    'api_app',
 ]
 
 MIDDLEWARE = [

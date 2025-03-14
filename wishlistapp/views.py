@@ -5,18 +5,23 @@ from wishlistapp.services import (
     wishlist_object,
 	create_wishlist
 )
+from wishlistapp.models import ( 
+	Wishlist_Item
+)
 from goodapp.models import (
     Good
 )
-from wishlistapp.models import ( 
-	Wishlist_Item
+from goodapp.services import (
+	json_goods_list_from_page_object_list
 )
 
 class WishlistView(View):
 	
 	def get(self, request: HttpRequest) -> HttpResponse:
+		wishlist = wishlist_object(request)
 		context = {
-			'wishlist_object': wishlist_object(request),
+			'wishlist_object': wishlist,
+			'goods_list': json_goods_list_from_page_object_list(request, wishlist.items()),
 		}
 		return render(request, 'wishlistapp/wishlist.html', context)	
 
