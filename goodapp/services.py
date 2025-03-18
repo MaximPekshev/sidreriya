@@ -2,15 +2,17 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 import json
 from wishlistapp.services import wishlist_object
+from cartapp.services import cart_object
 from goodapp.models import Good
 
 def json_goods_list_from_page_object_list(request: HttpRequest, page_object_list: QuerySet) -> list:
     goods_list = []
     wishlist = wishlist_object(request)
+    cart = cart_object(request)
     for item in page_object_list:
         imgObj = item.main_image()
         discount_price = item.discount_price()
-        goods_list.append({
+        good = {
             'pk': item.pk,
             'slug': item.slug,
             'name': item.name,
@@ -24,9 +26,24 @@ def json_goods_list_from_page_object_list(request: HttpRequest, page_object_list
             'is_vine': item.is_vine,
             'is_cidre': item.is_cidre,
             'in_barrel': item.in_barrel,
-            'loading': False,
+            'wl_loading': False,
+            'ct_loading': False,
             'in_wishlist': True if item in wishlist.items() else False
-        })
+        }
+        try:
+            cartinfo = cart.items().get(good=item)
+            cart_item_discount_price = cartinfo.discount_price()
+            cart_item_discount_summ = cartinfo.discount_summ()
+            good['cartInfo'] = {
+                'quantity': int(cartinfo.quantity),
+                'price': int(cartinfo.price),
+                'discount_price': int(cart_item_discount_price) if cart_item_discount_price else None,
+                'summ': int(cartinfo.summ),
+                'discount_summ': int(cart_item_discount_summ) if cart_item_discount_summ else None
+            }
+        except:
+            pass
+        goods_list.append(good)
     return json.dumps(goods_list)
 
 def json_good_from_object(request: HttpRequest, good_object: Good) -> dict:
@@ -45,6 +62,7 @@ def json_good_from_object(request: HttpRequest, good_object: Good) -> dict:
         'is_vine': good_object.is_vine,
         'is_cidre': good_object.is_cidre,
         'in_barrel': good_object.in_barrel,
-        'loading': False,
+        'wl_loading': False,
+        'ct_loading': False,
         'in_wishlist': True if good_object in wishlist.items() else False
     })

@@ -17,115 +17,154 @@
 {% block social %}
 {% endblock %}
 
+{% block custom_lib %}
+<script src="https://unpkg.com/vue@3.0.1/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/naive-ui@2.40.4/dist/index.prod.js"></script>
+{% endblock %}
+
 {% block content %}
 
-
-<div class="main-container no-sidebar">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 main-content">
-				<nav class="woocommerce-breadcrumb breadcrumbs">
-					<a href="{% url 'baseapp:index' %}">На главную</a>
-					<a href="{% url 'show_cart' %}">Корзина</a>
-				</nav>
-				{% if cart.items %}
-				<div class="block-form">
-					
-					<table class="shop_table cart">
-						<thead>
-							<tr>
-								<th class="product">Товар/Цена</th>
-								<th>Наличие</th>
-								<th>Кол-во</th>
-								<th>Сумма</th>
-								<th>С собой</th>
-								<th>Удалить</th>
-							</tr>
-						</thead>
-						<tbody>
-
-							{% for item in cart.items %}
-							<tr>
-								<td class="product">
-									<img class="product-thumb" src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-									<div class="product-info">
-										<h3 class="product-name"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}</a></h3>
-										{% comment %} {% if item.good.category.name == 'Сертификаты' or item.good.name == 'Дружеский обед' %} {% endcomment %}
-										{% if item.good.category.name == 'Сертификаты' or item.good.category.name == 'Куличи' or item.good.category.name == 'Вареники' or item.good.name == 'Дружеский обед' %}
-										<span class="product-price">&#8381 {{ item.good.price }}</span>
-										{% else %}
-										<span class="product-price">&#8381 {{ item.good.price }} / <span class="product-price discount-price">&#8381 {{ item.discount_price }} *</span>
-										{% endif %}
-									</div>
-								</td>
-								<td class="stock">
-									{% if item.good.quantity >= 1 %}
-										{% if item.good.in_barrel %}
-											{% if item.good in barrels %}
-											<span class="in-stock">в наличии</span>
-											{% else %}
-											<span class="in-stock" style="color: orange;">временно недоступен</span>
-											{% endif %}
-										{% else %}
+<div class="main-container no-sidebar" id="cartApp">
+	<n-config-provider :theme-overrides="themeOverrides">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 main-content">
+					<nav class="woocommerce-breadcrumb breadcrumbs">
+						<a href="{% url 'baseapp:index' %}">На главную</a>
+						<a href="{% url 'show_cart' %}">Корзина</a>
+					</nav>
+					<div v-if="goods_list.length > 0" class="block-form">
+						<table class="shop_table cart">
+							<thead>
+								<tr>
+									<th class="product">Товар/Цена</th>
+									<th>Наличие</th>
+									<th>Кол-во</th>
+									<th>Сумма</th>
+									<th>С собой</th>
+									<th>Удалить</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="item in goods_list" :key="item.slug" v-cloak>
+									<td class="product">
+										<img v-if="item.img" class="product-thumb" :src="item.img" alt="" style="width: 50px;">
+										<img v-else class="product-thumb" src="{% static 'images/products/no-photo.png' %}" alt="" style="width: 50px;">
+										<div class="product-info">
+											<h3 class="product-name">
+												<a 
+													href="#"
+													@click="redirectToGood(item.slug)"
+												>
+												<span>${ item.name }$</span>
+												<span v-if="item.name_en"> / ${ item.name_en }$</span>
+												</a>
+											</h3>
+											<span class="product-price">&#8381 ${ item.price }$</span>
+											<span 
+												v-if="item.categoryName != 'Куличи' 
+													&& item.categoryName != 'Вареники' 
+													&& item.categoryName != 'Сертификаты' 
+													&& item.name != 'Дружеский обед'"
+											> / </span>
+											<span 
+												class="price discount-price" 
+												v-if="item.categoryName != 'Куличи' 
+													&& item.categoryName != 'Вареники' 
+													&& item.categoryName != 'Сертификаты'
+													&& item.name != 'Дружеский обед'"
+											>&#8381 ${ item.discount_price }$ * </span>
+										</div>
+									</td>
+									<td v-if="item.quantity > 0" class="stock">
 										<span class="in-stock">в наличии</span>
-										{% endif %}
-									{% else %}
-									{% if item.good.is_cidre %}
-									<span class="in-stock" style="color: orange;">все выпили</span>
-									{% else %}
-									<span class="in-stock" style="color: orange;">закончились</span>
-									{% endif %}
-									{% endif %}
-								</td>
-								<td>
-									<div class="quantity">
-										<input type="text" data-step="1" data-min="0" data-max="" value="{{ item.quantity }}" title="Qty" class="input-text qty text" size="4">
-									</div>
-								</td>
-								<td class="product-subtotal">
-									<span class="amount">&#8381 {{ item.summ }}</span>
-								</td>
-								<td class="product-subtotal">
-									{% comment %} {% if item.good.category.name == 'Сертификаты' %} {% endcomment %}
-									{% if item.good.category.name == 'Сертификаты' or item.good.category.name == 'Куличи' or item.good.category.name == 'Вареники' %}
-									<span class="amount">&#8381 {{ item.summ }}</span>
-									{% else %}
-									<span class="amount">&#8381 {{ item.discount_summ }}</span>
-									{% endif %}
-								</td>
-								<td class="product-remove">
-									<a class="remove" href="{% url 'cart_del_item' slug=item.good.slug %}"><i class="fa fa-close"></i></a>
-								</td>
-							</tr>
-							{% endfor %}
-							<tr>
-								<td colspan="4"></td>
-								<td colspan="2" class="order-total" >Итого:   &#8381 {{ cart.summ }}</td>
-							</tr>
-							<tr>
-								<td colspan="4"></td>
-								<td colspan="2" class="order-total" >C собой:   &#8381 {{ cart.discount_summ }}</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="block-form-footer text-right">
-						<a href="{% url 'cart_checkout' %}"><button class="button  primary">Оформить заказ</button></a>
+									</td>
+									<td v-else class="stock">
+										<span 
+											v-if="item.is_cidre && item.is_vine" 
+											class="in-stock" 
+											style="color: orange;"
+										>
+											все выпили
+										</span>
+										<span
+											v-else-if="item.in_barrel"
+											class="in-stock"
+											style="color: orange;"
+										>
+											временно недоступен
+										</span>
+										<span 
+											v-else
+											class="in-stock"
+											style="color: orange;"
+										>
+											закончилось
+										</span>
+									</td>
+									<td>
+										<div class="quantity">
+											<input 
+												readonly
+												type="text" 
+												:value="item.cartInfo.quantity" 
+												title="Qty" 
+												class="input-text qty text" 
+											size="4">
+										</div>
+									</td>
+									<td class="product-subtotal">
+										<span class="amount">&#8381 ${ item.cartInfo.summ }$</span>
+									</td>
+									<td class="product-subtotal">
+										<span
+											class="amount"
+											v-if="item.categoryName == 'Сертификаты' 
+											&& item.categoryName == 'Куличи' 
+											&& item.categoryName == 'Вареники'"
+										>&#8381 ${ item.cartInfo.summ }$</span>
+										<span 
+											v-else
+											class="amount"
+										>&#8381 ${ item.cartInfo.discount_summ }$</span>
+									</td>
+									<td class="product-remove">
+										<a 
+											class="remove" 
+											href="#"
+											@click="delGoodFromCart($event, item)"
+										>
+											<i class="fa fa-close"></i>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4"></td>
+									<td colspan="2" class="order-total" >Итого:   &#8381 {{ cart.amount }}</td>
+								</tr>
+								<tr>
+									<td colspan="4"></td>
+									<td colspan="2" class="order-total" >C собой:   &#8381 {{ cart.discount_summ }}</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="block-form-footer text-right">
+							<a href="{% url 'cart_checkout' %}"><button class="button  primary">Оформить заказ</button></a>
+						</div>
+					</div>
+					<div v-else class="col-sm-12" >
+						<div class="text-center">
+							<h2 class="title">Ваша корзина пуста</h2>
+						</div>
+						<div class="text-center" style="padding-top: 30px ">
+							<a href="{% url 'show_catalog' %}"><button class="button  primary">За покупками</button></a>
+						</div>
 					</div>
 				</div>
-				{% else %}
-				<div class="col-sm-12" >
-					<div class="text-center">
-						<h2 class="title">Ваша корзина пуста</h2>
-					</div>
-					<div class="text-center" style="padding-top: 30px ">
-						<a class="button primary" href="{% url 'show_catalog' %}">За покупками</a>
-					</div>
-				</div>
-				{% endif %}
-				
 			</div>
 		</div>
-	</div>
+	</n-config-provider>
 </div>
 <div class="container">
 	{% include 'baseapp/widgets/pickup_reminder.html' %}
@@ -133,4 +172,61 @@
 {% endblock %}
 
 {% block magnific_popup %}
+{% endblock %}
+
+{% block custom_script %}
+<script type="text/javascript">
+	const CartApp = {
+		data () {
+			const { NConfigProvider } = naive
+			const themeOverrides = {
+				common: {
+				  primaryColor: '#444444',
+				  primaryColorHover: '#444444',
+				},
+				Badge: {
+				  color: '#eec15b',
+				},
+			}
+			return {
+				goods_list: [],
+				NConfigProvider,
+				themeOverrides,
+			}
+		},
+		delimiters: ["${", "}$"],
+		computed: {
+			goodsList () {
+				return {{ goods_list|safe }}
+			},
+		},
+		mounted () {
+			this.goods_list = this.goodsList
+		},
+		methods: {
+			redirectToGood(slug) {
+				window.location.href = `/catalog/${slug}`
+			},
+			delGoodFromCart (el, goodObj) {
+				el.preventDefault()
+				let good = this.goods_list.find(item => item.slug === goodObj.slug)
+				axios.defaults.xsrfCookieName = 'csrftoken'
+				axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+				axios({
+					method: 'delete',
+					url: `/api/v1/cart/${good.slug}`,
+				}).then(response => {
+					window.location.reload()
+				}).catch(error => {
+					console.log(error)
+				})
+
+			},
+		}
+	}
+	const app = Vue.createApp(CartApp)
+	app.use(naive)
+	app.mount('#cartApp')
+</script>
+
 {% endblock %}

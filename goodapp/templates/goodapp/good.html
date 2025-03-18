@@ -172,39 +172,35 @@
 									{% endif %}
 									<div class="quantity"></div>
 									<div class="wishlist-item">
-										<form id="quantityform" action="{% url 'cart_add_item' slug=good.slug %}" method="POST">
-											{% csrf_token %}
-											{% if good.in_barrel %}
-											<select type="text" name="quantity">
-												<option value="0.5">0,5</option>
-												<option value="1.0">1,0</option>
-												<option value="1.5">1,5</option>
-												<option value="2.0">2,0</option>
-												<option value="2.5">2,5</option>
-												<option value="3.0">3,0</option>
-												<option value="3.5">3,5</option>
-												<option value="4.0">4,0</option>
-											</select>
-											{% else %}
-											<input type="text" name="quantity" value="1" title="Qty" class="input-text qty text" size="1" required>
-											{% endif %}
-											{% if good.quantity >= 1 %}
-											{% if good.in_barrel and good in barrels %}
-												<button type="submit" class="">В корзину</button>
-											{% else %}
-											<button type="submit" class="">В корзину</button>
-											{% endif %}
-											{% endif %}
-											<a 
-												href="#" 
-												@click="addDelGoodToWishlist($event)"
-												class="button wishlist" 
-												:class="{ inWishlist: good_object.in_wishlist }"
-											>
-												<n-spin v-if="good_object.loading == true"></n-spin>
-												<i v-else class="fa fa-heart-o"></i>
-											</a>
-										</form>
+											<n-flex v-cloak align="center" reverse>
+												<a 
+													href="#" 
+													@click="addDelGoodToWishlist($event)"
+													class="button wishlist" 
+													:class="{ inWishlist: good_object.in_wishlist }"
+												>
+													<n-spin v-if="good_object.wl_loading == true"></n-spin>
+													<i v-else class="fa fa-heart-o"></i>
+												</a>
+												<button v-if="good_object.ct_loading" disabled>
+													<n-spin size="small"></n-spin>
+												</button>
+												<button v-else @click="addGoodToCart($event)">В корзину</button>
+												<n-select 
+													v-if="good_object.in_barrel == true"
+													style="width:100px;"
+													v-model:value="qty" 
+													size="large" 
+													:options="valueOptions"
+												></n-select>
+												<n-input-number 
+													v-else
+													style="width:100px;"
+													size="large" 
+													v-model:value="qty" 
+													:validator="validator" 
+												></n-input-number>
+											</n-flex>
 									</div>
 								</div>
 							</div>     
@@ -376,6 +372,18 @@
 				good_object: {},
 				NConfigProvider,
 				themeOverrides,
+				qty: 1,
+				validator: (x) => x > 0,
+				valueOptions: [
+					{ label: '0.5', value: 0.5 },
+					{ label: '1.0', value: 1 },
+					{ label: '1.5', value: 1.5 },
+					{ label: '2.0', value: 2 },
+					{ label: '2.5', value: 2.5 },
+					{ label: '3.0', value: 3 },
+					{ label: '3.5', value: 3.5 },
+					{ label: '4.0', value: 4 },
+				]
 			}
 		},
 		delimiters: ["${", "}$"],
@@ -388,9 +396,34 @@
 			this.good_object = this.good
 		},
 		methods: {
+			addGoodToCart (el) {
+				el.preventDefault()
+				let good = this.good_object
+				good.ct_loading = true
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					axios({
+						method: 'post',
+						url: `/api/v1/cart/`,
+						data: {
+							"price": good.price,
+							"good": good.pk,
+							"quantity": this.qty
+						}
+					}).then(response => {
+						window.location.reload()
+					}).catch(error => {
+						console.log(error)
+					}).finally(() => {
+						good.ct_loading = false
+					})
+				}, 500)
+
+			},
 			addDelGoodToWishlist (el) {
 				el.preventDefault()
-				this.good_object.loading = true
+				this.good_object.wl_loading = true
 				setTimeout(() => {
 					axios.defaults.xsrfCookieName = 'csrftoken'
 					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -403,7 +436,7 @@
 						}).catch(error => {
 							console.log(error)
 						}).finally(() => {
-							this.good_object.loading = false
+							this.good_object.wl_loading = false
 						})
 					} else {
 						axios({
@@ -418,7 +451,7 @@
 						}).catch(error => {
 							console.log(error)
 						}).finally(() => {
-							this.good_object.loading = false
+							this.good_object.wl_loading = false
 						})
 					}
 				}, 500)

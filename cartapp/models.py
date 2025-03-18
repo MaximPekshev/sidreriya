@@ -6,15 +6,11 @@ from goodapp.models import Good
 from decimal import Decimal
 
 def cart_calculate_summ(cart):
-
 	if cart:
 		cart_items = Cart_Item.objects.filter(cart=cart)
-
 		summ_of_cart = 0
-
 		for item in cart_items:
 			summ_of_cart += item.summ
-
 		cart.summ = summ_of_cart
 		cart.save()
 
@@ -63,11 +59,17 @@ class Cart(models.Model):
 			summ += item.quantity*item.discount_price()
 		return summ.quantize(Decimal("1"))
 	
+	def amount(self):
+		return Cart_Item.objects.filter(cart=self).aggregate(Sum('summ'))['summ__sum']
+	
 	def count(self):
 		return Cart_Item.objects.filter(cart=self).aggregate(Sum('quantity'))['quantity__sum']
 	
 	def items(self):
 		return Cart_Item.objects.filter(cart=self)
+	
+	def good_items(self):
+		return [q.good for q in Cart_Item.objects.filter(cart=self)]
 
 	def __str__(self):
 		return str(self.id)

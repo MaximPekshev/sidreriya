@@ -294,7 +294,6 @@ class GoodView(View):
 			# Регион
 			country = get_object_property_value(opv, 'Регион')
 		barrels = In_Barrels.objects.all()
-		print(json_good_from_object(request, good))
 		context = {
 			'good': good, 
 			'json_good': json_good_from_object(request, good),
@@ -361,6 +360,7 @@ class CategoryView(View):
 				})
 			context.update ({
 				'page_object': page, 
+				'goods_list': json_goods_list_from_page_object_list(request, page.object_list),
 				'prev_url': prev_url, 
 				'next_url': next_url, 
 				'is_paginated': is_paginated,

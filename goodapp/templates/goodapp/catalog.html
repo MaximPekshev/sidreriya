@@ -211,20 +211,15 @@
 								<span v-if="item.discount_price" class="price discount-price">
 									&#8381 ${ item.discount_price }$ * 
 								</span>
-								<form id="{{ item.slug }}addtocart" action="#" method="POST">
-									{% csrf_token %}
-									<input type="hidden" name="quantity" value="1">
-								</form>
 								<div class="group-button">
 									<a 
 										v-if="item.quantity > 0" 
 										href="#" 
 										class="add_to_cart_button"
-									>
-										<i class="fa fa-cart-plus"></i>
-										{% comment %} <n-spin>
-											
-										</n-spin> {% endcomment %}
+										@click="addGoodToCart($event, item)"
+									>	
+										<n-spin v-if="item.ct_loading == true"></n-spin>
+										<i v-else class="fa fa-cart-plus"></i>
 									</a>
 									<a 
 										href="#"
@@ -232,7 +227,7 @@
 										class="wishlist"
 										:class="{ inWishlist: item.in_wishlist }"
 									>	
-										<n-spin v-if="item.loading == true"></n-spin>
+										<n-spin v-if="item.wl_loading == true"></n-spin>
 										<i v-else class="fa fa-heart-o"></i>
 									</a>
 								</div>
@@ -516,10 +511,35 @@
 			this.goods_list = this.goodsList
 		},
 		methods: {
+			addGoodToCart (el, goodObj) {
+				el.preventDefault()
+				let good = this.goods_list.find(item => item.slug === goodObj.slug)
+				good.ct_loading = true
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					axios({
+						method: 'post',
+						url: `/api/v1/cart/`,
+						data: {
+							"price": good.price,
+							"good": good.pk,
+							"quantity": 1
+						}
+					}).then(response => {
+						window.location.reload()
+					}).catch(error => {
+						console.log(error)
+					}).finally(() => {
+						good.ct_loading = false
+					})
+				}, 500)
+
+			},
 			addDelGoodToWishlist (el, goodObj) {
 				el.preventDefault()
 				let good = this.goods_list.find(item => item.slug === goodObj.slug)
-				good.loading = true
+				good.wl_loading = true
 				setTimeout(() => {
 					axios.defaults.xsrfCookieName = 'csrftoken'
 					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -532,7 +552,7 @@
 						}).catch(error => {
 							console.log(error)
 						}).finally(() => {
-							good.loading = false
+							good.wl_loading = false
 						})
 					} else {
 						axios({
@@ -547,7 +567,7 @@
 						}).catch(error => {
 							console.log(error)
 						}).finally(() => {
-							good.loading = false
+							good.wl_loading = false
 						})
 					}
 				}, 500)

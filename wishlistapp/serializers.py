@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from wishlistapp.models import Wishlist_Item
-from wishlistapp.services import wishlist_object, create_wishlist
+from wishlistapp.services import (
+    wishlist_object, 
+    create_wishlist
+)
 
 class WishListItemSerializer(serializers.ModelSerializer):
     class Meta:
