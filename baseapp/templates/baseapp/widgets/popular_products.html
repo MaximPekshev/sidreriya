@@ -12,114 +12,124 @@
 			<div class="tab-container">
 				<div id="tab-3" class="tab-panel active">
 					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":1},"480":{"items":2},"768":{"items":3},"1000":{"items":4}}'>
-						{% for item in bestsellers %}
-						{% if item.good.is_cidre %}
-						<li class="product-item style3">
+						<li 
+							class="product-item style3"
+							v-cloak
+							v-for="item in popularDrinks" 
+							:key="item.slug"
+						>
 							<div class="product-inner">
 								<div class="thumb">
-									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.good.main_image %}
-											<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-										{% else %}
-											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-										{% endif %}
+									<a
+										href="#"
+										@click="redirectToGood(item.slug)" 
+									>
+										<img v-if="item.img" :src="item.img" :alt="item.name">
+										<img v-else src="{% static 'images/products/no-photo.png' %}" alt="">
 									</a>
-									<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
-											{% csrf_token %}
-											<input type="hidden" name="quantity" value="1">
-									</form>
 									<div class="group-button">
-										{% if item.good.quantity >= 1 %}
-										{% if item.good.in_barrel %}
-										{% if item.good in barrels %}
-											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
-										{% endif %}
-										{% else %}
-										<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
-										{% endif %}
-										{% endif %}
+										<button v-if="item.ct_loading" disabled>
+											<n-spin size="small"></n-spin>
+										</button>
+										<button v-else @click="addGoodToCart($event, item, `popularDrinks`)">В корзину</button>
 									</div>
 									<div class="flash">
-										{% if not item.good.quantity %}
-										<span class="sale">Все выпили</span>
-										{% endif %}
-										{% if item.good.in_barrel %}
-										<span class="new">Розлив</span>
-										{% endif %}
+										<span 
+											v-if="(item.quantity == 0 && item.is_vine) || (item.quantity == 0 && item.is_cidre)"
+											class="sale"
+										>
+											Все выпили
+										</span>
+										<span 
+											v-else-if="(item.quantity == 0)" 
+											class="sale"
+										>
+											Закончилось
+										</span>
+										<span v-if="item.in_barrel" class="new">Розлив</span>
 									</div>
 								<div class="info">
-									<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
-									{% if item.good.price %}
-										{% if item.good.old_price %}
-										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
-										{% else %}
-										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.discount_price }} *</span>
-										{% endif %}
-									{% else %}
-									<span class="price">&#8381 0</span>
-									{% endif %}
+									<h3 class="product-name short">
+										<a href="#" @click="redirectToGood(item.slug)">
+											<span>${ item.name }$</span>
+											<span v-if="item.name_en"> / ${ item.name_en }$</span>
+										</a>
+									</h3>
+									<span v-if="item.old_price" class="price">
+										<ins>&#8381 ${ item.price }$ </ins>
+										<del>&#8381 ${ item.old_price }$</del>
+									</span>
+									<span v-else class="price">
+										&#8381 ${ item.price }$
+									</span>
+									<span v-if="item.discount_price"> / </span>
+									<span v-if="item.discount_price" class="price discount-price">
+										&#8381 ${ item.discount_price }$ * 
+									</span>
 								</div>
 							</div>
 						</li>
-						{% endif %}
-						{% endfor %}
 					</ul>
 				</div>
 				<div id="tab-4" class="tab-panel">
 					<ul class="owl-carousel nav-center nav-style-1" data-loop="true" data-nav="true" data-dots="false" data-margin="0" data-responsive='{"0":{"items":1},"480":{"items":2},"768":{"items":3},"1000":{"items":4}}'>
-
-
-						{% for item in bestsellers %}
-						{% if not item.good.is_cidre %}
-						<li class="product-item style3">
+						<li 
+							class="product-item style3"
+							v-cloak
+							v-for="item in popularDishes" 
+							:key="item.slug"
+						>
 							<div class="product-inner">
 								<div class="thumb">
-									<a href="{% url 'show_good' slug=item.good.slug %}">
-										{% if item.good.main_image %}
-											<img src="{{ item.good.main_image.images.url }}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-										{% else %}
-											<img src="{% static 'images/products/no-photo.png' %}" alt="{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }}{% endif %}">
-										{% endif %}
+									<a
+										href="#"
+										@click="redirectToGood(item.slug)" 
+									>
+										<img v-if="item.img" :src="item.img" :alt="item.name">
+										<img v-else src="{% static 'images/products/no-photo.png' %}" alt="">
 									</a>
-									<form id="{{ item.good.slug }}addtocart" action="{% url 'cart_add_item' slug=item.good.slug %}" method="POST">
-											{% csrf_token %}
-											<input type="hidden" name="quantity" value="1">
-									</form>
 									<div class="group-button">
-										{% if item.good.quantity >= 1 %}
-										{% if item.good.in_barrel %}
-										{% if item.good in barrels %}
-											<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
-										{% endif %}
-										{% else %}
-										<button form="{{ item.good.slug }}addtocart" type="submit" class="">В корзину</button>
-										{% endif %}
-										{% endif %}
+										<button v-if="item.ct_loading" disabled>
+											<n-spin size="small"></n-spin>
+										</button>
+										<button v-else @click="addGoodToCart($event, item, `popularDishes`)">В корзину</button>
 									</div>
 									<div class="flash">
-										{% if not item.good.quantity %}
-										<span class="sale">Все выпили</span>
-										{% endif %}
-										{% if item.good.in_barrel %}
-										<span class="new">Розлив</span>
-										{% endif %}
+										<span 
+											v-if="(item.quantity == 0 && item.is_vine) || (item.quantity == 0 && item.is_cidre)"
+											class="sale"
+										>
+											Все выпили
+										</span>
+										<span 
+											v-else-if="(item.quantity == 0)" 
+											class="sale"
+										>
+											Закончилось
+										</span>
+										<span v-if="item.in_barrel" class="new">Розлив</span>
 									</div>
 								<div class="info">
-									<h3 class="product-name short"><a href="{% url 'show_good' slug=item.good.slug %}">{{ item.good.name }}{% if item.good.name_en %} / {{ item.good.name_en }} {% endif %}</a></h3>
-									{% if item.good.price %}
-										{% if item.good.old_price %}
-										<span class="price"><ins>&#8381 {{ item.good.price }} </ins><del>&#8381 {{ item.good.old_price }}</del></span>
-										{% else %}
-										<span class="price">&#8381 {{ item.good.price }} / </span><span class="price discount-price">&#8381 {{ item.good.discount_price }} *</span>
-										{% endif %}
-									{% else %}
-									<span class="price">&#8381 0</span>
-									{% endif %}
+									<h3 class="product-name short">
+										<a href="#" @click="redirectToGood(item.slug)">
+											<span>${ item.name }$</span>
+											<span v-if="item.name_en"> / ${ item.name_en }$</span>
+										</a>
+									</h3>
+									<span v-if="item.old_price" class="price">
+										<ins>&#8381 ${ item.price }$ </ins>
+										<del>&#8381 ${ item.old_price }$</del>
+									</span>
+									<span v-else class="price">
+										&#8381 ${ item.price }$
+									</span>
+									<span v-if="item.discount_price"> / </span>
+									<span v-if="item.discount_price" class="price discount-price">
+										&#8381 ${ item.discount_price }$ * 
+									</span>
 								</div>
 							</div>
 						</li>
-						{% endif %}
-						{% endfor %}
 					</ul>
 				</div>
 			</div>

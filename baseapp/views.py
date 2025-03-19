@@ -23,12 +23,17 @@ from music_week_app.models import MusicWeek
 class IndexView(View):
 
 	def get(self, request):
+		bestsellers_list = Bestseller.objects.filter(good__quantity__gte=1).order_by('?')
+		popular_drinks = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=True) | Q(good__is_vine=True))]
+		popular_dishes = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=False) & Q(good__is_vine=False))]
 		context = {
 			'kulichi': Category.objects.filter(name='Куличи').first(),
 			'vareniki': Category.objects.filter(name='Вареники').first(),
 			'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
 			'music_week': MusicWeek.objects.filter(date__lte=datetime.datetime.now()).order_by('date').last(),
-			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
+			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
+			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
+			# 'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return  render(request, 'baseapp/index.html', context)
 
