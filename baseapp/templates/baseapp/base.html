@@ -58,9 +58,12 @@
 	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{{ REVISION }}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/color.css' %}?{{ REVISION }}">
-
 	<link rel="stylesheet" href="{% static 'css/jquery.arcticmodal.css' %}?{{ REVISION }}">
 	<link rel="stylesheet" href="{% static 'css/simple.css' %}?{{ REVISION }}">
+
+	<script src="https://unpkg.com/vue@3.0.1/dist/vue.global.prod.js"></script>
+	<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/naive-ui@2.40.4/dist/index.prod.js"></script>
 	{% block custom_lib %}
 	{% endblock %}
 

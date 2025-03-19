@@ -1,6 +1,12 @@
 
 
-.group-button .wishlist .n-spin-body {
+.single-product .wishlist-item .n-spin-body {
+    padding-top: 3px;
+}
+.product-inner .n-spin-body {
+    padding-top: 3px;
+}
+.shop_table .n-spin-body {
     padding-top: 3px;
 }
 .group-button .add_to_cart_button .n-spin-body {

@@ -18,9 +18,6 @@
 {% endblock %}
 
 {% block custom_lib %}
-<script src="https://unpkg.com/vue@3.0.1/dist/vue.global.prod.js"></script>
-<script src="https://unpkg.com/axios@1.0.0/dist/axios.min.js"></script>
-<script src="https://unpkg.com/naive-ui@2.40.4/dist/index.prod.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -96,11 +93,10 @@
 									</td>
 									<td>
 										<div class="quantity">
-											<form id="{{ item.slug }}addtocart" action="#" method="POST">
-												{% csrf_token %}
-												<input type="hidden" name="quantity" value="1">
-												<button type="submit" class="button add_to_cart_button">В корзину</button>
-											</form>
+											<button v-if="item.ct_loading" disabled>
+												<n-spin size="small"></n-spin>
+											</button>
+											<button v-else @click="addGoodToCart($event, item)">В корзину</button>
 										</div>
 									</td>
 									<td class="product-remove">
@@ -118,7 +114,7 @@
 					</div>
 					<div v-else class="col-sm-12" >
 						<div class="text-center">
-							<h2 class="title">Отметь своих любимчиков из нашей коллекции сидров!</h2>
+							<h2 class="title">Отметь своих любимчиков из нашей коллекции!</h2>
 						</div>
 						<div class="text-center" style="padding-top: 30px ">
 							<a href="{% url 'show_catalog' %}"><button class="button  primary">За покупками</button></a>
@@ -170,6 +166,30 @@
 		methods: {
 			redirectToGood(slug) {
 				window.location.href = `/catalog/${slug}`
+			},
+			addGoodToCart (el, goodObj) {
+				el.preventDefault()
+				let good = this.goods_list.find(item => item.slug === goodObj.slug)
+				good.ct_loading = true
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					axios({
+						method: 'post',
+						url: `/api/v1/cart/`,
+						data: {
+							"price": good.price,
+							"good": good.pk,
+							"quantity": 1
+						}
+					}).then(response => {
+						window.location.reload()
+					}).catch(error => {
+						console.log(error)
+					}).finally(() => {
+						good.ct_loading = false
+					})
+				}, 500)
 			},
 			addDelGoodToWishlist (el, goodObj) {
 				el.preventDefault()

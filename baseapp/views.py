@@ -8,6 +8,9 @@ from goodapp.models import (
 	Good,
 	Bestseller
 )
+from goodapp.services import (
+	json_goods_list_from_page_object_list
+)
 from baseapp.models import (
 	Breakfast 
 )
@@ -96,8 +99,10 @@ class BreakfastView(View):
 class CertificateView(View):
 
 	def get(self, request):
+		category = Category.objects.filter(name='Сертификаты').first()
 		context = {
-			'category': Category.objects.filter(name='Сертификаты').first(),
+			'category': category,
+			'goods_list': json_goods_list_from_page_object_list(request, category.items()),
 			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return  render(request, 'baseapp/certificate.html', context)
