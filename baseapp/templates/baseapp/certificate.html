@@ -106,26 +106,31 @@
 			}
 			return {
 				goods_list: [],
+				popularDrinks: [],
+				popularDishes: [],
 				NConfigProvider,
 				themeOverrides,
 			}
 		},
 		delimiters: ["${", "}$"],
-		computed: {
-			goodsList () {
-				return {{ goods_list|safe }}
-			},
-		},
 		mounted () {
-			this.goods_list = this.goodsList
+			this.goods_list = {{ goods_list|safe }}
+			this.popularDrinks = {{ popular_drinks|safe }}
+			this.popularDishes = {{ popular_dishes|safe }}
 		},
 		methods: {
 			redirectToGood(slug) {
 				window.location.href = `/catalog/${slug}`
 			},
-			addGoodToCart (el, goodObj) {
+			addGoodToCart (el, goodObj, listName) {
 				el.preventDefault()
-				let good = this.goods_list.find(item => item.slug === goodObj.slug)
+				let goods_list = this.goods_list
+				if (listName == 'popularDrinks') {
+					goods_list = this.popularDrinks
+				} else if (listName == 'popularDishes') {
+					goods_list = this.popularDishes
+				}
+				let good = goods_list.find(item => item.slug === goodObj.slug)
 				good.ct_loading = true
 				setTimeout(() => {
 					axios.defaults.xsrfCookieName = 'csrftoken'

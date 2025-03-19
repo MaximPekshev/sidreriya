@@ -28,7 +28,7 @@ def json_goods_list_from_page_object_list(request: HttpRequest, page_object_list
             'in_barrel': item.in_barrel,
             'wl_loading': False,
             'ct_loading': False,
-            'in_wishlist': True if item in wishlist.items() else False
+            'in_wishlist': True if item in wishlist.items() else False,
         }
         try:
             cartinfo = cart.items().get(good=item)

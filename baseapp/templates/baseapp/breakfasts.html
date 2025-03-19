@@ -12,34 +12,105 @@
 
 {% block content %}
 
-<div class="main-container right-sidebar style3 margin-bottom-30">
-	<div class="container">
-		<nav class="woocommerce-breadcrumb breadcrumbs">
-			<a href="{% url 'baseapp:index' %}">На главную</a>
-			<a href="{% url 'baseapp:breakfasts' %}">Завтраки</a>
-			Меню
-		</nav>
-		<div class="row">
-			<div class="col-sm-12 col-md-8 main-content margin-top-10">
-				<div class="blog-single">
-					<div class="post-item">
-						<div class="post-thumb">
-							<div class="images kt-images">
-								<div class="kt-main-image">
-									<a class="zoom" href="{{ breakfast_menu.image.url }}"><img src="{{ breakfast_menu.image.url }}" alt=""></a>
+<div class="main-container right-sidebar style3 margin-bottom-30" id ="breakfastApp">
+	<n-config-provider :theme-overrides="themeOverrides">
+		<div class="container">
+			<nav class="woocommerce-breadcrumb breadcrumbs">
+				<a href="{% url 'baseapp:index' %}">На главную</a>
+				<a href="{% url 'baseapp:breakfasts' %}">Завтраки</a>
+				Меню
+			</nav>
+			<div class="row">
+				<div class="col-sm-12 col-md-8 main-content margin-top-10">
+					<div class="blog-single">
+						<div class="post-item">
+							<div class="post-thumb">
+								<div class="images kt-images">
+									<div class="kt-main-image">
+										<a class="zoom" href="{{ breakfast_menu.image.url }}"><img src="{{ breakfast_menu.image.url }}" alt=""></a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				{% include 'baseapp/widgets/popular_products_sidebar.html' %}	
 			</div>
-			{% include 'baseapp/widgets/popular_products_sidebar.html' %}	
+			{% include 'baseapp/widgets/pickup_reminder.html' %}
 		</div>
-		{% include 'baseapp/widgets/pickup_reminder.html' %}
-	</div>
+	</n-config-provider>
 </div>
 
 {% endblock %}
 
 {% block magnific_popup %}
 {% endblock %}
+
+{% block custom_script %}
+<script type="text/javascript">
+	const BreakfastApp = {
+		data () {
+			const { NConfigProvider } = naive
+			const themeOverrides = {
+				common: {
+				  primaryColor: '#444444',
+				  primaryColorHover: '#444444',
+				},
+				Badge: {
+				  color: '#eec15b',
+				},
+			}
+			return {
+				popularDrinks: [],
+				popularDishes: [],
+				NConfigProvider,
+				themeOverrides,
+			}
+		},
+		delimiters: ["${", "}$"],
+		mounted () {
+			this.popularDrinks = {{ popular_drinks|safe }}
+			this.popularDishes = {{ popular_dishes|safe }}
+		},
+		methods: {
+			redirectToGood(slug) {
+				window.location.href = `/catalog/${slug}`
+			},
+			addGoodToCart (el, goodObj, listName) {
+				el.preventDefault()
+				let goods_list = this.goods_list
+				if (listName == 'popularDrinks') {
+					goods_list = this.popularDrinks
+				} else if (listName == 'popularDishes') {
+					goods_list = this.popularDishes
+				}
+				let good = goods_list.find(item => item.slug === goodObj.slug)
+				good.ct_loading = true
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					axios({
+						method: 'post',
+						url: `/api/v1/cart/`,
+						data: {
+							"price": good.price,
+							"good": good.pk,
+							"quantity": 1
+						}
+					}).then(response => {
+						window.location.reload()
+					}).catch(error => {
+						console.log(error)
+					}).finally(() => {
+						good.ct_loading = false
+					})
+				}, 500)
+			}
+		}
+	}
+	const app = Vue.createApp(BreakfastApp)
+	app.use(naive)
+	app.mount('#breakfastApp')
+</script>
+{% endblock %}
+

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import View
+from django.db.models import Q
 import datetime
+
 
 from goodapp.models import (
 	Category, 
@@ -90,9 +92,14 @@ class GiftBoxesView(View):
 class BreakfastView(View):
 
 	def get(self, request):
+		bestsellers_list = Bestseller.objects.filter(good__quantity__gte=1).order_by('?')
+		popular_drinks = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=True) | Q(good__is_vine=True))]
+		popular_dishes = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=False) & Q(good__is_vine=False))]
 		context = {
 			'breakfast_menu': Breakfast.objects.all().first(),
-			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
+			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
+			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
+			# 'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return render(request, 'baseapp/breakfasts.html', context)	
 
@@ -100,9 +107,14 @@ class CertificateView(View):
 
 	def get(self, request):
 		category = Category.objects.filter(name='Сертификаты').first()
+		bestsellers_list = Bestseller.objects.filter(good__quantity__gte=1).order_by('?')
+		popular_drinks = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=True) | Q(good__is_vine=True))]
+		popular_dishes = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=False) & Q(good__is_vine=False))]
 		context = {
 			'category': category,
 			'goods_list': json_goods_list_from_page_object_list(request, category.items()),
-			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
+			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
+			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
+			# 'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return  render(request, 'baseapp/certificate.html', context)
