@@ -12,6 +12,9 @@
 .group-button .add_to_cart_button .n-spin-body {
     padding-top: 3px;
 }
+.group-button .wishlist .n-spin-body {
+    padding-top: 3px;
+}
 .single-product .wishlist-item .n-spin-body {
     padding-top: 3px;
 }

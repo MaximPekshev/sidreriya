@@ -1,15 +1,11 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
 
 {% block social %}
 {% endblock %}
 
-{% block custom_lib %}
-{% endblock %}
-
 {% block content %}
-
 <div
 	class="main-container {% if not subcategories %} left-sidebar {% endif %} {% if filters %} left-sidebar {% endif %}"
 	id="catalogApp"

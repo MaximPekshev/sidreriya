@@ -1,4 +1,4 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
 
@@ -7,9 +7,6 @@
 {% block title %}{% if good.meta_name %}{{ good.meta_name }}{% else %}{{ good.name }}{% if good.name_en %} / {{ good.name_en }}{% endif %}{% endif %}. Гастробар Сидрерия.{% endblock %}
 
 {% block social %}
-{% endblock %}
-
-{% block custom_lib %}
 {% endblock %}
 
 {% block content %}

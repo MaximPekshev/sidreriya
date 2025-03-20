@@ -33,7 +33,6 @@ class IndexView(View):
 			'music_week': MusicWeek.objects.filter(date__lte=datetime.datetime.now()).order_by('date').last(),
 			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
 			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
-			# 'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return  render(request, 'baseapp/index.html', context)
 
@@ -51,11 +50,6 @@ class AboutUsView(View):
 
 	def get(self, request):
 		return  render(request, 'baseapp/about_us.html')
-
-class ContactUsView(View):
-
-	def get(self, request):
-		return  render(request, 'baseapp/contact_us.html')
 
 class PromoView(View):
 

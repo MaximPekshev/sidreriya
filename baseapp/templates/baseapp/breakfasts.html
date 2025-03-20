@@ -1,17 +1,12 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
-
-{% block header %}
-{{ block.super }}
-{% endblock %}
 
 {% block social %}
 {{ block.super }}
 {% endblock %}
 
 {% block content %}
-
 <div class="main-container right-sidebar style3 margin-bottom-30" id ="breakfastApp">
 	<n-config-provider :theme-overrides="themeOverrides">
 		<div class="container">
@@ -40,7 +35,6 @@
 		</div>
 	</n-config-provider>
 </div>
-
 {% endblock %}
 
 {% block magnific_popup %}

@@ -1,10 +1,6 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
-
-{% block header %}
-{{ block.super }}
-{% endblock %}
 
 {% block meta_description %}От 4-х обедов привезём бесплатно. За полный обед с салатом и напитком просим 350 Р. с 11:00 до 18:00{% endblock %}
 
@@ -12,9 +8,6 @@
 
 {% block social %}
 {{ block.super }}
-{% endblock %}
-
-{% block custom_lib %}
 {% endblock %}
 
 {% block content %}

@@ -1,4 +1,4 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
 
@@ -10,10 +10,6 @@
 {{ block.super }}
 {% endblock %}
 
-{% block header %}
-{{ block.super }}
-{% endblock %}
-
 {% block social %}
 {% endblock %}
 
@@ -21,7 +17,6 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="main-container no-sidebar" id="cartApp">
 	<n-config-provider :theme-overrides="themeOverrides">
 		<div class="container">

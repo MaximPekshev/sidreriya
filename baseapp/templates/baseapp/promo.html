@@ -1,14 +1,12 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
-{% block header %}
-{{ block.super }}
-{% endblock %}
+{% load static %}
 
 {% block social %}
 {{ block.super }}
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="main-container">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
@@ -41,7 +39,6 @@
 		</div>			
 	</div>	
 </div>
-
 {% endblock %}
 
 {% block magnific_popup %}
