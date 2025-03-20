@@ -1,11 +1,8 @@
-from django.db.models import QuerySet
-from django.http import HttpRequest
 import json
 from wishlistapp.services import wishlist_object
 from cartapp.services import cart_object
-from goodapp.models import Good
 
-def json_goods_list_from_page_object_list(request: HttpRequest, page_object_list: QuerySet) -> list:
+def json_goods_list_from_page_object_list(request, page_object_list):
     goods_list = []
     wishlist = wishlist_object(request)
     cart = cart_object(request)
@@ -46,7 +43,7 @@ def json_goods_list_from_page_object_list(request: HttpRequest, page_object_list
         goods_list.append(good)
     return json.dumps(goods_list)
 
-def json_good_from_object(request: HttpRequest, good_object: Good) -> dict:
+def json_good_from_object(request, good_object):
     wishlist = wishlist_object(request)
     return json.dumps({
         'pk': good_object.pk,

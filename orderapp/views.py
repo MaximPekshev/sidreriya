@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.db.models import Sum
 from django.http import JsonResponse
 from django.db import transaction
 
@@ -19,7 +18,6 @@ from cartapp.services import cart_object
 from cartapp.models import Cart_Item
 from cartapp.models import cart_calculate_summ
 from goodapp.models import Good
-from wishlistapp.models import Wishlist_Item
 
 # helpers
 def send_mail_on_bar(order_id):

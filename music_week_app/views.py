@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
 from django.views.generic import View
 from datetime import datetime
 from music_week_app.models import MusicWeek
 
 class MusicWeekView(View):
     
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request):
         music_week = MusicWeek.objects.filter(date__lte=datetime.now()).order_by('date').last()
         context = {
             'music_week': music_week,

@@ -1,7 +1,6 @@
 from cartapp.models import Cart
-from django.http import HttpRequest
 
-def cart_object(request: HttpRequest) -> Cart:
+def cart_object(request):
 	if request.user.is_authenticated:
 		cart = Cart.objects.filter(user = request.user).last()
 	else:
@@ -9,8 +8,8 @@ def cart_object(request: HttpRequest) -> Cart:
 		cart = Cart.objects.filter(id = cart_id).last()
 	return cart
 
-def create_cart(request: HttpRequest) -> Cart:
-	cart 			= Cart()
+def create_cart(request):
+	cart = Cart()
 	if request.user.is_authenticated:
 		cart.user = request.user
 	else:

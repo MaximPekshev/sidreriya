@@ -1,4 +1,3 @@
-from django.http import HttpRequest, HttpResponse
 from django.views.generic import View
 
 from cartapp.services import (
@@ -29,7 +28,7 @@ from authapp.models import Buyer
 
 class CartView(View):
 	
-	def get(self, request: HttpRequest) -> HttpResponse:
+	def get(self, request):
 		
 		barrels = []
 		for item in In_Barrels.objects.all():
