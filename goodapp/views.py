@@ -17,6 +17,10 @@ from goodapp.models import (
 	In_Barrels,
 	Bestseller
 )
+from goodapp.services import (
+	json_goods_list_from_page_object_list,
+	json_good_from_object
+)
 from baseapp.models import (
     Menu 
 )
@@ -217,14 +221,14 @@ class CatalogView(View):
 		if page.has_next():
 			next_url = '{1}page={0}'.format(page.next_page_number(), str_active_filters)
 		else:
-			next_url = ''			
-		barrels = In_Barrels.objects.all()
+			next_url = ''
 		context.update({
 			'page_object': page, 
+			'goods_list': json_goods_list_from_page_object_list(request, page.object_list),
 			'prev_url': prev_url, 
 			'next_url': next_url, 
 			'is_paginated': is_paginated,
-			'barrels': barrels,
+			'barrels': In_Barrels.objects.all(),
 			'filters' : filters(goods, category_values, manufacturer_values, active_filters_obj),
 			'active_filters': active_filters,
 			'str_active_filters': str_active_filters,
@@ -290,9 +294,9 @@ class GoodView(View):
 			# Регион
 			country = get_object_property_value(opv, 'Регион')
 		barrels = In_Barrels.objects.all()
-
 		context = {
 			'good': good, 
+			'json_good': json_good_from_object(request, good),
 			'opv': opv.exclude(_property__title='Крепость'),
 			'is_cidre': good.is_cidre,
 			'barrels': barrels,
@@ -356,6 +360,7 @@ class CategoryView(View):
 				})
 			context.update ({
 				'page_object': page, 
+				'goods_list': json_goods_list_from_page_object_list(request, page.object_list),
 				'prev_url': prev_url, 
 				'next_url': next_url, 
 				'is_paginated': is_paginated,

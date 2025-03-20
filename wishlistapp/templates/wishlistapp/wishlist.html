@@ -1,4 +1,4 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
 
@@ -10,107 +10,117 @@
 {{ block.super }}
 {% endblock %}
 
-{% block header %}
-{{ block.super }}
-{% endblock %}
-
 {% block social %}
 {% endblock %}
 
+{% block custom_lib %}
+{% endblock %}
+
 {% block content %}
-
-<div class="main-container no-sidebar">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 main-content">
-				<nav class="woocommerce-breadcrumb breadcrumbs">
-					<a href="{% url 'baseapp:index' %}">На главную</a>
-					<a href="{% url 'show_wishlist' %}">Избранное</a>
-				</nav>
-				{% if wishlist.items %}
-				<div class="block-form">
-					
-					<table class="shop_table cart">
-						<thead>
-							<tr>
-								<th class="product">Товар/Цена</th>
-								<th>Наличие</th>
-								<th></th>
-								<th>Удалить</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for item in wishlist.items %}
-							<tr>
-								<td class="product">
-									<img class="product-thumb" src="{{ item.main_image.images.url }}" alt="" style="width: 50px;">
-									<div class="product-info">
-										<h3 class="product-name"><a href="{% url 'show_good' slug=item.slug %}">{{ item.name }}{% if item.name_en %} / {{ item.name_en }}{% endif %}</a></h3>
-										<span class="product-price">&#8381 {{ item.price }}{% if item.category.name == "Куличи" or item.category.name == "Вареники" %}{% else %} / &#8381 * {{ item.discount_price }}{% endif %}</span>
-									</div>
-								</td>
-								<td class="stock">
-									{% if item.quantity >= 1 %}
-										{% if item.in_barrel %}
-											{% if item in barrels %}
-											<span class="in-stock">в наличии</span>
-											{% else %}
-											<span class="in-stock" style="color: orange;">временно недоступен</span>
-											{% endif %}
-										{% else %}
+<div class="main-container no-sidebar" id="wishlistApp">
+	<n-config-provider :theme-overrides="themeOverrides">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 main-content">
+					<nav class="woocommerce-breadcrumb breadcrumbs">
+						<a href="{% url 'baseapp:index' %}">На главную</a>
+						<a href="{% url 'show_wishlist' %}">Избранное</a>
+					</nav>
+					{% comment %} {% if goods_list.length > 0 %} {% endcomment %}
+					<div v-if="goods_list.length > 0" class="block-form">
+						<table class="shop_table cart">
+							<thead>
+								<tr>
+									<th class="product">Товар/Цена</th>
+									<th>Наличие</th>
+									<th></th>
+									<th>Удалить</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr 
+									v-cloak
+									v-for="item in goods_list" 
+									:key="item.slug"
+								>
+									<td class="product">
+										<img v-if="item.img" class="product-thumb" :src="item.img" alt="" style="width: 50px;">
+										<img v-else class="product-thumb" src="{% static 'images/products/no-photo.png' %}" alt="" style="width: 50px;">
+										<div class="product-info">
+											<h3 class="product-name">
+												<a
+													href="#"
+													@click="redirectToGood(item.slug)"
+												>
+													<span>${ item.name }$</span>
+													<span v-if="item.name_en"> / ${ item.name_en }$</span>
+												</a>
+											</h3>
+											<span class="product-price">&#8381 ${ item.price }$</span>
+											<span v-if="item.categoryName != 'Куличи' && item.categoryName != 'Вареники'"> / </span>
+											<span class="price discount-price" v-if="item.categoryName != 'Куличи' && item.categoryName != 'Вареники'">&#8381 ${ item.discount_price }$ * </span>
+										</div>
+									</td>
+									<td v-if="item.quantity > 0" class="stock">
 										<span class="in-stock">в наличии</span>
-										{% endif %}
-									{% else %}
-									{% if item.is_cidre %}
-									<span class="in-stock" style="color: orange;">все выпили</span>
-									{% else %}
-									<span class="in-stock" style="color: orange;">закончилось</span>
-									{% endif %}
-									{% endif %}
-								</td>
-								<td>
-									<div class="quantity">
-										<form id="{{ item.slug }}addtocart" action="{% url 'cart_add_item' slug=item.slug %}" method="POST">
-											{% csrf_token %}
-											<input type="hidden" name="quantity" value="1">
-
-											{% if item.quantity >= 1 %}
-											{% if item.in_barrel %}
-												{% if item in barrels %}
-												<button type="submit" class="button add_to_cart_button">В корзину</button>
-												{% endif %}
-											{% else %}
-											<button type="submit" class="button add_to_cart_button">В корзину</button>
-											{% endif %}
-											{% endif %}
-
-											
-										</form>
-										
-									</div>
-								</td>
-								<td class="product-remove">
-									<a class="remove" href="{% url 'wishlist_add_item' slug=item.slug %}"><i class="fa fa-close"></i></a>
-								</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				</div>
-				{% else %}
-				<div class="col-sm-12" >
-					<div class="text-center">
-						<h2 class="title">Отметь своих любимчиков из нашей коллекции сидров!</h2>
+									</td>
+									<td v-else class="stock">
+										<span 
+											v-if="item.is_cidre && item.is_vine" 
+											class="in-stock" 
+											style="color: orange;"
+										>
+											все выпили
+										</span>
+										<span
+											v-else-if="item.in_barrel"
+											class="in-stock"
+											style="color: orange;"
+										>
+											временно недоступен
+										</span>
+										<span 
+											v-else
+											class="in-stock"
+											style="color: orange;"
+										>
+											закончилось
+										</span>
+									</td>
+									<td>
+										<div class="quantity">
+											<button v-if="item.ct_loading" disabled>
+												<n-spin size="small"></n-spin>
+											</button>
+											<button v-else @click="addGoodToCart($event, item)">В корзину</button>
+										</div>
+									</td>
+									<td class="product-remove">
+										<a 
+											class="remove" 
+											href="#"
+											@click="addDelGoodToWishlist($event, item)"
+										>
+											<i class="fa fa-close"></i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<div class="text-center" style="padding-top: 30px ">
-						<a class="button primary" href="{% url 'show_catalog' %}">За покупками</a>
+					<div v-else class="col-sm-12" >
+						<div class="text-center">
+							<h2 class="title">Отметь своих любимчиков из нашей коллекции!</h2>
+						</div>
+						<div class="text-center" style="padding-top: 30px ">
+							<a href="{% url 'show_catalog' %}"><button class="button  primary">За покупками</button></a>
+						</div>
 					</div>
+					
 				</div>
-				{% endif %}
-				
 			</div>
 		</div>
-	</div>
+	</n-config-provider>
 </div>
 <div class="container">
 	{% include 'baseapp/widgets/pickup_reminder.html' %}
@@ -118,4 +128,88 @@
 {% endblock %}
 
 {% block magnific_popup %}
+{% endblock %}
+
+{% block custom_script %}
+<script type="text/javascript">
+	const WishlistApp = {
+		data () {
+			const { NConfigProvider } = naive
+			const themeOverrides = {
+				common: {
+				  primaryColor: '#444444',
+				  primaryColorHover: '#444444',
+				},
+				Badge: {
+				  color: '#eec15b',
+				},
+			}
+			return {
+				goods_list: [],
+				NConfigProvider,
+				themeOverrides,
+			}
+		},
+		delimiters: ["${", "}$"],
+		computed: {
+			goodsList () {
+				return {{ goods_list|safe }}
+			},
+		},
+		mounted () {
+			this.goods_list = this.goodsList
+		},
+		methods: {
+			redirectToGood(slug) {
+				window.location.href = `/catalog/${slug}`
+			},
+			addGoodToCart (el, goodObj) {
+				el.preventDefault()
+				let good = this.goods_list.find(item => item.slug === goodObj.slug)
+				good.ct_loading = true
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					axios({
+						method: 'post',
+						url: `/api/v1/cart/`,
+						data: {
+							"price": good.price,
+							"good": good.pk,
+							"quantity": 1
+						}
+					}).then(response => {
+						window.location.reload()
+					}).catch(error => {
+						console.log(error)
+					}).finally(() => {
+						good.ct_loading = false
+					})
+				}, 500)
+			},
+			addDelGoodToWishlist (el, goodObj) {
+				el.preventDefault()
+				let good = this.goods_list.find(item => item.slug === goodObj.slug)
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					if (good.in_wishlist) {
+						axios({
+							method: 'delete',
+							url: `/api/v1/wishlist/${good.slug}/`,
+						}).then(response => {
+							window.location.reload()
+						}).catch(error => {
+							console.log(error)
+						})
+					}
+				}, 500)
+			},
+		}
+	}
+	const app = Vue.createApp(WishlistApp)
+	app.use(naive)
+	app.mount('#wishlistApp')
+</script>
+
 {% endblock %}

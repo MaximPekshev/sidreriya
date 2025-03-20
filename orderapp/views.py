@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.db.models import Sum
 from django.http import JsonResponse
 from django.db import transaction
 
@@ -15,11 +14,10 @@ from .models import Order, Order_Item
 from .forms import OrderCreateForm
 from authapp.models import Buyer
 from authapp.forms import BuyerSaveForm
-from cartapp.views import get_cart
+from cartapp.services import cart_object
 from cartapp.models import Cart_Item
 from cartapp.models import cart_calculate_summ
 from goodapp.models import Good
-from wishlistapp.models import Wishlist_Item
 
 # helpers
 def send_mail_on_bar(order_id):
@@ -357,7 +355,7 @@ def order_create(request, *args, **kwargs):
 					order_item.save()
 					# create_order_item(new_order, order_item_slug, order_item.get("qty"), order_item.get("summ"))
 				# удаляем из корзины товар, который успешно попал в заказ
-				cart = get_cart(request)
+				cart = cart_object(request)
 				cart_items = Cart_Item.objects.filter(cart=cart)
 				for order_item in order_items_list:
 					order_item_slug = order_item
@@ -535,7 +533,7 @@ def order_add(request):
 
 
 			else:	
-				cart_items = Cart_Item.objects.filter(cart=get_cart(request))
+				cart_items = Cart_Item.objects.filter(cart=cart_object(request))
 
 				for item in cart_items:
 					if item.good.quantity !=0:
@@ -550,7 +548,7 @@ def order_add(request):
 							)
 						order_item.save()
 
-				cart_to_clear = get_cart(request)
+				cart_to_clear = cart_object(request)
 
 				cart_items_to_delete = Cart_Item.objects.filter(cart=cart_to_clear)
 

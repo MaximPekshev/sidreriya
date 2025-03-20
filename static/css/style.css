@@ -142,9 +142,11 @@ th, td{
 .button, 
 input[type="submit"],
 button{
+    width: 132px;
+    height: 40px;
     color: #444444;
     display: inline-block;
-    padding: 8px 35px;
+    /* padding: 8px 35px; */
     text-align: center;
     text-transform: uppercase;
     font-size: 10px;
@@ -3031,7 +3033,7 @@ HEADER
     height: 40px;
     text-align: center;
     line-height: 40px;
-    font-size: 0;
+    /* font-size: 0; */
     padding: 0;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -3059,12 +3061,12 @@ HEADER
     font-family: "Flaticon";
     font-size: 14px;
 }
-.product-item .wishlist:after{
+/* .product-item .wishlist:after{
     content: "\e001";
-}
-.product-item .add_to_cart_button:after{
+} */
+/* .product-item .add_to_cart_button:after{
     content: "\e008";
-}
+} */
 .product-item .compare:after{
     content: "\e00a";
 }

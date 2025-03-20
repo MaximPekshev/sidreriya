@@ -1,3 +1,13 @@
+from django.views.generic import View
+
+from cartapp.services import (
+	cart_object,
+	create_cart
+)
+from goodapp.services import (
+	json_goods_list_from_page_object_list
+)
+
 from django.shortcuts import (
     render, 
     redirect
@@ -16,42 +26,19 @@ from goodapp.models import (
 )
 from authapp.models import Buyer
 
-def get_cart(request):
-
-	if request.user.is_authenticated:
-		cart 		= Cart.objects.filter(user = request.user).last()
-	else:
-		cart_id 	= request.session.get("cart_id")
-		cart 		= Cart.objects.filter(id = cart_id).last()
-
-	return cart
-
-def create_cart(request):
-
-	cart_id 		= request.session.get("cart_id")
-	cart 			= Cart()
-
-	if request.user.is_authenticated:
-		cart.user = request.user
-	else:
-		cart.user = None
-
-	cart.save()
-	request.session['cart_id'] = cart.id
-
-	return cart
-
-
-def show_cart(request):
-
-	barrels = []
-	for item in In_Barrels.objects.all():
-		barrels.append(item.good)
-	context = {
-		'barrels': barrels,
-	}
+class CartView(View):
 	
-	return render(request, 'cartapp/cart_page.html', context)
+	def get(self, request):
+		
+		barrels = []
+		for item in In_Barrels.objects.all():
+			barrels.append(item.good)
+		cart = cart_object(request)	
+		context = {
+			'barrels': barrels,
+			'goods_list': json_goods_list_from_page_object_list(request, cart.good_items()),
+		}
+		return render(request, 'cartapp/cart_page.html', context)
 
 
 def cart_add_item(request, slug):
@@ -60,7 +47,7 @@ def cart_add_item(request, slug):
 
 		quantity 		= Decimal(request.POST.get('quantity'))
 
-		cart 			= get_cart(request)
+		cart 			= cart_object(request)
 
 		if cart == None:
 
@@ -80,7 +67,7 @@ def cart_add_item(request, slug):
 
 def cart_del_item(request, slug):
 
-	cart 	= get_cart(request)
+	cart 	= cart_object(request)
 
 	if cart != None:
 
@@ -91,6 +78,9 @@ def cart_del_item(request, slug):
 
 	current_path = request.META['HTTP_REFERER']
 	return redirect(current_path)
+
+
+
 
 def cart_checkout(request):
 
@@ -127,7 +117,7 @@ def cart_checkout(request):
 		else:
 			min_time = max_time	
 
-	cart  = get_cart(request)
+	cart  = cart_object(request)
 
 	if cart != None:
 		free_cart_items = []

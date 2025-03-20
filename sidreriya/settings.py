@@ -33,11 +33,12 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_framework',
     'filterapp',
     'ajax_select',
     'festapp',
     'music_week_app',
+    'rest_framework',
+    'api_app',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +118,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ACCOUNT_EMAIL_REQUIRED =True
 ACCOUNT_AUTHENTICATION_METHOD='email'

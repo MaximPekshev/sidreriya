@@ -8,323 +8,181 @@
 
 {% block title %}Первая Сидрерия в Белгороде{% endblock %}
 
-{% block header %}
-<div id="header" class="header style2 style9">
-	<div class="top-bar">
-		<div class="container">
-			<ul class="kt-nav top-bar-menu right">
-				{% if user.is_authenticated %}
-				<li>
-					<a href="{% url 'show_profile' %}">Привет, {{ user }}</a>
-				</li>
-				<li>	
-					<a href="{% url 'account_logout' %}">Выйти</a>
-				</li>	
-					{% else %}
-				<li>
-					<a href="{% url 'account_login' %}">Вход/Регистрация</a>
-				</li>
-				{% endif %}
-				<li class="menu-item-has-children box-setting">
-					<a href="tel:+74722412416"><span class="menu-icon pe-7s-headphones"></span> Тел: 412-416</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>			
-
-
-<div id="header" class="header">
-	<div class="top-bar">
-		<div class="container">
-			<div class="top-bar-left">
-				<div class="logo">
-					<a href="{% url 'baseapp:index' %}"><img src="{% static 'images/logos/Sidreria_logo_bely.png' %}" width="150" alt=""></a>
-				</div>
-				<div class="form-search-wapper">
-					<form id="search-form" class="form-search" method="GET" action="{% url 'show_catalog' %}">
-						<input 
-							class="input" 
-							name="q" 
-							type="text" 
-							placeholder="Поиск по меню..."
-							{% if q %}
-							value="{{ q }}"
-							{% endif %}
-						>
-						<button type="submit" form="search-form" class="btn-search" style="padding-bottom: 10px;"><span class="flaticon-magnifying-glass34"></span></button>
-					</form>
+{% block content %}
+<div id="indexApp">
+	<n-config-provider :theme-overrides="themeOverrides">
+		<!-- Home slide-->
+		<div class="kt_home_slide slide-home2 slide-home3 nav-center nav-style1" data-nav="true"  data-autoplay="true" data-loop="true" data-responsive='{"0":{"items":"1","nav":false},"768":{"items":"1","nav":false},"992":{"items":"1"}}'>
+			<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner.jpg' %}" data-height="543"  data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+				<div class="content-slide">
+					<div class="container container-slide">
+						<div class="inner">
+							<span data-animate="fadeInDown" class="caption subtitle">актуальные предложения</span>
+							<h2 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h2>
+							<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:delivery' %}">Подробнее...</a>
+						</div>
+					</div>
 				</div>
 			</div>
+		<!-- 	<div class="item-slide" data-background="{% static 'images/banners/vacation.png' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+				<div class="content-slide">
+					<div class="container container-slide">
+						<div class="inner">
+							<span data-animate="fadeInDown" class="caption as_span">Наш режим работы в праздничные дни:</span>
+							<h2 data-animate="zoomIn" class="caption as_title" style="padding-top: 20px;">01.05 - 02.05</h2>
+							<h2 data-animate="zoomIn" class="caption as_subtitle">- c 9:00 до 03:00</h2>
+							<h2 data-animate="zoomIn" class="caption as_title">03.05 - 06.05</h2>
+							<h2 data-animate="zoomIn" class="caption as_subtitle">- c 9:00 до 01:00</h2>
+							<h2 data-animate="zoomIn" class="caption as_title">07.05 - 09.05</h2>
+							<h2 data-animate="zoomIn" class="caption as_subtitle">- c 9:00 до 03:00</h2>
 
-			<div class="top-bar-right">
-				<ul class="kt-nav top-bar-menu">
-					<li class="menu-item-has-children">
-						<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
-					</li>
-					<li class="menu-item-has-children box-setting">
-						<a href="{% url 'show_wishlist' %}">
-							<span class="menu-icon icon flaticon-heart295"></span>
-							<span class="count">{% if wishlist.count %}{{ wishlist.count }} {% endif %}</span>
-						</a>
-					</li>
-					<li class="menu-item-has-children mini-cart">
-						<a  href="{% url 'show_cart' %}">
-							<span class="menu-icon  icon flaticon-shopping-cart6"></span>
-							{% if cart %}
-								{% if cart.count > 0 %}
-								<span class="count">{{ cart.count }}</span>
-								<span class="text">шт.</span>
-								<span class="kak">-</span>
-								<span class="subtotal">&#8381 {{ cart.summ }}</span>
-								{% endif %}
-							{% endif %}
-						</a>
-					</li>
-				</ul>
+							<h2 data-animate="fadeInDown" class="caption as_subtitle" style="padding-top: 30px;">С ЛЮБОВЬЮ, ВАША СИДРЕРИЯ</h2>
+						</div>
+					</div>
+				</div>
+			</div> -->
+
+			{% comment %} баннер - сокращенное время работы {% endcomment %}
+			{% comment %} <div class="item-slide" data-background="{% static 'images/banners/wall.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+				<div class="content-slide">
+					<div class="container container-slide">
+						<div class="inner">
+							<span data-animate="fadeInDown" class="caption subtitle">В связи с обстановкой, мы вынуждены временно<br> работать по сокращенному режиму:</span>
+							<h2 data-animate="zoomIn" class="caption title">с 10:00 до 16:00</h2>
+							<a data-animate="fadeInDown" class="caption link">Вместе с вами ждем, когда все наладится</a>
+						</div>
+					</div>
+				</div>
+			</div> {% endcomment %}
+			{% comment %} баннер - сокращенное время работы {% endcomment %}
+			
+			<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner2.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+				<div class="content-slide">
+					<div class="container container-slide">
+						<div class="inner">
+							<span data-animate="fadeInDown" class="caption subtitle">бесплатная доставка обедов из Сидрерии!</span>
+							<h2 data-animate="zoomIn" class="caption title">От 3-х обедов<br>привезём<br>БЕСПЛАТНО</h2>
+							<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:promo' %}">Подробнее...</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="main-header">
-		<div class="container">
-			<div class="main-menu-wapper">
-				<a class="mobile-navigation" href="#">
-					<span class="icon">
-						<span></span>
-						<span></span>
-						<span></span>
-					</span>
-					Меню
-				</a>
-				<ul class="kt-nav main-menu clone-main-menu">
-					<li>
-						<a href="{% url 'baseapp:delivery' %}">Доставка</a>
-					</li>
-					{% if in_bar %}
-					<li class="menu-item-has-children item-megamenu">
-						<a href="{% url 'show_in_barrels' %}">В бочонках</a>
-						<div class="sub-menu megamenu" style="width:1200px;">
-							<div class="row">
-								{% for item in in_bar %}
-								<div class="col-sm-3 margin-top-10" >
-									<a href="{% url 'show_good' slug=item.good.slug %}"><img style="" src="{{ item.good.main_image.images.url }}" alt=""></a>
-								</div>
-								{% endfor %}
+		<!-- Banner -->
+		{% if vareniki.items %}
+		<div class="section-banner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-12">
+						<div class="kt-banner block-banner-text style3 margin-top-30 margin-bottom-30" data-height="293" data-background="{% static 'images/banners/vareniki.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'show_category' slug=vareniki.slug %}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'show_category' slug=vareniki.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Вареники</h4></a>
 							</div>
 						</div>
-					</li>
-					{% endif %}
-					<li>
-						{% comment %} <a href="{% url 'show_category' slug='2717255153' %}">Сидр</a> {% endcomment %}
-						<a href="{% url 'show_catalog' %}?Категория=Сидр">Сидр</a>
-					</li>
-					<li>
-						{% comment %} <a href="{% url 'show_category' slug='679382604' %}">Вино</a> {% endcomment %}
-						<a href="{% url 'show_catalog' %}?Категория=Вино">Вино</a>
-					</li>
-					<li>
-						<a href="{% url 'show_category' slug='4127154760' %}">Еда</a>
-					</li>
-					<li>
-						<a href="{% url 'baseapp:set_lunch' %}">Обеды</a>
-					</li>
-					<li>
-						<a href="{% url 'baseapp:breakfasts' %}">Завтраки</a>
-					</li>
-					<li>
-						<a href="{% url 'baseapp:сertificate' %}">Сертификаты</a>
-					</li>
-					<li>
-						<a href="{% url 'baseapp:atmosphere' %}">Атмосфера</a>
-					</li>
-					<li>
-						<a href="{% url 'baseapp:about_us' %}">О нас</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
-
-{% endblock %}
-
-{% block content %}
-<!-- Home slide-->
-<div class="kt_home_slide slide-home2 slide-home3 nav-center nav-style1" data-nav="true"  data-autoplay="true" data-loop="true" data-responsive='{"0":{"items":"1","nav":false},"768":{"items":"1","nav":false},"992":{"items":"1"}}'>
-	<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner.jpg' %}" data-height="543"  data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
-		<div class="content-slide">
-			<div class="container container-slide">
-				<div class="inner">
-					<span data-animate="fadeInDown" class="caption subtitle">актуальные предложения</span>
-					<h2 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h2>
-					<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:delivery' %}">Подробнее...</a>
-				</div>
-			</div>
-		</div>
-	</div>
-<!-- 	<div class="item-slide" data-background="{% static 'images/banners/vacation.png' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
-		<div class="content-slide">
-			<div class="container container-slide">
-				<div class="inner">
-					<span data-animate="fadeInDown" class="caption as_span">Наш режим работы в праздничные дни:</span>
-					<h2 data-animate="zoomIn" class="caption as_title" style="padding-top: 20px;">01.05 - 02.05</h2>
-					<h2 data-animate="zoomIn" class="caption as_subtitle">- c 9:00 до 03:00</h2>
-					<h2 data-animate="zoomIn" class="caption as_title">03.05 - 06.05</h2>
-					<h2 data-animate="zoomIn" class="caption as_subtitle">- c 9:00 до 01:00</h2>
-					<h2 data-animate="zoomIn" class="caption as_title">07.05 - 09.05</h2>
-					<h2 data-animate="zoomIn" class="caption as_subtitle">- c 9:00 до 03:00</h2>
-
-					<h2 data-animate="fadeInDown" class="caption as_subtitle" style="padding-top: 30px;">С ЛЮБОВЬЮ, ВАША СИДРЕРИЯ</h2>
-				</div>
-			</div>
-		</div>
-	</div> -->
-
-	{% comment %} баннер - сокращенное время работы {% endcomment %}
-	{% comment %} <div class="item-slide" data-background="{% static 'images/banners/wall.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
-		<div class="content-slide">
-			<div class="container container-slide">
-				<div class="inner">
-					<span data-animate="fadeInDown" class="caption subtitle">В связи с обстановкой, мы вынуждены временно<br> работать по сокращенному режиму:</span>
-					<h2 data-animate="zoomIn" class="caption title">с 10:00 до 16:00</h2>
-					<a data-animate="fadeInDown" class="caption link">Вместе с вами ждем, когда все наладится</a>
-				</div>
-			</div>
-		</div>
-	</div> {% endcomment %}
-	{% comment %} баннер - сокращенное время работы {% endcomment %}
-	
-	<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner2.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
-		<div class="content-slide">
-			<div class="container container-slide">
-				<div class="inner">
-					<span data-animate="fadeInDown" class="caption subtitle">бесплатная доставка обедов из Сидрерии!</span>
-					<h2 data-animate="zoomIn" class="caption title">От 3-х обедов<br>привезём<br>БЕСПЛАТНО</h2>
-					<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:promo' %}">Подробнее...</a>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- Banner -->
-{% if vareniki.items %}
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-12">
-				<div class="kt-banner block-banner-text style3 margin-top-30 margin-bottom-30" data-height="293" data-background="{% static 'images/banners/vareniki.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug=vareniki.slug %}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'show_category' slug=vareniki.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Вареники</h4></a>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-{% endif %}
-{% if kulichi.items %}
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-12">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/kulichi_3.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug=kulichi.slug%}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'show_category' slug=kulichi.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Куличи</h4></a>
+		{% endif %}
+		{% if kulichi.items %}
+		<div class="section-banner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-12">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/kulichi_3.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'show_category' slug=kulichi.slug%}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'show_category' slug=kulichi.slug %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Куличи</h4></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-{% endif %}
+		{% endif %}
 
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/food.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_category' slug='4127154760' %}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'show_category' slug='4127154760' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ЕДА</h4></a>
+		<div class="section-banner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/food.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'show_category' slug='4127154760' %}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'show_category' slug='4127154760' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ЕДА</h4></a>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/cidre.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_catalog' %}?Категория=Сидр" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'show_catalog' %}?Категория=Сидр"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/delivery.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'baseapp:delivery' %}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'baseapp:delivery' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ДОСТАВКА</h4></a>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-12 col-md-6">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/atmo.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'baseapp:atmosphere' %}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'baseapp:atmosphere' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">АТМОСФЕРА</h4></a>
+					<div class="col-sm-12 col-md-6">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/cidre.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'show_catalog' %}?Категория=Сидр" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'show_catalog' %}?Категория=Сидр"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">СИДР</h4></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-{% if festivals %}
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-12">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="350" data-background="{% static 'images/banners/fest_banner.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_festival_list' %}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'show_festival_list' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Фестивали</h4></a>
+
+		<div class="section-banner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/delivery.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'baseapp:delivery' %}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'baseapp:delivery' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">ДОСТАВКА</h4></a>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="293" data-background="{% static 'images/banners/atmo.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'baseapp:atmosphere' %}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'baseapp:atmosphere' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">АТМОСФЕРА</h4></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-{% endif %}
-
-{% if music_week %}
-<div class="section-banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-12">
-				<div class="kt-banner block-banner-text style3 margin-top-30" data-height="350" data-background="{% static 'images/banners/music_week.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
-					<a href="{% url 'show_actual_music_week' %}" class="bg-image"></a>
-					<div class="content text-right">
-						<a href="{% url 'show_actual_music_week' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Афиша музыкальных концертов</h4></a>
+		{% if festivals %}
+		<div class="section-banner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-12">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="350" data-background="{% static 'images/banners/fest_banner.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'show_festival_list' %}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'show_festival_list' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Фестивали</h4></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+		{% endif %}
+
+		{% if music_week %}
+		<div class="section-banner">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-12">
+						<div class="kt-banner block-banner-text style3 margin-top-30" data-height="350" data-background="{% static 'images/banners/music_week.jpg' %}" data-positionright="40" data-verticalmiddle="middle">
+							<a href="{% url 'show_actual_music_week' %}" class="bg-image"></a>
+							<div class="content text-right">
+								<a href="{% url 'show_actual_music_week' %}"><h4 class="subtitle" style="font-family: 'Bebas'; font-size: 60px">Афиша музыкальных концертов</h4></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		{% include 'baseapp/widgets/popular_products.html' %}
+</n-config-provider>
 </div>
-{% endif %}
-
-
-{% if bestsellers %}
-{% include 'baseapp/widgets/popular_products.html' %}
-{% endif %}
-
-
 {% endblock %}
 
 {% block magnific_popup %}
@@ -346,4 +204,72 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block custom_script %}
+<script type="text/javascript">
+	const IndexApp = {
+		data () {
+			const { NConfigProvider } = naive
+			const themeOverrides = {
+				common: {
+				  primaryColor: '#444444',
+				  primaryColorHover: '#444444',
+				},
+				Badge: {
+				  color: '#eec15b',
+				},
+			}
+			return {
+				popularDrinks: [],
+				popularDishes: [],
+				NConfigProvider,
+				themeOverrides,
+			}
+		},
+		delimiters: ["${", "}$"],
+		mounted () {
+			this.popularDrinks = {{ popular_drinks|safe }}
+			this.popularDishes = {{ popular_dishes|safe }}
+		},
+		methods: {
+			redirectToGood(slug) {
+				window.location.href = `/catalog/${slug}`
+			},
+			addGoodToCart (el, goodObj, listName) {
+				el.preventDefault()
+				let goods_list = []
+				if (listName == 'popularDrinks') {
+					goods_list = this.popularDrinks
+				} else if (listName == 'popularDishes') {
+					goods_list = this.popularDishes
+				}
+				let good = goods_list.find(item => item.slug === goodObj.slug)
+				good.ct_loading = true
+				setTimeout(() => {
+					axios.defaults.xsrfCookieName = 'csrftoken'
+					axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+					axios({
+						method: 'post',
+						url: `/api/v1/cart/`,
+						data: {
+							"price": good.price,
+							"good": good.pk,
+							"quantity": 1
+						}
+					}).then(response => {
+						window.location.reload()
+					}).catch(error => {
+						console.log(error)
+					}).finally(() => {
+						good.ct_loading = false
+					})
+				}, 500)
+			}
+		}
+	}
+	const app = Vue.createApp(IndexApp)
+	app.use(naive)
+	app.mount('#indexApp')
+</script>
 {% endblock %}

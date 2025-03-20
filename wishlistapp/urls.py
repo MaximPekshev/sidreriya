@@ -1,8 +1,6 @@
 from django.urls import path
-from .views import show_wishlist
-from .views import wishlist_add_item
+from .views import WishlistView
 
 urlpatterns = [
-	path('', 		show_wishlist, name='show_wishlist'),
-	path('add/<str:slug>/', wishlist_add_item, name='wishlist_add_item'),
+	path('', WishlistView.as_view(), name='show_wishlist'),
 ]

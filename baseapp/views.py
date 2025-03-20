@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.views.generic import View
+from django.db.models import Q
 import datetime
+
 
 from goodapp.models import (
 	Category, 
 	Set_Lunch, 
 	Good,
 	Bestseller
+)
+from goodapp.services import (
+	json_goods_list_from_page_object_list
 )
 from baseapp.models import (
 	Breakfast 
@@ -18,12 +23,16 @@ from music_week_app.models import MusicWeek
 class IndexView(View):
 
 	def get(self, request):
+		bestsellers_list = Bestseller.objects.filter(good__quantity__gte=1).order_by('?')
+		popular_drinks = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=True) | Q(good__is_vine=True))]
+		popular_dishes = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=False) & Q(good__is_vine=False))]
 		context = {
 			'kulichi': Category.objects.filter(name='Куличи').first(),
 			'vareniki': Category.objects.filter(name='Вареники').first(),
 			'festivals': Festival.objects.filter(is_active=True).order_by('-id')[:2],
 			'music_week': MusicWeek.objects.filter(date__lte=datetime.datetime.now()).order_by('date').last(),
-			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
+			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
+			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
 		}
 		return  render(request, 'baseapp/index.html', context)
 
@@ -41,11 +50,6 @@ class AboutUsView(View):
 
 	def get(self, request):
 		return  render(request, 'baseapp/about_us.html')
-
-class ContactUsView(View):
-
-	def get(self, request):
-		return  render(request, 'baseapp/contact_us.html')
 
 class PromoView(View):
 
@@ -87,17 +91,29 @@ class GiftBoxesView(View):
 class BreakfastView(View):
 
 	def get(self, request):
+		bestsellers_list = Bestseller.objects.filter(good__quantity__gte=1).order_by('?')
+		popular_drinks = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=True) | Q(good__is_vine=True))]
+		popular_dishes = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=False) & Q(good__is_vine=False))]
 		context = {
 			'breakfast_menu': Breakfast.objects.all().first(),
-			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
+			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
+			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
+			# 'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return render(request, 'baseapp/breakfasts.html', context)	
 
 class CertificateView(View):
 
 	def get(self, request):
+		category = Category.objects.filter(name='Сертификаты').first()
+		bestsellers_list = Bestseller.objects.filter(good__quantity__gte=1).order_by('?')
+		popular_drinks = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=True) | Q(good__is_vine=True))]
+		popular_dishes = [q.good for q in bestsellers_list.filter(Q(good__is_cidre=False) & Q(good__is_vine=False))]
 		context = {
-			'category': Category.objects.filter(name='Сертификаты').first(),
-			'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
+			'category': category,
+			'goods_list': json_goods_list_from_page_object_list(request, category.items()),
+			'popular_drinks': json_goods_list_from_page_object_list(request, popular_drinks),
+			'popular_dishes': json_goods_list_from_page_object_list(request, popular_dishes),
+			# 'bestsellers' : Bestseller.objects.filter(good__quantity__gte=1).order_by('?'),
 		}
 		return  render(request, 'baseapp/certificate.html', context)

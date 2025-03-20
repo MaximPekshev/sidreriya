@@ -1,16 +1,11 @@
-{% extends 'baseapp/index.html' %}
+{% extends 'baseapp/base.html' %}
 
 {% load static %}
-
-{% block header %}
-{{ block.super }}
-{% endblock %}
 
 {% block social %}
 {% endblock %}
 
 {% block content %}
-
 <div class="main-container">
 	<div class="container">
 		<nav class="woocommerce-breadcrumb breadcrumbs">
@@ -34,9 +29,6 @@
 						</div>
 						<div class="row">
 							<div class="col-sm-12 col-md-12">
-								{% comment %} <div class="col-sm-12 col-md-12" style="padding-top: 20px">
-									<img src="{% static 'images/atmo/atmo1.jpg' %}" alt="" class="img-fluid">
-								</div> {% endcomment %}
 								<div class="col-sm-6 col-md-6" style="padding-top: 20px">
 									<img src="{% static 'images/atmo/atmo2.jpg' %}" alt="" class="img-fluid">
 								</div>
@@ -72,8 +64,6 @@
 		</div>
 	</div>	
 </div>
-
 {% endblock %}
-
 {% block magnific_popup %}
 {% endblock %}
