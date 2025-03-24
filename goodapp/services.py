@@ -49,6 +49,7 @@ def json_goods_list_from_page_object_list(request, page_object_list):
 
 def json_good_from_object(request, good_object):
     wishlist = wishlist_object(request)
+    cart = cart_object(request)
     good = {
         'pk': good_object.pk,
         'slug': good_object.slug,
@@ -72,4 +73,17 @@ def json_good_from_object(request, good_object):
             good['in_wishlist'] = True if good_object in wishlist.items() else False
         except:
             pass
+    try:
+        cartinfo = cart.items().get(good=good_object)
+        cart_item_discount_price = cartinfo.discount_price()
+        cart_item_discount_summ = cartinfo.discount_summ()
+        good['cartInfo'] = {
+            'quantity': int(cartinfo.quantity),
+            'price': int(cartinfo.price),
+            'discount_price': int(cart_item_discount_price) if cart_item_discount_price else None,
+            'summ': int(cartinfo.summ),
+            'discount_summ': int(cart_item_discount_summ) if cart_item_discount_summ else None
+        }
+    except:
+        pass
     return json.dumps(good)
