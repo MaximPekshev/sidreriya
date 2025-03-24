@@ -66,7 +66,6 @@ def json_good_from_object(request, good_object):
         'in_barrel': good_object.in_barrel,
         'wl_loading': False,
         'ct_loading': False,
-        'in_wishlist': True if good_object in wishlist.items() else False
     }
     if wishlist:
         try:
