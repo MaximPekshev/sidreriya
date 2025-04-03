@@ -22,7 +22,8 @@ from goodapp.services import (
 	json_good_from_object
 )
 from baseapp.models import (
-    Menu 
+    Menu,
+	BarMenu,
 )
 from filterapp.models import PropertiesFilter
 
@@ -337,6 +338,7 @@ class CategoryView(View):
 			context.update({
 				'subcategories': subcategories,
 				'menu': Menu.objects.first(),
+				'bar_menu': BarMenu.objects.first(),
 			})
 		else:
 			goods = Good.objects.filter(category=category, is_active=True).order_by('pk')
