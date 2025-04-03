@@ -1,6 +1,8 @@
 import json
 from wishlistapp.services import wishlist_object
 from cartapp.services import cart_object
+from orderapp.services import popular_order_items
+from goodapp.models import Bestseller
 
 def json_goods_list_from_page_object_list(request, page_object_list):
     goods_list = []
@@ -86,3 +88,20 @@ def json_good_from_object(request, good_object):
     except:
         pass
     return json.dumps(good)
+
+def set_bestsellers():
+    """
+    Удаляет старые бестселлеры и создает новые на основе популярных товаров
+    """
+    for item in Bestseller.objects.all():
+        item.delete()
+    drinks = popular_order_items().get('drinks')
+    dishes = popular_order_items().get('dishes')
+    for item in drinks:
+        item = Bestseller.objects.create(
+            good = drinks[item]['good'],
+        )
+    for item in dishes:
+        item = Bestseller.objects.create(
+            good = dishes[item]['good'],
+        )
