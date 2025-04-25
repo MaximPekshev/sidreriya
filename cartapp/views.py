@@ -34,6 +34,8 @@ class CartView(View):
 		for item in In_Barrels.objects.all():
 			barrels.append(item.good)
 		cart = cart_object(request)	
+		if cart == None:
+			cart = create_cart(request)
 		context = {
 			'barrels': barrels,
 			'goods_list': json_goods_list_from_page_object_list(request, cart.good_items()),
