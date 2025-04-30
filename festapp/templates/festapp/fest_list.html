@@ -29,7 +29,7 @@
 									<a href="{% url 'show_festival' cpu_slug=festival.cpu_slug %}" class="bg-image"></a>
 									<div class="content text-center">
 										<h3 class="title">{{ festival.name }}</h3>
-										<h4 class="subtitle">{{ festival.description | slice:":150" }}</h4>
+										<h4 class="subtitle">{{ festival.description | slice:":150" }}...</h4>
 										<a class="link-more" href="{% url 'show_festival' cpu_slug=festival.cpu_slug %}">Подробности</a>
 									</div>
 								</div>
