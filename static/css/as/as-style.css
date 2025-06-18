@@ -56,6 +56,12 @@
 
 .validationError {
     background-color: #FFE2E2;
+    border: 1px solid #FF0000 !important;
+}
+.error {
+    color: #FF0000;
+    font-size: 14px;
+    margin-top: 5px;
 }
 .as_preloader {
     position: fixed;

@@ -164,14 +164,18 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<span>Телефон *</span>
-										<p><input
-											v-phone
-											@input="checkInputPhone" 
-											:class="{ validationError: inputPhoneError }" 
-											type="text" name="input_phone" 
-											v-model="input_phone" 
-											placeholder="Телефон"
-										></p>
+										<p>
+											<input
+												v-phone
+												@input="checkInputPhone" 
+												:class="{ validationError: inputPhoneError }" 
+												type="text" name="input_phone" 
+												v-model="input_phone" 
+												placeholder="Телефон"
+											>
+										{% comment %} <span v-if="inputPhoneError" class="error">Обязательное поле</span> {% endcomment %}
+										</p>
+										
 									</div>
 									<div class="col-sm-6">
 										<span>Email</span>
@@ -267,6 +271,8 @@
 								</div>
 								<div class="block-form-footer text-center">
 									<button @click="createOrder" class="button primary">Отправить заказ</button>
+									<div v-if="formError" class="error">Заполните корректно обязательные поля!!</div>
+									<div v-if="orderItemsError" class="error">Ваш заказ пуст!! Добавьте товары в корзину!!</div>
 								</div>
 							</div>
 						</div>
@@ -311,8 +317,8 @@
 										<H3 class="notice">${ orderCreateData }$</H3>
 										<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
 									</div>
-									<div class="row margin-top-30">
-										<a href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
+									<div class="row margin-top-30" style="display: flex; justify-content: center;">
+										<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
 									</div>
 								</div>
 								<a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
@@ -368,6 +374,8 @@
 				input_porch: "{{ buyer.porch }}",
 				input_floor: "{{ buyer.floor }}",
 				pickupType: 2,
+				formError: false,
+				orderItemsError: false,
 			}
 		},
 		delimiters: ["${", "}$"],
@@ -392,7 +400,7 @@
 				this.inputPhoneError = false;
 				let regExp = /\(|\)|\ |-/g;
 				let cleanPhone = this.input_phone.replace(regExp, '');
-				if (cleanPhone.length < 11) {
+				if (cleanPhone.length < 10) {
 					this.inputPhoneError = true;
 				};
 				return this.inputPhoneError;
@@ -488,8 +496,11 @@
 			},
 			createOrder: async function(event) {
 				event.preventDefault();
+				this.orderItemsError = false;
+				this.formError = false;
 				//console.log("checking order form");
 				if (!this.orderFormIsValid()) {
+					this.formError = true;
 					return;
 				};
 				//console.log("trying to create order");
@@ -540,6 +551,8 @@
 						}
 						this.showOrderCreateModal=true;
 					});
+				} else {
+					this.orderItemsError = true;
 				};
 			},
 		},
