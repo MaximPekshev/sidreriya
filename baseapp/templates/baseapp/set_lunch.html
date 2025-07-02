@@ -258,8 +258,8 @@
 										<H3 class="notice">${ orderCreateData }$</H3>
 										<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
 									</div>
-									<div class="row margin-top-30">
-										<a href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
+									<div class="row margin-top-30" style="display: flex; justify-content: center;">
+										<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
 									</div>
 								</div>
 								<a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
@@ -342,7 +342,7 @@
 				this.inputPhoneError = false;
 				let regExp = /\(|\)|\ |-/g;
 				let cleanPhone = this.input_phone.replace(regExp, '');
-				if (cleanPhone.length < 11) {
+				if (cleanPhone.length < 8) {
 					this.inputPhoneError = true;
 				};
 				return this.inputPhoneError;
@@ -484,7 +484,7 @@
 					function replaceNumberForInput(value) {
 						let val = ''
 						//const x = value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/)
-						const val = value.replace(/\D/g, '')
+						val = value.replace(/\D/g, '')
 
 				
 						//if (!x[2] && x[1] !== '') {
