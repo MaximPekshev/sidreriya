@@ -400,7 +400,7 @@
 				this.inputPhoneError = false;
 				let regExp = /\(|\)|\ |-/g;
 				let cleanPhone = this.input_phone.replace(regExp, '');
-				if (cleanPhone.length < 10) {
+				if (cleanPhone.length < 8) {
 					this.inputPhoneError = true;
 				};
 				return this.inputPhoneError;
@@ -588,13 +588,14 @@
 				mounted(el) {
 					function replaceNumberForInput(value) {
 						let val = ''
-						const x = value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/)
+						//const x = value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/)
+						val = value.replace(/\D/g, '')
 				
-						if (!x[2] && x[1] !== '') {
-							val = x[1] === '8' ? x[1] : '8' + x[1]
-						} else {
-							val = !x[3] ? x[1] + x[2] : x[1] + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '')
-						}
+						//if (!x[2] && x[1] !== '') {
+						//	val = x[1] === '8' ? x[1] : '8' + x[1]
+						//} else {
+						//	val = !x[3] ? x[1] + x[2] : x[1] + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '')
+						//}
 				
 						return val
 					};
