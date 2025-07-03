@@ -1,5 +1,8 @@
 
 
+.block-form .n-form-item-blank {
+    padding: 0px 3px;
+}
 .single-product .wishlist-item .n-spin-body {
     padding-top: 3px;
 }

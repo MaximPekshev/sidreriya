@@ -27,8 +27,8 @@ def send_mail_on_bar(order_id):
 		order = None	
 	HOST = "mail.hosting.reg.ru"
 	sender_email = config('MAIL_USER')
-	receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
-	# receiver_email = ['m.pekshev@annasoft.ru',]
+	# receiver_email = ['info@sidreriyabelgorod.ru', 'alena-go@bk.ru', 'sidreriya.bel@gmail.com']
+	receiver_email = ['m.pekshev@annasoft.ru',]
 	password = config('MAIL_PASSWORD')
 	message = MIMEMultipart("alternative")
 	message["Subject"] = "Поступил заказ № {} от {}".format(order.order_number, order.date.strftime("%d-%m-%Y")) 

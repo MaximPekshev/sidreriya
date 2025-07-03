@@ -1,0 +1,628 @@
+{% extends 'baseapp/base.html' %}
+
+{% load static %}
+
+{% block meta_description %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}
+{{ block.super }}
+{% endblock %}
+
+{% block social %}
+{% endblock %}
+
+{% block custom_lib %}
+{% endblock %}
+
+{% block content %}
+<div id="order_form">
+	<div v-if="loadingIndicator" class="as_preloader" id="as_preloader">
+		<div class="as_preloader_row">
+			<div class="loader" id="loader-2">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<div class="main-container">
+		<div class="container">
+			<nav class="woocommerce-breadcrumb breadcrumbs">
+				<a href="{% url 'baseapp:index' %}">На главную</a>
+				Новый заказ
+			</nav>
+			
+			{% comment %} баннер - сокращенное время работы {% endcomment %}
+			{% comment %} <div class="comments-area">
+				<ol class="comment-list">
+					<li class="comment">
+						<div class="comment-item">
+							<div class="comment-content" align="center">
+								<p style="font-family: 'Bebas'; font-size: 20px">В связи с обстановкой, мы вынуждены временно<br> работать по сокращенному режиму:</p>
+							</div>
+							<div class="comment-author" style="padding-top: 20px; padding-bottom: 20px" align="center">
+								<span class="author" style="font-family: 'Bebas'; font-size: 38px">с 10:00 до 16:00</span>
+							</div>
+							<div class="comment-content" align="center">
+								<p style="font-family: 'Bebas'; font-size: 20px">Вместе с вами ждем, когда все наладится</p>
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div> {% endcomment %}
+			{% comment %} баннер - сокращенное время работы {% endcomment %}
+
+
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="block-form order-review">
+						<h3 class="form-heading">Ваш заказ</h3>
+						<table class="shop_table">
+							<thead>
+								<tr>
+									<th class="product-name">Товар</th>
+									<th class="product-total"></th>
+									<th class="product-total" style="text-align: right;">Сумма</th>
+									<th class="product-total">С собой</th>
+								</tr>
+							</thead>
+							<tbody id="order_table">
+								{% for item in cart_items %}
+								<tr>
+									<td class="product-slug" hidden>{{ item.good.slug }}</td>
+									<td class="product-name">{{ item.good }}</td>
+									<td class="product-total qty"><span class="amount">x {{ item.quantity }}</span></td>
+									<td class="product-total summ" style="text-align: right;"><span class="amount">&#8381 {{ item.summ }}</span></td>
+									{% if item.good.category.name == 'Сертификаты' or item.good.name == 'Дружеский обед' %}
+									<td class="product-total pickup-summ"><span class="amount">&#8381 {{ item.summ }}</span></td>
+									{% else %}
+									<td class="product-total pickup-summ"><span class="amount">&#8381 {{ item.discount_summ }}</span></td>
+									{% endif %}
+								</tr>
+								{% endfor %}
+							</tbody>
+							<tfoot>
+								<tr class="order-total">
+									<th>Итого</th>
+									<th></th>
+									<td style="text-align: right;"><strong><span class="amount">&#8381 {{ cart.summ }}</span></strong></td>
+									<td><strong><span class="amount">&#8381 {{ cart.discount_summ }}</span></strong></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					{% comment %} <p>
+						Стоимость вашего заказа указана без скидок!
+					</p> {% endcomment %}
+					<p>	
+						На данный момент действуют акции при самовывозе:<br> -25% на весь сидр<br> -20% на основное меню<br>
+					</p>
+					<p>
+						Скидка будет применена по факту подтверждения заказа нашими барменами.
+					</p>
+					<p>
+						<a href="{% url 'baseapp:delivery' %}"> О нашей доставке </a>
+					</p>
+				</div>
+				<div class="col-sm-6">
+					<div class="block-form">
+						<div class="panel" style="border-bottom-style: none;">
+							<div class="" role="tab" id="headingOne-as">
+								<h3 class="form-heading">Форма заказа</h3></a>
+							</div>
+							<div class="as-order-form">
+								<div class="row">
+									<div class="col-sm-6 margin-bottom-20">
+										<div class="custom-control custom-radio margin-left-10">
+											<input v-model="orderType" type="radio" id="order_type_1" class="custom-control-input" value="1">
+											<label class="custom-control-label" for="order_type_1">Доставка</label>
+										</div>
+										<div class="custom-control custom-radio margin-left-10">
+											<input  v-model="orderType" type="radio" id="order_type_2" class="custom-control-input" value="2">
+											<label class="custom-control-label" for="order_type_2">Самовывоз</label>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="custom-control custom-radio margin-left-10">
+											<input type="radio" @change="checkInputTime" v-model="cookTimeType" id="cookTimeType1" class="custom-control-input" value="1">
+											<label class="custom-control-label" for="cookTimeType1">Как можно скорее</label>
+										</div>
+										<div class="custom-control custom-radio wishlist-form margin-left-10">
+											<input type="radio" @change="checkInputTime" v-model="cookTimeType" id="cookTimeType2" class="custom-control-input margin-bottom-30" v-model="cookTimeType" id="cookTimeType2" value="2">
+											<label class="custom-control-label" for="cookTimeType2">Выбрать время</label>
+											<input :class="{ validationError : inputTimeError }" :disabled="cookTimeType==1" type="time" @input="checkInputTime" id="deliv_time" name="input_time" class="select-option margin-left-30" :min="minDate" :max="maxDate" v-model="inputTime">
+										</div>
+									</div>
+									<p style="color: #ff7575; text-align: center;" v-if="inputTimeError">Выберите корректное время доставки!</p>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<span>Имя *</span>
+										<p><input 
+											@input="checkInputName" 
+											:class="{ validationError: inputNameError }"  
+											type="text" 
+											name="input_name" 
+											v-model="input_name" 
+											placeholder="Имя" 
+											value="{{ buyer.first_name }}"
+											>
+										</p>
+									</div>
+									<div class="col-sm-6">
+										<span>Фамилия</span>
+										<p><input 
+											type="text" 
+											name="input_last_name" 
+											v-model="input_last_name"
+											placeholder="Фамилия" 
+										></p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<span>Телефон *</span>
+										<p>
+											<input
+												v-phone
+												@input="checkInputPhone" 
+												:class="{ validationError: inputPhoneError }" 
+												type="text" name="input_phone" 
+												v-model="input_phone" 
+												placeholder="Телефон"
+											>
+										{% comment %} <span v-if="inputPhoneError" class="error">Обязательное поле</span> {% endcomment %}
+										</p>
+										
+									</div>
+									<div class="col-sm-6">
+										<span>Email</span>
+										<p><input 
+											v-model="input_email" 
+											@input="checkInputEmail"
+											:class="{ validationError: inputEmailError }"
+											name="input_email" 
+											type="text" 
+											placeholder="Email" 
+										></p>
+									</div>
+								</div>
+								<div class="delivery-address-info" v-if="orderType==1">
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Нас. пункт *</span>
+											<p><input 
+												type="text" 
+												name="input_locality"
+												v-model="input_locality"
+												placeholder="Нас. пункт" 
+												@input="checkInputLocality"
+												:class="{ validationError: input_localityError }"
+											></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Улица *</span>
+											<p><input 
+												type="text" 
+												v-model="input_street" 
+												name="input_street" 
+												placeholder="Улица"
+												@input="checkInputStreet"
+												:class="{ validationError: input_streetError }"
+											></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Дом *</span>
+											<p><input 
+												type="text" 
+												v-model="input_house" 
+												name="input_house" 
+												placeholder="Дом"
+												@input="checkInputHouse"
+												:class="{ validationError: input_houseError }"
+											></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Квартира</span>
+											<p><input 
+												type="text" 
+												v-model="input_apartments" 
+												name="input_apartments"
+												placeholder="Кв."
+											></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<span>Подъезд</span>
+											<p><input
+												type="text" 
+												name="input_porch"
+												v-model="input_porch" 
+												placeholder="Подъезд" 
+											></p>
+										</div>
+										<div class="col-sm-6">
+											<span>Этаж</span>
+											<p><input 
+												type="text" 
+												name="input_floor" 
+												v-model="input_floor"
+												placeholder="Этаж"
+											></p>
+										</div>
+									</div>
+								</div>
+								<div class="row margin-bottom-20" v-if="orderType==2">
+									<div class="col-sm-12">
+										<div class="custom-control custom-radio" style="padding-left: 10px">
+											<input type="radio" v-model="pickupType" id="pickupLocation2" class="custom-control-input" value="2">
+											<label class="custom-control-label" for="pickupLocation2">Заберу из Сидрерии на Костюкова</label>
+										</div>
+										<div class="custom-control custom-radio" style="padding-left: 10px">
+											<input type="radio" v-model="pickupType" id="pickupLocation1" class="custom-control-input"  value="1">
+											<label class="custom-control-label" for="pickupLocation1">Заберу из Сидрерии на Везелке</label>
+										</div>
+									</div>
+								</div>
+								<div class="block-form-footer text-center">
+									<button @click="createOrder" class="button primary">Отправить заказ</button>
+									<div v-if="formError" class="error">Заполните корректно обязательные поля!!</div>
+									<div v-if="orderItemsError" class="error">Ваш заказ пуст!! Добавьте товары в корзину!!</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<p style="margin-left: 20px;">
+						Совершая заказ вы соглашаетесь с <a href="{% url 'baseapp:delivery' %}">условиями  доставки</a>.<br> 
+					</p>
+					<strong><p style="margin-left: 20px;">	
+						Часы работы:
+					</p></strong>
+					<div class="row">
+						<p class="col-xs-5" style="margin-left: 20px;">	
+							Костюкова:<br>
+							Вс-Чт : 9-00/0-00<br> 
+							Пт-Сб : 9-00/2-00
+						</p>
+						<p class="col-xs-5" style="margin-left: 20px;">	
+							Левобережная:<br>
+							Пн-Чт : 11-00/0-00<br> 
+							Пт : 11-00/2-00<br>
+							Сб : 14-00/2-00<br>
+							Вс : 14-00/0-00<br>
+						</p>
+					</div>
+					<p style="margin-left: 20px;">	
+						За 30 минут до закрытия заведения прием заказов прекращается!
+					</p>
+				</div>
+			</div>
+		</div>	
+	</div>
+	<transition name="orderCreateResponseModal">
+		<div v-show="showOrderCreateModal" v-cloak>
+			<div class="modal-mask">
+				<div class="modal-wrapper">
+				  <div class="modal-container container">
+					<div class="row"> 
+						<div class="col-xs-12 col-md-6 col-md-offset-3">
+							<div v-if="orderCreateMessage" class="white-popup" style="width: auto;">
+								<div class="kt-popup-newsletter">
+									<div class="popup-title">
+										<H3 class="notice">${ orderCreateData }$</H3>
+										<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
+									</div>
+									<div class="row margin-top-30" style="display: flex; justify-content: center;">
+										<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
+									</div>
+								</div>
+								<a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
+							</div>
+						</div>
+					</div> 
+				  </div>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div>
+
+{% endblock %}
+
+{% block magnific_popup %}
+{% endblock %}
+
+{% block custom_script %}
+<script type='text/javascript'>
+	axios.defaults.xsrfCookieName = 'csrftoken';
+	axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+</script>
+
+<script type='text/javascript'>
+	const OrderForm = {
+		data() {
+			return {
+				showOrderCreateModal: false,
+				orderCreateMessage: "",
+				orderCreateData: "",
+				loadingIndicator: false,
+				orderType: 1,
+				cookTimeType: 1,
+				inputTime: "{{ min_time }}",
+				inputTimeError: false,
+				min_time: "{{ min_time }}",
+				max_time: "{{ max_time }}",
+				input_name: "{{ buyer.first_name }}",
+				inputNameError: false,
+				input_last_name: "{{ buyer.last_name }}",
+				input_phone: "{{ buyer.phone }}",
+				inputPhoneError: false,
+				input_email: "{{ buyer.email }}",
+				inputEmailError: false,
+				input_locality: ("{{ buyer.locality }}") ? "{{ buyer.locality }}" : "Белгород",
+				input_localityError: false,
+				input_street: "{{ buyer.street }}",
+				input_streetError: false,
+				input_house: "{{ buyer.house }}",
+				input_houseError: false,
+				input_apartments: "{{ buyer.apartments }}",
+				input_porch: "{{ buyer.porch }}",
+				input_floor: "{{ buyer.floor }}",
+				pickupType: 2,
+				formError: false,
+				orderItemsError: false,
+			}
+		},
+		delimiters: ["${", "}$"],
+		methods: {
+			checkInputTime: function () {
+				this.inputTimeError = false;
+				if (this.cookTimeType==2) {
+					if (!this.inputTime || this.inputTime<this.min_time || this.inputTime>this.max_time) {
+						this.inputTimeError = true;
+					};
+				}
+				return this.inputTimeError;
+			},
+			checkInputName: function () {
+				this.inputNameError = false;
+				if (!this.input_name) {
+					this.inputNameError = true;
+				};
+				return this.inputNameError;
+			},
+			checkInputPhone: function () {
+				this.inputPhoneError = false;
+				let regExp = /\(|\)|\ |-/g;
+				let cleanPhone = this.input_phone.replace(regExp, '');
+				if (cleanPhone.length < 8) {
+					this.inputPhoneError = true;
+				};
+				return this.inputPhoneError;
+			},
+			checkInputEmail: function () {
+				this.inputEmailError = false;
+				let regExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+				if (!this.input_email == "") {
+					if (!regExp.test(this.input_email)) {
+						this.inputEmailError = true;
+					};
+				};
+				return this.inputEmailError;
+			},
+			checkInputLocality: function () {
+				this.input_localityError = false;
+				if (!this.input_locality) {
+					this.input_localityError = true;
+				};
+				return this.input_localityError;
+			},
+			checkInputStreet: function () {
+				this.input_streetError = false;
+				if (!this.input_street) {
+					this.input_streetError = true;
+				};
+				return this.input_streetError;
+			},
+			checkInputHouse: function () {
+				this.input_houseError = false;
+				if (!this.input_house) {
+					this.input_houseError = true;
+				};
+				return this.input_houseError;
+			},
+			orderFormIsValid: function () {
+				this.checkInputName();this.checkInputPhone();this.checkInputEmail();
+				if (this.orderType == 1) {
+					this.checkInputLocality();this.checkInputStreet();this.checkInputHouse();
+				};
+				if (this.cookTimeType==2) {
+					this.checkInputTime();
+				}
+				let formChecked = true;
+				if (this.input_qtyError || this.inputNameError || this.inputPhoneError || this.inputEmailError) {
+					formChecked = false;
+				};
+				if (this.orderType == 1) {
+					if (this.input_localityError || this.input_streetError || this.input_houseError) {
+						formChecked = false;
+					};
+				};
+				if (this.cookTimeType==2) {
+					if ( this.inputTimeError ) {
+						formChecked = false;
+					};
+				}
+				return formChecked;
+			},
+			getOrderItems: function () {
+				let data = {};
+				let order_table = document.getElementById("order_table");
+				let order_list = order_table.querySelectorAll("tr");
+				order_list.forEach((element) => {
+					let order_item = element.querySelectorAll("td");
+					let productSlug = "";
+					let qty = "";
+					let summ = "";
+					let pickupSumm = "";
+					order_item.forEach((td) => {
+						if (td.classList.contains("product-slug")) {
+							productSlug = td.innerHTML;
+						};
+						if (td.classList.contains("qty")) {
+							qty = td.querySelectorAll("span")[0].innerText.split(" ")[1].split(",")[0];
+						};
+						if (td.classList.contains("summ")) {
+							summ = td.querySelectorAll("span")[0].innerText.split(" ")[1];
+						};
+						if (td.classList.contains("pickup-summ")) {
+							pickupSumm = td.querySelectorAll("span")[0].innerText.split(" ")[1];
+						};
+					});
+					if (productSlug) {
+						data[productSlug] = {
+							"qty": qty,
+							"summ": summ,
+							"pickupSumm": pickupSumm,
+						};
+					};
+				});
+				return data;
+			},
+			createOrder: async function(event) {
+				event.preventDefault();
+				this.orderItemsError = false;
+				this.formError = false;
+				//console.log("checking order form");
+				if (!this.orderFormIsValid()) {
+					this.formError = true;
+					return;
+				};
+				//console.log("trying to create order");
+				let orderItems = this.getOrderItems();
+				if (Object.keys(orderItems).length > 0) {
+					this.orderCreateMessage = "";
+					this.orderCreateData = "";
+					this.loadingIndicator = true;
+					let data = {
+						"orderType": this.orderType,
+						"input_qty": this.input_qty,
+						"input_comment": this.input_comment,
+						"input_name": this.input_name,
+						"input_last_name": this.input_last_name,
+						"input_phone": this.input_phone,
+						"cookTimeType": this.cookTimeType,
+						"order_items_list": JSON.stringify(orderItems),
+						"input_email": this.input_email,
+					};
+					if (this.orderType==1) {
+						data["input_address"] = this.deliveryAddress;
+					} else if (this.orderType==2) {
+						data["pickupType"] = this.pickupType;
+					};
+					if (this.cookTimeType==2) {
+						data["inputTime"] = this.inputTime;
+					};
+					await axios({
+						method: 'post',
+						mode: 'same-origin',
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+						url: '/order/create/',
+						data: data,
+					}).then((response) => {
+						this.loadingIndicator = false;
+						this.orderCreateData = response.data.data;
+						this.orderCreateMessage = response.data.message;
+						this.showOrderCreateModal= true;
+					}).catch((error) => {
+						console.log(error);
+						this.loadingIndicator = false;
+						if (error.data.error) {
+							this.orderCreateData = error.data.error;
+						} else {
+							this.orderCreateData = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
+						}
+						this.showOrderCreateModal=true;
+					});
+				} else {
+					this.orderItemsError = true;
+				};
+			},
+		},
+		computed: {
+			deliveryAddress() {
+				let address = "";
+				if (this.input_locality) {
+					address += this.input_locality;
+				};
+				if (this.input_street) {
+					address += ", " + this.input_street + " ул.";
+				};
+				if (this.input_house) {
+					address += ", д " + this.input_house;
+				};
+				if (this.input_apartments) {
+					address += ", кв " + this.input_apartments;
+				};
+				if (this.input_porch) {
+					address += ", подъезд " + this.input_porch;
+				};
+				if (this.input_floor) {
+					address += ", этаж " + this.input_floor;
+				};
+				if (address != "") {
+					address += "."
+				};
+				return address;
+			},
+		},
+		directives: {
+			phone: {
+				mounted(el) {
+					function replaceNumberForInput(value) {
+						let val = ''
+						//const x = value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/)
+						val = value.replace(/\D/g, '')
+				
+						//if (!x[2] && x[1] !== '') {
+						//	val = x[1] === '8' ? x[1] : '8' + x[1]
+						//} else {
+						//	val = !x[3] ? x[1] + x[2] : x[1] + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '')
+						//}
+				
+						return val
+					};
+					function replaceNumberForPaste(value) {
+						const r = value.replace(/\D/g, '')
+						let val = r
+						//if (val.charAt(0) === '7') {
+						//  val = '8' + val.slice(1)
+						//}
+						return replaceNumberForInput(val)
+					};
+					el.oninput = function(e) {
+						if (!e.isTrusted) {
+							return
+						}
+						this.value = replaceNumberForInput(this.value)
+					};
+					el.onpaste = function() {
+						setTimeout(() => {
+							const pasteVal = el.value
+							this.value = replaceNumberForPaste(pasteVal)
+						})
+					};
+				}
+			}
+		},
+	}
+	Vue.createApp(OrderForm).mount('#order_form')
+</script>	
+{% endblock %}
