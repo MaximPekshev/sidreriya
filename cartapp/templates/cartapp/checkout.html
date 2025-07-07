@@ -354,7 +354,7 @@
 			const formRef = Vue.ref(null);
 			const showTimePicker = Vue.ref(false);
 			const showDeliveryAddressFields = Vue.ref(true);
-			const showOrderCreateModal = Vue.ref(false);
+			//const showOrderCreateModal = Vue.ref(false);
 			const loadingIndicator = Vue.ref(false);
 			const orderCreateMessage = Vue.ref("");
 			const orderCreateData = Vue.ref("");
@@ -420,6 +420,32 @@
 				return address;
 			};
 
+			const sendOrder = (data) => {
+				axios({
+					method: 'post',
+					mode: 'same-origin',
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+					url: '/order/create/',
+					data: data,
+				}).then((response) => {
+					loadingIndicator.value = false;
+					orderCreateData.value = response.data.data;
+					orderCreateMessage.value = response.data.message;
+					//showOrderCreateModal.value = true;
+				}).catch((error) => {
+					console.log(error);
+					loadingIndicator.value = false;
+					if (error.data.error) {
+						orderCreateData.value = error.data.error;
+					} else {
+						orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
+					}
+					//showOrderCreateModal.value = true;
+				});
+			};
+
 			const createNewOrder = (e) => {
 				e.preventDefault();
 				formRef.value?.validate(
@@ -448,29 +474,7 @@
 									: data["inputTime"] = null;
 							};
 							console.log("Submitting order with data:", data);
-							axios({
-								method: 'post',
-								mode: 'same-origin',
-								headers: {
-									'Content-Type': 'multipart/form-data',
-								},
-								url: '/order/create/',
-								data: data,
-							}).then((response) => {
-								loadingIndicator.value = false;
-								orderCreateData.value = response.data.data;
-								orderCreateMessage.value = response.data.message;
-								showOrderCreateModal.value = true;
-							}).catch((error) => {
-								console.log(error);
-								loadingIndicator.value = false;
-								if (error.data.error) {
-									orderCreateData.value = error.data.error;
-								} else {
-									orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
-								}
-								showOrderCreateModal.value = true;
-							});
+							sendOrder(data);
 						} else {
 							console.log("Validation error:", error);
 						}
@@ -483,7 +487,7 @@
 				formRef,	
 				showTimePicker,
 				showDeliveryAddressFields,
-				showOrderCreateModal,
+				//showOrderCreateModal,
 				orderCreateMessage,
 				orderCreateData,
 				createNewOrder,
@@ -543,22 +547,18 @@
 						message: "Введите номер дома",
 					},
 					radioGroupValue: {
-						required: true,
 						trigger: 'change',
 						message: 'Выберите тип доставки',
 					},
 					radioDeliveryTimeValue: {
-						required: true,
 						trigger: 'change',
 						message: 'Выберите время доставки',
 					},
 					timePickerValue: {
-						required: true,
 						trigger: ["blur", "change"],
 						message: "Выберите время доставки",
 					},
 					radioSelfPickupType: {
-						required: true,
 						trigger: 'change',
 						message: "Выберите тип самовывоза",
 					},
