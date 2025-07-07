@@ -267,7 +267,7 @@
 										<n-spin size="medium" />
 									</n-space>
 								</button>
-								<button v-else @click.prevent="createNewOrder" class="button primary">
+								<button v-else @click="createNewOrder" class="button primary">
 									Отправить заказ
 								</button>
 							</div>
@@ -420,58 +420,62 @@
 				return address;
 			};
 
-			const createNewOrder = () => {
-				formRef.value.validate()
-					.then((valid) => {
-						console.log("Form is valid:", valid);
-						loadingIndicator.value = true;
-						orderCreateData.value = "";
-						orderCreateMessage.value = "";
-						let data = {
-							"orderType": formRef.value.model.radioDeliveryValue,
-							"input_name": formRef.value.model.name,
-							"input_phone": formRef.value.model.phone,
-							"cookTimeType": formRef.value.model.radioDeliveryTimeValue,
-							"order_items_list": JSON.stringify(getOrderItems()),
-							"input_email": formRef.value.model.email,
-						};
-						if (formRef.value.model.radioDeliveryValue == "1") {
-							data["input_address"] = deliveryAddress();
-						} else if (formRef.value.model.radioDeliveryValue == "2") {
-							data["pickupType"] = formRef.value.model.radioSelfPickupType;
-						};
-						if (formRef.value.model.radioDeliveryTimeValue == "2") {
-							formRef.value.model.timePickerValue
-								? data["inputTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
-								: data["inputTime"] = null;
-						};
-						console.log("Submitting order with data:", data);
-						axios({
-							method: 'post',
-							mode: 'same-origin',
-							headers: {
-								'Content-Type': 'multipart/form-data',
-							},
-							url: '/order/create/',
-							data: data,
-						}).then((response) => {
-							loadingIndicator.value = false;
-							orderCreateData.value = response.data.data;
-							orderCreateMessage.value = response.data.message;
-							showOrderCreateModal.value = true;
-						}).catch((error) => {
-							console.log(error);
-							loadingIndicator.value = false;
-							if (error.data.error) {
-								orderCreateData.value = error.data.error;
-							} else {
-								orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
-							}
-							showOrderCreateModal.value = true;
-						});
-					}).catch((error) => {
-						console.log("Validation error:", error);
-					});
+			const createNewOrder = (e) => {
+				e.preventDefault();
+				formRef.value?.validate(
+					(errors) => {
+						if (!errors) {
+							console.log("Form is valid:");
+							loadingIndicator.value = true;
+							orderCreateData.value = "";
+							orderCreateMessage.value = "";
+							let data = {
+								"orderType": formRef.value.model.radioDeliveryValue,
+								"input_name": formRef.value.model.name,
+								"input_phone": formRef.value.model.phone,
+								"cookTimeType": formRef.value.model.radioDeliveryTimeValue,
+								"order_items_list": JSON.stringify(getOrderItems()),
+								"input_email": formRef.value.model.email,
+							};
+							if (formRef.value.model.radioDeliveryValue == "1") {
+								data["input_address"] = deliveryAddress();
+							} else if (formRef.value.model.radioDeliveryValue == "2") {
+								data["pickupType"] = formRef.value.model.radioSelfPickupType;
+							};
+							if (formRef.value.model.radioDeliveryTimeValue == "2") {
+								formRef.value.model.timePickerValue
+									? data["inputTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
+									: data["inputTime"] = null;
+							};
+							console.log("Submitting order with data:", data);
+							axios({
+								method: 'post',
+								mode: 'same-origin',
+								headers: {
+									'Content-Type': 'multipart/form-data',
+								},
+								url: '/order/create/',
+								data: data,
+							}).then((response) => {
+								loadingIndicator.value = false;
+								orderCreateData.value = response.data.data;
+								orderCreateMessage.value = response.data.message;
+								showOrderCreateModal.value = true;
+							}).catch((error) => {
+								console.log(error);
+								loadingIndicator.value = false;
+								if (error.data.error) {
+									orderCreateData.value = error.data.error;
+								} else {
+									orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
+								}
+								showOrderCreateModal.value = true;
+							});
+						} else {
+							console.log("Validation error:", error);
+						}
+					}
+				);
 			};
 
 			return {
