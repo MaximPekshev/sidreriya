@@ -420,8 +420,8 @@
 				return address;
 			};
 
-			const createNewOrder = async () => {
-				await formRef.value.validate()
+			const createNewOrder = () => {
+				formRef.value.validate()
 					.then((valid) => {
 						console.log("Form is valid:", valid);
 						loadingIndicator.value = true;
