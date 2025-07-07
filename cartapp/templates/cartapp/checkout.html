@@ -20,7 +20,7 @@
 
 <div id="order_form">
 	<n-config-provider :theme-overrides="themeOverrides">
-		<div v-if="loadingIndicator" class="as_preloader" id="as_preloader">
+		{% comment %} <div v-if="loadingIndicator" class="as_preloader" id="as_preloader">
 			<div class="as_preloader_row">
 				<div class="loader" id="loader-2">
 					<span></span>
@@ -28,7 +28,7 @@
 					<span></span>
 				</div>
 			</div>
-		</div>
+		</div> {% endcomment %}
 		<div class="main-container">
 			<div class="container">
 				<nav class="woocommerce-breadcrumb breadcrumbs">
@@ -56,8 +56,18 @@
 				</div> {% endcomment %}
 				{% comment %} баннер - сокращенное время работы {% endcomment %}
 
-
-				<div class="row">
+				<div v-if="orderCreateMessage" class="white-popup" style="width: auto;">
+					<div class="kt-popup-newsletter">
+						<div class="popup-title">
+							<H3 class="notice">${ orderCreateData }$</H3>
+							<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
+						</div>
+						<div class="row margin-top-30" style="display: flex; justify-content: center;">
+							<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
+						</div>
+					</div>
+				</div>
+				<div v-else class="row">
 					<div class="col-sm-6">
 						<div class="block-form order-review">
 							<h3 class="form-heading">Ваш заказ</h3>
@@ -130,10 +140,10 @@
 											@update:value="() => showDeliveryAddressFields = !showDeliveryAddressFields"
 										>
 											<n-space vertical>
-												<n-radio value="1">
+												<n-radio value="1" :disabled="loadingIndicator">
 													Доставка
 												</n-radio>
-												<n-radio value="2">
+												<n-radio value="2" :disabled="loadingIndicator">
 													Самовывоз
 												</n-radio>
 											</n-space>
@@ -149,10 +159,10 @@
 											@update:value="() => showTimePicker = !showTimePicker"
 										>
 											<n-space vertical>
-												<n-radio value="1">
+												<n-radio value="1" :disabled="loadingIndicator">
 													Как можно скорее
 												</n-radio>
-												<n-radio value="2">
+												<n-radio value="2" :disabled="loadingIndicator">
 													Выбрать время
 												</n-radio>
 												<n-time-picker 
@@ -160,40 +170,74 @@
 													format="HH:mm" 
 													v-if="showTimePicker" 
 													placeholder="Выберите время"
+													:disabled="loadingIndicator"
 												/>
 											</n-space>
 										</n-radio-group>
 									</n-form-item-gi>
 									<n-form-item-gi span="4 m:4 l:4" label="Имя" path="name">
-										<n-input v-model:value="model.name" placeholder="Ваше имя" />
+										<n-input 
+											v-model:value="model.name" 
+											placeholder="Ваше имя" 
+											:disabled="loadingIndicator" 
+										/>
 									</n-form-item-gi>
 									<n-form-item-gi span="4 m:2 l:2" label="Телефон" path="phone">
 										<n-input 
 											v-model:value="model.phone" 
 											placeholder="Ваш номер телефона" 
 											:allow-input="onlyAllowNumber"
+											:disabled="loadingIndicator"
 										/>
 									</n-form-item-gi>
 									<n-form-item-gi span="4 m:2 l:2" label="Email" path="email">
-										<n-input v-model:value="model.email" placeholder="Ваш email" />
+										<n-input 
+											v-model:value="model.email" 
+											placeholder="Ваш email"
+											:disabled="loadingIndicator"
+										 />
 									</n-form-item-gi>	
 									<n-form-item-gi v-if="showDeliveryAddressFields" span="4 m:2 l:2" label="Населенный пункт" path="city">
-										<n-input v-model:value="model.city" placeholder="Населенный пункт" />
+										<n-input
+											v-model:value="model.city" 
+											placeholder="Населенный пункт" 
+											:disabled="loadingIndicator"
+										/>
 									</n-form-item-gi>
 									<n-form-item-gi v-if="showDeliveryAddressFields" span="4 m:2 l:2" label="Улица" path="street">
-										<n-input v-model:value="model.street" placeholder="Улица" />
+										<n-input 
+											v-model:value="model.street" 
+											placeholder="Улица"
+											:disabled="loadingIndicator"
+										/>
 									</n-form-item-gi>
 									<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Дом" path="house">
-										<n-input v-model:value="model.house" placeholder="Дом" />
+										<n-input 
+											v-model:value="model.house" 
+											placeholder="Дом"
+											:disabled="loadingIndicator" 
+										/>
 									</n-form-item-gi>
 									<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Квартира" path="apartments">
-										<n-input v-model:value="model.apartments" placeholder="Квартира" />
+										<n-input 
+											v-model:value="model.apartments" 
+											placeholder="Квартира" 
+											:disabled="loadingIndicator"
+										/>
 									</n-form-item-gi>
 									<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Подъезд" path="porch">
-										<n-input v-model:value="model.porch" placeholder="Подъезд" />
+										<n-input 
+											v-model:value="model.porch" 
+											placeholder="Подъезд" 
+											:disabled="loadingIndicator"
+										/>
 									</n-form-item-gi>
 									<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Этаж" path="floor">
-										<n-input v-model:value="model.floor" placeholder="Этаж" />
+										<n-input 
+											v-model:value="model.floor" 
+											placeholder="Этаж"
+											:disabled="loadingIndicator" 
+										/>
 									</n-form-item-gi>
 
 									<n-form-item-gi
@@ -206,10 +250,10 @@
 											name="radioSelfPickupType"
 										>
 											<n-space vertical>
-												<n-radio value="2">
+												<n-radio value="2" :disabled="loadingIndicator">
 													Заберу из Сидрерии на Костюкова
 												</n-radio>
-												<n-radio value="1">
+												<n-radio value="1" :disabled="loadingIndicator">
 													Заберу из Сидрерии на Везелке
 												</n-radio>
 											</n-space>
@@ -218,7 +262,14 @@
 								</n-grid>
 							</n-form>
 							<div class="block-form-footer text-center">
-								<button @click="createNewOrder" class="button primary">Отправить заказ</button>
+								<button v-if="loadingIndicator" disabled>
+									<n-space justify="center" align="center">
+										<n-spin size="medium" />
+									</n-space>
+								</button>
+								<button v-else @click.prevent="createNewOrder" class="button primary">
+									Отправить заказ
+								</button>
 							</div>
 						</div>
 						<p style="margin-left: 20px;">
@@ -248,7 +299,7 @@
 				</div>
 			</div>	
 		</div>
-		<transition name="orderCreateResponseModal">
+		{% comment %} <transition name="orderCreateResponseModal">
 			<div v-show="showOrderCreateModal" v-cloak>
 				<div class="modal-mask">
 					<div class="modal-wrapper">
@@ -273,7 +324,7 @@
 					</div>
 				</div>
 			</div>
-		</transition>
+		</transition> {% endcomment %}
 	</n-config-provider>
 </div>
 {% endblock %}
@@ -383,7 +434,7 @@
 							"cookTimeType": formRef.value.model.radioDeliveryTimeValue,
 							"order_items_list": JSON.stringify(getOrderItems()),
 							"input_email": formRef.value.model.email,
-						}
+						};
 						if (formRef.value.model.radioDeliveryValue == "1") {
 							data["input_address"] = deliveryAddress();
 						} else if (formRef.value.model.radioDeliveryValue == "2") {
@@ -511,69 +562,6 @@
 			}
 		},
 		delimiters: ["${", "}$"],
-		methods: {
-			getOrderItems: function () {
-				let data = {};
-				let order_table = document.getElementById("order_table");
-				let order_list = order_table.querySelectorAll("tr");
-				order_list.forEach((element) => {
-					let order_item = element.querySelectorAll("td");
-					let productSlug = "";
-					let qty = "";
-					let summ = "";
-					let pickupSumm = "";
-					order_item.forEach((td) => {
-						if (td.classList.contains("product-slug")) {
-							productSlug = td.innerHTML;
-						};
-						if (td.classList.contains("qty")) {
-							qty = td.querySelectorAll("span")[0].innerText.split(" ")[1].split(",")[0];
-						};
-						if (td.classList.contains("summ")) {
-							summ = td.querySelectorAll("span")[0].innerText.split(" ")[1];
-						};
-						if (td.classList.contains("pickup-summ")) {
-							pickupSumm = td.querySelectorAll("span")[0].innerText.split(" ")[1];
-						};
-					});
-					if (productSlug) {
-						data[productSlug] = {
-							"qty": qty,
-							"summ": summ,
-							"pickupSumm": pickupSumm,
-						};
-					};
-				});
-				return data;
-			},
-		},
-		computed: {
-			deliveryAddress() {
-				let address = "";
-				if (this.input_locality) {
-					address += this.input_locality;
-				};
-				if (this.input_street) {
-					address += ", " + this.input_street + " ул.";
-				};
-				if (this.input_house) {
-					address += ", д " + this.input_house;
-				};
-				if (this.input_apartments) {
-					address += ", кв " + this.input_apartments;
-				};
-				if (this.input_porch) {
-					address += ", подъезд " + this.input_porch;
-				};
-				if (this.input_floor) {
-					address += ", этаж " + this.input_floor;
-				};
-				if (address != "") {
-					address += "."
-				};
-				return address;
-			},
-		}
 	}
 	Vue.createApp(OrderForm).use(naive).mount('#order_form')
 </script>	

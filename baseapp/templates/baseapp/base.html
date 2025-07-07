@@ -123,16 +123,16 @@
 	
 				<div class="top-bar-right">
 					<ul class="kt-nav top-bar-menu">
-						<li class="menu-item-has-children">
+						<li class="">
 							<a href="https://www.instagram.com/sidreriya_bel/" target="_blank"><i class="fa fa-instagram"></i></a>
 						</li>
-						<li class="menu-item-has-children box-setting">
+						<li class="box-setting">
 							<a href="{% url 'show_wishlist' %}">
 								<span class="menu-icon icon flaticon-heart295"></span>
 								<span class="count">{% if wishlist %}{{ wishlist.count }} {% endif %}</span>
 							</a>
 						</li>
-						<li class="menu-item-has-children mini-cart">
+						<li class="mini-cart">
 							<a  href="{% url 'show_cart' %}">
 								<span class="menu-icon  icon flaticon-shopping-cart6"></span>
 								{% if cart %}
