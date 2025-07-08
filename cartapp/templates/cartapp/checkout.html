@@ -354,7 +354,6 @@
 			const formRef = Vue.ref(null);
 			const showTimePicker = Vue.ref(false);
 			const showDeliveryAddressFields = Vue.ref(true);
-			//const showOrderCreateModal = Vue.ref(false);
 			const loadingIndicator = Vue.ref(false);
 			const orderCreateMessage = Vue.ref("");
 			const orderCreateData = Vue.ref("");
@@ -394,6 +393,36 @@
 				return data;
 			};
 
+			const getOrderItemsObject = () => {
+				let order_table = document.getElementById("order_table");
+				let order_list = order_table.querySelectorAll("tr");
+				let items = [];
+				order_list.forEach((element) => {
+					let order_item = element.querySelectorAll("td");
+					let productSlug = "";
+					let qty = "";
+					let summ = "";
+					order_item.forEach((td) => {
+						if (td.classList.contains("product-slug")) {
+							productSlug = td.innerHTML;
+						};
+						if (td.classList.contains("qty")) {
+							qty = td.querySelectorAll("span")[0].innerText.split(" ")[1].split(",")[0];
+						};
+						if (td.classList.contains("summ")) {
+							summ = td.querySelectorAll("span")[0].innerText.split(" ")[1];
+						};
+					});
+					items.push( {
+						"good_id": productSlug,
+						"quantity": qty,
+						"price": summ/ qty,
+						"summ": summ,
+					});
+				});
+				return items;
+			}
+
 			const deliveryAddress = () => {
 				let address = "";
 				if (formRef.value.model.city) {
@@ -421,29 +450,30 @@
 			};
 
 			const sendOrder = (data) => {
-				axios({
-					method: 'post',
-					mode: 'same-origin',
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					},
-					url: '/order/create/',
-					data: data,
-				}).then((response) => {
-					loadingIndicator.value = false;
-					orderCreateData.value = response.data.data;
-					orderCreateMessage.value = response.data.message;
-					//showOrderCreateModal.value = true;
-				}).catch((error) => {
-					console.log(error);
-					loadingIndicator.value = false;
-					if (error.data.error) {
-						orderCreateData.value = error.data.error;
-					} else {
-						orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
-					}
-					//showOrderCreateModal.value = true;
-				});
+				axios.defaults.xsrfCookieName = 'csrftoken'
+				axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+				loadingIndicator.value = true;
+				setTimeout(() => {
+					axios({
+						method: 'post',
+						url: '/api/v1/order/',
+						data: data,
+					}).then((response) => {
+						//console.log("Order created successfully:", response);
+						orderCreateData.value = response.data.data;
+						orderCreateMessage.value = response.data.message;
+					}).catch((error) => {
+						console.log(error);
+						if (error.data.error) {
+							orderCreateData.value = error.data.error;
+						} else {
+							orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
+						}
+					}).finally(() => {
+						loadingIndicator.value = false;
+					});
+				}, 500);
+				
 			};
 
 			const createNewOrder = (e) => {
@@ -451,30 +481,31 @@
 				formRef.value?.validate(
 					(errors) => {
 						if (!errors) {
-							console.log("Form is valid:");
-							loadingIndicator.value = true;
+							//console.log("Form is valid:");
 							orderCreateData.value = "";
 							orderCreateMessage.value = "";
 							let data = {
 								"orderType": formRef.value.model.radioDeliveryValue,
-								"input_name": formRef.value.model.name,
-								"input_phone": formRef.value.model.phone,
+								"first_name": formRef.value.model.name,
+								"phone": formRef.value.model.phone,
 								"cookTimeType": formRef.value.model.radioDeliveryTimeValue,
-								"order_items_list": JSON.stringify(getOrderItems()),
-								"input_email": formRef.value.model.email,
+								"email": formRef.value.model.email,
+								"items": getOrderItemsObject()
 							};
 							if (formRef.value.model.radioDeliveryValue == "1") {
-								data["input_address"] = deliveryAddress();
+								data["address"] = deliveryAddress();
 							} else if (formRef.value.model.radioDeliveryValue == "2") {
 								data["pickupType"] = formRef.value.model.radioSelfPickupType;
 							};
 							if (formRef.value.model.radioDeliveryTimeValue == "2") {
 								formRef.value.model.timePickerValue
-									? data["inputTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
-									: data["inputTime"] = null;
+									? data["cookTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
+									: data["cookTime"] = null;
 							};
-							console.log("Submitting order with data:", data);
-							sendOrder(data);
+							//console.log("Submitting order with data:", data);
+							sendOrder({
+								"data": data,
+							});
 						} else {
 							console.log("Validation error:", error);
 						}
@@ -487,7 +518,6 @@
 				formRef,	
 				showTimePicker,
 				showDeliveryAddressFields,
-				//showOrderCreateModal,
 				orderCreateMessage,
 				orderCreateData,
 				createNewOrder,

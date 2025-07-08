@@ -568,3 +568,124 @@ def order_add(request):
 			}
 
 			return render(request, 'orderapp/order_created.html', context)
+
+from rest_framework.views import APIView
+import logging
+from .serializers import SimpleOrderSerializer
+from rest_framework.response import Response
+
+logger = logging.getLogger(__name__)
+
+def clear_cart(request):
+	cart = cart_object(request)
+	cart_items = Cart_Item.objects.filter(cart=cart)
+	for item in cart_items:
+		item.delete()
+	cart.summ = 0
+	cart.save()
+
+# Вспомогательная функция для получения объекта Good по его slug (good_id)
+def good_by_id(good_id):
+	return Good.objects.filter(slug=good_id).first()
+
+def handle_items_order(items_list, order):
+	# Проходим по каждому товару в списке товаров заказа
+	for item_dir in items_list:
+		# Создаем объект Order_Item для текущего заказа
+		item_order = Order_Item(order=order)
+		# Получаем товар по good_id, если он есть
+		key_name = "good_id"
+		if key_name in item_dir:
+			good_id = item_dir.get(key_name)
+			item_order.good = None if good_id is None else good_by_id(good_id=good_id)
+		# Устанавливаем количество товара, если указано
+		key_name = "quantity"
+		if key_name in item_dir:
+			setattr(item_order, key_name, item_dir.get(key_name))
+		# Устанавливаем цену товара, если указано
+		key_name = "price"
+		if key_name in item_dir:
+			setattr(item_order, key_name, item_dir.get(key_name))
+		# Устанавливаем сумму по товару, если указано
+		key_name = "summ"
+		if key_name in item_dir:
+			setattr(item_order, key_name, item_dir.get(key_name))
+		# Сохраняем объект Order_Item в базе данных
+		item_order.save()
+
+def handle_order(order, user):
+	with transaction.atomic():
+		# Создаем новый объект заказа
+		orderObject = Order.objects.create()
+		# Если пользователь авторизован — ищем или создаем покупателя
+		if user.is_authenticated:
+			try:
+				buyer = Buyer.objects.get(user=user)
+			except Buyer.DoesNotExist:
+				buyer = Buyer.objects.create(
+					user = user,
+					first_name = order.first_name,
+					phone = order.phone,
+					)
+				buyer.save()	
+			orderObject.buyer = buyer
+		# Получаем список товаров из заказа и добавляем их к заказу
+		items = order.get("items")
+		handle_items_order(items, order=orderObject)
+		# Заполняем основные поля заказа
+		orderObject.first_name = order.get("first_name")
+		orderObject.phone = order.get("phone")
+		# Обработка времени приготовления
+		cookTimeType = order.get("cookTimeType")
+		if cookTimeType == "1":
+			orderObject.cook_time = "Как можно скорее"
+		elif cookTimeType == "2":
+			orderObject.cook_time = order.get("cookTime")
+		# Обработка типа заказа (доставка или самовывоз)
+		orderType = order.get("orderType")
+		if orderType == "1":
+			orderObject.address = order.get("address")
+		elif orderType == "2":
+			pickupType = order.get("pickupType")
+			if pickupType == "1":
+				orderObject.address = "Самовывоз - ул. Костюкова 36Г, Белгород"
+			elif pickupType == "2":
+				orderObject.address = "Самовывоз - ул. Левобережная 22А, Белгород"
+		# Сохраняем заказ
+		orderObject.save()
+		return orderObject
+
+class OrderView(APIView):
+	# Обработка POST-запроса для создания заказа
+	def post(self, request):
+		response = {"data": []}
+		# Получаем данные заказа из запроса
+		data = request.data.get("data")
+		if not data:
+			# Если данных нет — возвращаем пустой ответ
+			return Response(response)
+		logger.info({"order_data": data})
+		# Сериализуем данные заказа для валидации
+		serializer = SimpleOrderSerializer(data=data)
+		if serializer.is_valid(raise_exception=True):
+			# Если данные валидны — создаём заказ
+			order = handle_order(order=data, user=request.user)
+			# Если указан email — отправляем письмо покупателю
+			if order.email:
+				send_mail_to_buyer(order.id, order.email)
+			# Отправляем письмо сотрудникам бара
+			send_mail_on_bar(order.id)
+			# Очищаем корзину пользователя
+			clear_cart(request)
+			return JsonResponse(
+				data={
+					'data': 'Заказ {} от {} успешно создан!'.format(order.order_number, order.date.strftime("%d-%m-%y %H:%m")),
+					'message': 'В ближайшее время с Вами свяжется наш сотрудник для уточнения деталей.'
+				},
+				status=200
+			)
+		else:
+			# Если данные невалидны — логируем ошибку и возвращаем ошибку клиенту
+			logger.error({"order_error": serializer.errors})
+			response["error"] = "Ошибка валидации данных заказа"
+			return JsonResponse(data=response, status=400)

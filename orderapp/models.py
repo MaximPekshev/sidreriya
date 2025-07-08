@@ -16,7 +16,7 @@ class Order_Item(models.Model):
 		return str(self.id)
 
 	def save(self, *args,  **kwargs):
-		self.summ = self.price * self.quantity
+		self.summ = Decimal(self.price) * Decimal(self.quantity)
 		super(Order_Item, self).save(*args, **kwargs)
 		self.order.save()
 
