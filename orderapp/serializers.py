@@ -20,4 +20,4 @@ class SimpleOrderSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, required=False, allow_blank=True, allow_null=True)
     address = serializers.CharField(max_length=255, required=False, allow_blank=True, allow_null=True)
     cookTime = serializers.TimeField(format="H%:s%", required=False)
-    pickupType = serializers.CharField(max_length=1, required=False)
+    pickupType = serializers.CharField(max_length=1, required=False) 

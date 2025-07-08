@@ -20,15 +20,6 @@
 
 <div id="order_form">
 	<n-config-provider :theme-overrides="themeOverrides">
-		{% comment %} <div v-if="loadingIndicator" class="as_preloader" id="as_preloader">
-			<div class="as_preloader_row">
-				<div class="loader" id="loader-2">
-					<span></span>
-					<span></span>
-					<span></span>
-				</div>
-			</div>
-		</div> {% endcomment %}
 		<div class="main-container">
 			<div class="container">
 				<nav class="woocommerce-breadcrumb breadcrumbs">
@@ -55,19 +46,7 @@
 					</ol>
 				</div> {% endcomment %}
 				{% comment %} баннер - сокращенное время работы {% endcomment %}
-
-				<div v-if="orderCreateMessage" class="white-popup" style="width: auto;">
-					<div class="kt-popup-newsletter">
-						<div class="popup-title">
-							<H3 class="notice">${ orderCreateData }$</H3>
-							<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
-						</div>
-						<div class="row margin-top-30" style="display: flex; justify-content: center;">
-							<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
-						</div>
-					</div>
-				</div>
-				<div v-else class="row">
+				<div class="row">
 					<div class="col-sm-6">
 						<div class="block-form order-review">
 							<h3 class="form-heading">Ваш заказ</h3>
@@ -299,7 +278,7 @@
 				</div>
 			</div>	
 		</div>
-		{% comment %} <transition name="orderCreateResponseModal">
+		<transition name="orderCreateResponseModal">
 			<div v-show="showOrderCreateModal" v-cloak>
 				<div class="modal-mask">
 					<div class="modal-wrapper">
@@ -324,7 +303,7 @@
 					</div>
 				</div>
 			</div>
-		</transition> {% endcomment %}
+		</transition>
 	</n-config-provider>
 </div>
 {% endblock %}
@@ -357,41 +336,7 @@
 			const loadingIndicator = Vue.ref(false);
 			const orderCreateMessage = Vue.ref("");
 			const orderCreateData = Vue.ref("");
-
-			const getOrderItems = () => {
-				let data = {};
-				let order_table = document.getElementById("order_table");
-				let order_list = order_table.querySelectorAll("tr");
-				order_list.forEach((element) => {
-					let order_item = element.querySelectorAll("td");
-					let productSlug = "";
-					let qty = "";
-					let summ = "";
-					let pickupSumm = "";
-					order_item.forEach((td) => {
-						if (td.classList.contains("product-slug")) {
-							productSlug = td.innerHTML;
-						};
-						if (td.classList.contains("qty")) {
-							qty = td.querySelectorAll("span")[0].innerText.split(" ")[1].split(",")[0];
-						};
-						if (td.classList.contains("summ")) {
-							summ = td.querySelectorAll("span")[0].innerText.split(" ")[1];
-						};
-						if (td.classList.contains("pickup-summ")) {
-							pickupSumm = td.querySelectorAll("span")[0].innerText.split(" ")[1];
-						};
-					});
-					if (productSlug) {
-						data[productSlug] = {
-							"qty": qty,
-							"summ": summ,
-							"pickupSumm": pickupSumm,
-						};
-					};
-				});
-				return data;
-			};
+			const showOrderCreateModal = Vue.ref(false);
 
 			const getOrderItemsObject = () => {
 				let order_table = document.getElementById("order_table");
@@ -444,7 +389,7 @@
 					address += ", этаж " + formRef.value.model.floor;
 				};
 				if (address != "") {
-					address += "."
+					address += ".";
 				};
 				return address;
 			};
@@ -453,15 +398,18 @@
 				axios.defaults.xsrfCookieName = 'csrftoken'
 				axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 				loadingIndicator.value = true;
+				orderCreateData.value = "";
+				orderCreateMessage.value = "";
+				showOrderCreateModal.value = false;
 				setTimeout(() => {
 					axios({
 						method: 'post',
 						url: '/api/v1/order/',
 						data: data,
 					}).then((response) => {
-						//console.log("Order created successfully:", response);
 						orderCreateData.value = response.data.data;
 						orderCreateMessage.value = response.data.message;
+						showOrderCreateModal.value = true;
 					}).catch((error) => {
 						console.log(error);
 						if (error.data.error) {
@@ -469,6 +417,7 @@
 						} else {
 							orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
 						}
+						showOrderCreateModal.value = true;
 					}).finally(() => {
 						loadingIndicator.value = false;
 					});
@@ -481,9 +430,6 @@
 				formRef.value?.validate(
 					(errors) => {
 						if (!errors) {
-							//console.log("Form is valid:");
-							orderCreateData.value = "";
-							orderCreateMessage.value = "";
 							let data = {
 								"orderType": formRef.value.model.radioDeliveryValue,
 								"first_name": formRef.value.model.name,
@@ -502,7 +448,6 @@
 									? data["cookTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
 									: data["cookTime"] = null;
 							};
-							//console.log("Submitting order with data:", data);
 							sendOrder({
 								"data": data,
 							});
@@ -522,6 +467,7 @@
 				orderCreateData,
 				createNewOrder,
 				loadingIndicator,
+				showOrderCreateModal,
 				size: Vue.ref("medium"),
 				onlyAllowNumber: (value) => !value || /^\d+$/.test(value),
 				model: Vue.ref({

@@ -80,6 +80,7 @@ class SetLunchView(View):
 			'now_active': now_active,
 			'set_lunch': Set_Lunch.objects.filter(date=now).first(),
 			'good_slug': Good.objects.filter(name="Дружеский обед").first().slug,
+			'good_price': Good.objects.filter(name="Дружеский обед").first().price,
 		}
 		return  render(request, 'baseapp/set_lunch.html', context)
 

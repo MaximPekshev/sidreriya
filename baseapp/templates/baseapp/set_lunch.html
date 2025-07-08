@@ -12,265 +12,256 @@
 
 {% block content %}
 <div id="order_form">
-	<div v-if="loadingIndicator" class="as_preloader" id="as_preloader">
-		<div class="as_preloader_row">
-			<div class="loader" id="loader-2">
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-		</div>
-	</div>
-	<div class="main-container right-sidebar">
-		<div class="container">
-			<nav class="woocommerce-breadcrumb breadcrumbs">
-				<a href="{% url 'baseapp:index' %}">На главную</a>
-				<a href="{% url 'baseapp:set_lunch' %}">Дружеские обеды</a>
-				Сегодня в меню
-			</nav>
-			{% comment %} баннер - сокращенное время работы {% endcomment %}
-			{% comment %} <div class="comments-area">
-				<ol class="comment-list">
-					<li class="comment">
-						<div class="comment-item">
-							<div class="comment-content" align="center">
-								<p style="font-family: 'Bebas'; font-size: 20px">В связи с обстановкой, мы вынуждены временно<br> работать по сокращенному режиму:</p>
+	<n-config-provider :theme-overrides="themeOverrides">
+		<div class="main-container right-sidebar">
+			<div class="container">
+				<nav class="woocommerce-breadcrumb breadcrumbs">
+					<a href="{% url 'baseapp:index' %}">На главную</a>
+					<a href="{% url 'baseapp:set_lunch' %}">Дружеские обеды</a>
+					Сегодня в меню
+				</nav>
+				{% comment %} баннер - сокращенное время работы {% endcomment %}
+				{% comment %} <div class="comments-area">
+					<ol class="comment-list">
+						<li class="comment">
+							<div class="comment-item">
+								<div class="comment-content" align="center">
+									<p style="font-family: 'Bebas'; font-size: 20px">В связи с обстановкой, мы вынуждены временно<br> работать по сокращенному режиму:</p>
+								</div>
+								<div class="comment-author" style="padding-top: 20px; padding-bottom: 20px" align="center">
+									<span class="author" style="font-family: 'Bebas'; font-size: 38px">с 10:00 до 16:00</span>
+								</div>
+								<div class="comment-content" align="center">
+									<p style="font-family: 'Bebas'; font-size: 20px">Вместе с вами ждем, когда все наладится</p>
+								</div>
 							</div>
-							<div class="comment-author" style="padding-top: 20px; padding-bottom: 20px" align="center">
-								<span class="author" style="font-family: 'Bebas'; font-size: 38px">с 10:00 до 16:00</span>
-							</div>
-							<div class="comment-content" align="center">
-								<p style="font-family: 'Bebas'; font-size: 20px">Вместе с вами ждем, когда все наладится</p>
-							</div>
-						</div>
-					</li>
-				</ol>
-			</div> {% endcomment %}
-			{% comment %} баннер - сокращенное время работы {% endcomment %}
-			<div class="row">
-				<div class="col-sm-12 col-md-8 main-content">
-					<div class="blog-single">
-						<div class="post-item">
-							<div class="post-thumb">
-								<div class="images kt-images">
-									<div class="kt-main-image">
-										{% if set_lunch.image %}
-										<a class="zoom" href="{{ set_lunch.image.url }}"><img src="{{ set_lunch.image.url }}" alt=""></a>
-										{% else %}
-										<a class="zoom" href="{% static 'images/banners/set_lunch_default.png' %}"><img src="{% static 'images/banners/set_lunch_default.png' %}" alt=""></a>
-										{% endif %}
+						</li>
+					</ol>
+				</div> {% endcomment %}
+				{% comment %} баннер - сокращенное время работы {% endcomment %}
+				<div class="row">
+					<div class="col-sm-12 col-md-8 main-content">
+						<div class="blog-single">
+							<div class="post-item">
+								<div class="post-thumb">
+									<div class="images kt-images">
+										<div class="kt-main-image">
+											{% if set_lunch.image %}
+											<a class="zoom" href="{{ set_lunch.image.url }}"><img src="{{ set_lunch.image.url }}" alt=""></a>
+											{% else %}
+											<a class="zoom" href="{% static 'images/banners/set_lunch_default.png' %}"><img src="{% static 'images/banners/set_lunch_default.png' %}" alt=""></a>
+											{% endif %}
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
-					<div class="block-form">
-						<div class="panel" style="border-bottom-style: none;">
-							<h3 class="form-heading">Форма заказа</h3>
-							<div class="as-order-form">
-								<div class="row margin-bottom-20">
-									<div class="col-sm-12">
-										<div class="custom-control custom-radio" style="padding-left: 10px">
-											<input v-model="orderType" type="radio" id="order_type_1" class="custom-control-input" value="1">
-											<label class="custom-control-label" for="order_type_1">Доставка</label>
-										</div>
-										<div class="custom-control custom-radio" style="padding-left: 10px">
-											<input v-model="orderType" type="radio" id="order_type_2" class="custom-control-input" value="2">
-											<label class="custom-control-label" for="order_type_2">Самовывоз</label>
-										</div>
-									</div>
-								</div>
-								<div id="deliv_form" class="checkout">
-									<input type="text" name="good_id" value="lunch" hidden>
-									<div class="row">
-										<div class="col-sm-12">
-											<span>Количество</span>
-											<p><input 
-												@input="checkInputQty" 
-												:class="{ validationError : input_qtyError }"
-												type="text" 
-												name="input_qty" 
-												v-model="input_qty"
-												class="input-text qty text">
-											</p>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<span>Комментарий</span>
-											<p><textarea 
-												name="input_comment" 
-												style="width: 100%; resize: both;" 
-												type="text" v-model="input_comment" 
-												placeholder="Ваши пожелания к заказу" 
-												class="input-text qty text" 
-												rows="4"></textarea>
-											</p>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<span>Имя *</span>
-											<p><input 
-												@input="checkInputName" 
-												:class="{ validationError: inputNameError }"  
-												type="text" 
-												name="input_name" 
-												v-model="input_name" 
-												placeholder="Имя" 
-												value="{{ buyer.first_name }}">
-											</p>
-										</div>
-									</div>
-									
-										<div class="row">
-											<div class="col-sm-12">
-												<span>Телефон *</span>
-												<p><input 
-													v-phone
-													@input="checkInputPhone" 
-													:class="{ validationError: inputPhoneError }" 
-													type="text" name="input_phone" 
-													v-model="input_phone" 
-													placeholder="Телефон"
-													>
-												</p>
-											</div>
-										</div>
-									<div class="delivery-address-info" v-if="orderType==1">	
-										<div class="row">
-											<div class="col-sm-12">
-												<span>Нас. пункт *</span>
-												<p><input 
-													type="text" 
-													name="input_locality"
-													v-model="input_locality"
-													placeholder="Нас. пункт" 
-													@input="checkInputLocality"
-													:class="{ validationError: input_localityError }"
-													>
-											</p>
-											</div>
-											
-										</div>
-										<div class="row">
-											<div class="col-sm-12">
-												<span>Улица *</span>
-												<p><input 
-													type="text" 
-													v-model="input_street" 
-													name="input_street" 
-													placeholder="Улица"
-													@input="checkInputStreet"
-													:class="{ validationError: input_streetError }"
-													>
-												</p>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-6">
-												<span>Дом *</span>
-												<p><input 
-													type="text" 
-													v-model="input_house" 
-													name="input_house" 
-													placeholder="Дом"
-													@input="checkInputHouse"
-													:class="{ validationError: input_houseError }"
-													>
-												</p>
-											</div>
-											<div class="col-sm-6">
-												<span>Квартира/Офис</span>
-												<p><input type="text" v-model="input_apartments" name="input_apartments" placeholder="Кв."></p>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-6">
-												<span>Подъезд</span>
-												<p><input type="text" v-model="input_porch" name="input_porch" placeholder="Подъезд"></p>
-											</div>
-											<div class="col-sm-6">
-												<span>Этаж</span>
-												<p><input type="text" v-model="input_floor" name="input_floor" placeholder="Этаж"></p>
-											</div>
-										</div>
-									</div>	
-
-									<div class="row margin-bottom-20" v-if="orderType==2">
-										<div class="col-sm-12">
-											<div class="custom-control custom-radio" style="padding-left: 10px">
-												<input type="radio" v-model="pickupType" id="pickupLocation2" class="custom-control-input" value="2">
-												<label class="custom-control-label" for="pickupLocation2">Заберу из Сидрерии на Костюкова</label>
-											</div>
-											<div class="custom-control custom-radio" style="padding-left: 10px">
-												<input type="radio" v-model="pickupType" id="pickupLocation1" class="custom-control-input"  value="1">
-												<label class="custom-control-label" for="pickupLocation1">Заберу из Сидрерии на Везелке</label>
-											</div>
-										</div>
-									</div>
-									<div class="custom-control custom-radio margin-left-10">
-										<input @change="checkInputTime" type="radio" v-model="cookTimeType" id="cookTimeType1" class="custom-control-input"  value="1">
-										<label class="custom-control-label" for="cookTimeType1">Как можно скорее</label>
-									</div>
-									<div class="custom-control custom-radio wishlist-form margin-left-10">
-										<input type="radio" @change="checkInputTime" v-model="cookTimeType" id="cookTimeType2" class="custom-control-input margin-bottom-30" value="2">
-										<label class="custom-control-label" for="cookTimeType2">Выбрать время</label>
-										<input :class="{ validationError : inputTimeError }" :disabled="cookTimeType==1" type="time" @input="checkInputTime" id="deliv_time" name="input_time" class="select-option margin-left-30" :min="minDate" :max="maxDate" v-model="inputTime">
-										<p style="color: #ff7575" v-if="inputTimeError" class="margin-left-20">Выберите корректное время!<br> (c ${ min_time }$ до ${ max_time }$)</p>
-									</div> 
-
-									<div class="block-form-footer text-center">
-										<button @click="createOrder" class="button primary">Заказать</button>
-									</div>
+					<div class="col-sm-12 col-md-4 sidebar border blog-sidebar">
+						<div class="block-form">
+							<div class="panel" style="border-bottom-style: none;">
+								<h3 class="form-heading">Форма заказа</h3>
+								<n-form
+									ref="formRef"
+									:model="model"
+									:rules="rules"
+									:size="size"
+									label-placement="top"
+								>
+									<n-grid cols="4" item-responsive responsive="screen">
+										<n-form-item-gi
+											span="2"
+											path="radioDeliveryValue"
+										>
+											<n-radio-group 
+												v-model:value="model.radioDeliveryValue" 
+												name="radioDeliveryValue"
+												@update:value="() => showDeliveryAddressFields = !showDeliveryAddressFields"
+											>
+												<n-space vertical>
+													<n-radio value="1" :disabled="loadingIndicator">
+														Доставка
+													</n-radio>
+													<n-radio value="2" :disabled="loadingIndicator">
+														Самовывоз
+													</n-radio>
+												</n-space>
+											</n-radio-group>
+										</n-form-item-gi>
+										<n-form-item-gi
+											span="2"
+											path="radioDeliveryTimeValue"
+										>
+											<n-radio-group 
+												v-model:value="model.radioDeliveryTimeValue" 
+												name="radioDeliveryTimeValue"
+												@update:value="() => showTimePicker = !showTimePicker"
+											>
+												<n-space vertical>
+													<n-radio value="1" :disabled="loadingIndicator">
+														Как можно скорее
+													</n-radio>
+													<n-radio value="2" :disabled="loadingIndicator">
+														Выбрать время
+													</n-radio>
+													<n-time-picker 
+														v-model:value="model.timePickerValue" 
+														format="HH:mm" 
+														v-if="showTimePicker" 
+														placeholder="Выберите время"
+														:disabled="loadingIndicator"
+													/>
+												</n-space>
+											</n-radio-group>
+										</n-form-item-gi>
+										<n-form-item-gi span="4" label="Количество" path="quantity">
+											<n-input 
+												v-model:value="model.quantity" 
+												placeholder="Кол-во" 
+												:allow-input="onlyAllowNumber"
+												:disabled="loadingIndicator" 
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi span="4" label="Комментарий" path="comment">
+											<n-input 
+												v-model:value="model.comment" 
+												placeholder="Комментарий" 
+												type="textarea"
+												:disabled="loadingIndicator" 
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi span="4 m:4 l:4" label="Имя" path="name">
+										<n-input 
+											v-model:value="model.name" 
+											placeholder="Ваше имя" 
+											:disabled="loadingIndicator" 
+										/>
+									</n-form-item-gi>
+										<n-form-item-gi span="4" label="Телефон" path="phone">
+											<n-input 
+												v-model:value="model.phone" 
+												placeholder="Ваш номер телефона" 
+												:allow-input="onlyAllowNumber"
+												:disabled="loadingIndicator"
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi v-if="showDeliveryAddressFields" span="4" label="Населенный пункт" path="city">
+											<n-input
+												v-model:value="model.city" 
+												placeholder="Населенный пункт" 
+												:disabled="loadingIndicator"
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi v-if="showDeliveryAddressFields" span="4" label="Улица" path="street">
+											<n-input 
+												v-model:value="model.street" 
+												placeholder="Улица"
+												:disabled="loadingIndicator"
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Дом" path="house">
+											<n-input 
+												v-model:value="model.house" 
+												placeholder="Дом"
+												:disabled="loadingIndicator" 
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Квартира" path="apartments">
+											<n-input 
+												v-model:value="model.apartments" 
+												placeholder="Квартира" 
+												:disabled="loadingIndicator"
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Подъезд" path="porch">
+											<n-input 
+												v-model:value="model.porch" 
+												placeholder="Подъезд" 
+												:disabled="loadingIndicator"
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi v-if="showDeliveryAddressFields" span="2 m:2 l:2" label="Этаж" path="floor">
+											<n-input 
+												v-model:value="model.floor" 
+												placeholder="Этаж"
+												:disabled="loadingIndicator" 
+											/>
+										</n-form-item-gi>
+										<n-form-item-gi
+											span="2"
+											path="radioSelfPickupType"
+											v-if="!showDeliveryAddressFields"
+										>
+											<n-radio-group 
+												v-model:value="model.radioSelfPickupType" 
+												name="radioSelfPickupType"
+											>
+												<n-space vertical>
+													<n-radio value="2" :disabled="loadingIndicator">
+														Заберу из Сидрерии на Костюкова
+													</n-radio>
+													<n-radio value="1" :disabled="loadingIndicator">
+														Заберу из Сидрерии на Везелке
+													</n-radio>
+												</n-space>
+											</n-radio-group>
+										</n-form-item-gi>
+									</n-grid>
+								</n-form>
+								<div class="block-form-footer text-center">
+									<button v-if="loadingIndicator" disabled>
+										<n-space justify="center" align="center">
+											<n-spin size="medium" />
+										</n-space>
+									</button>
+									<button v-else @click="createNewOrder" class="button primary">
+										Отправить заказ
+									</button>
 								</div>
 							</div>
-
 						</div>
+
+						<p style="margin-left: 20px;">
+							- От 3-х обедов привезём БЕСПЛАТНО!
+						</p>
+
+						<p style="margin-left: 20px;">
+							Совершая заказ вы соглашаетесь с <a href="{% url 'baseapp:delivery' %}">условиями  доставки</a>.<br> 
+						</p>
+						<p style="margin-left: 20px;">	
+							Обеденное время:<br> Пн-Пт : 11:00/18:00
+						</p>
 					</div>
-
-					<p style="margin-left: 20px;">
-						- От 3-х обедов привезём БЕСПЛАТНО!
-					</p>
-
-					<p style="margin-left: 20px;">
-						Совершая заказ вы соглашаетесь с <a href="{% url 'baseapp:delivery' %}">условиями  доставки</a>.<br> 
-					</p>
-					<p style="margin-left: 20px;">	
-						Обеденное время:<br> Пн-Пт : 11:00/18:00
-					</p>
 				</div>
 			</div>
 		</div>
-	</div>
-	<transition name="orderCreateResponseModal">
-		<div v-show="showOrderCreateModal" v-cloak>
-			<div class="modal-mask">
-				<div class="modal-wrapper">
-				  <div class="modal-container container">
-					<div class="row"> 
-						<div class="col-xs-12 col-md-6 col-md-offset-3">
-							<div v-if="orderCreateMessage" class="white-popup" style="width: auto;">
-								<div class="kt-popup-newsletter">
-									<div class="popup-title">
-										<H3 class="notice">${ orderCreateData }$</H3>
-										<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
+		<transition name="orderCreateResponseModal">
+			<div v-show="showOrderCreateModal" v-cloak>
+				<div class="modal-mask">
+					<div class="modal-wrapper">
+					<div class="modal-container container">
+						<div class="row"> 
+							<div class="col-xs-12 col-md-6 col-md-offset-3">
+								<div v-if="orderCreateMessage" class="white-popup" style="width: auto;">
+									<div class="kt-popup-newsletter">
+										<div class="popup-title">
+											<H3 class="notice">${ orderCreateData }$</H3>
+											<p class="notice" v-if="orderCreateMessage">${ orderCreateMessage }$</p>
+										</div>
+										<div class="row margin-top-30" style="display: flex; justify-content: center;">
+											<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
+										</div>
 									</div>
-									<div class="row margin-top-30" style="display: flex; justify-content: center;">
-										<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
-									</div>
+									<a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
 								</div>
-								<a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a>
 							</div>
-						</div>
-					</div> 
-				  </div>
+						</div> 
+					</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</transition>
+		</transition>
+	</n-config-provider>
 </div>
 {% endblock %}
 
@@ -286,239 +277,201 @@
 
 <script type="text/javascript">
 	const OrderForm = {
-		data() {
-		  return {
-			showOrderCreateModal: false,
-			orderCreateMessage: "",
-			orderCreateData: "",
-			orderType: 1,
-			input_qty: 1,
-			input_qtyError: false,
-			input_comment: "",
-			input_name: "{{ buyer.first_name }}",
-			inputNameError: false,
-			input_phone: "{{ buyer.phone }}",
-			inputPhoneError: false,
-			input_locality: ("{{ buyer.locality }}") ? "{{ buyer.locality }}" : "Белгород",
-			input_localityError: false,
-			input_street: "{{ buyer.street }}",
-			input_streetError: false,
-			input_house: "{{ buyer.house }}",
-			input_houseError: false,
-			input_apartments: "{{ buyer.apartments }}",
-			input_porch: "{{ buyer.porch }}",
-			input_floor: "{{ buyer.floor }}",
-			pickupType: 2,
-			cookTimeType: 1,
-			inputTime: "{{ min_time }}",
-			inputTimeError: false,
-			min_time: "{{ min_time }}",
-			max_time: "{{ max_time }}",
-			now_active: "{{ now_active }}",
-			inputDataError: false,
-			good_slug: "{{ good_slug }}",
-			loadingIndicator: false,
-		  }
-		},
-		delimiters: ["${", "}$"],
-		mounted() {
-		},
-		methods: {
-			checkInputQty: function () {
-				this.input_qtyError = false;
-				if (!this.input_qty) {
-					this.input_qtyError = true;
-				};
-				return this.input_qtyError;
-			},
-			checkInputName: function () {
-				this.inputNameError = false;
-				if (!this.input_name) {
-					this.inputNameError = true;
-				};
-				return this.inputNameError;
-			},
-			checkInputPhone: function () {
-				this.inputPhoneError = false;
-				let regExp = /\(|\)|\ |-/g;
-				let cleanPhone = this.input_phone.replace(regExp, '');
-				if (cleanPhone.length < 8) {
-					this.inputPhoneError = true;
-				};
-				return this.inputPhoneError;
-			},
-			checkInputTime: function () {
-				this.inputTimeError = false;
-				if (this.cookTimeType==2) {
-					if (!this.inputTime || this.inputTime<this.min_time || this.inputTime>this.max_time) {
-						this.inputTimeError = true;
-					};
+		setup () {
+			const themeOverrides = {
+				common: {
+					primaryColor: '#262626',
+					primaryColorHover: '#262626'
 				}
-				return this.inputTimeError;
-			},
-			checkInputLocality: function () {
-				this.input_localityError = false;
-				if (!this.input_locality) {
-					this.input_localityError = true;
-				};
-				return this.input_localityError;
-			},
-			checkInputStreet: function () {
-				this.input_streetError = false;
-				if (!this.input_street) {
-					this.input_streetError = true;
-				};
-				return this.input_streetError;
-			},
-			checkInputHouse: function () {
-				this.input_houseError = false;
-				if (!this.input_house) {
-					this.input_houseError = true;
-				};
-				return this.input_houseError;
-			},
-			orderFormIsValid: function () {
-				this.checkInputQty();this.checkInputName();this.checkInputPhone();
-				if (this.orderType == 1) {
-					this.checkInputLocality();this.checkInputStreet();this.checkInputHouse();
-				};
-				if (this.cookTimeType==2) {
-					this.checkInputTime();
-				}
-				let formChecked = true;
-				if (this.input_qtyError || this.inputNameError || this.inputPhoneError) {
-						formChecked = false;
-				};
-				if (this.orderType == 1) {
-					if (this.input_localityError || this.input_streetError || this.input_houseError) {
-						formChecked = false;
-					};
-				};
-				if (this.cookTimeType==2) {
-					if ( this.inputTimeError ) {
-						formChecked = false;
-					};
-				}
-				return formChecked;
-			},
-			createOrder: async function(event) {
-				event.preventDefault();
-				console.log("checking order form");
-				if (!this.orderFormIsValid()) {
-					return;
-				};
-				console.log("trying to create order");
-				this.orderCreateMessage = "";
-				this.orderCreateData = "";
-				this.loadingIndicator = true;
-				let data = {
-					"orderType": this.orderType,
-					"input_qty": this.input_qty,
-					"input_comment": this.input_comment,
-					"input_name": this.input_name,
-					"input_phone": this.input_phone,
-					"cookTimeType": this.cookTimeType,
-					"good_slug": this.good_slug,
-				};
-				if (this.orderType==1) {
-					data["input_address"] = this.deliveryAddress;
-				} else if (this.orderType==2) {
-					data["pickupType"] = this.pickupType;
-				};
-				if (this.cookTimeType==2) {
-					data["inputTime"] = this.inputTime;
-				};
-				await axios({
-					method: 'post',
-					mode: 'same-origin',
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					},
-					url: '/order/create/',
-					data: data,
-				}).then((response) => {
-					console.log(response);
-					this.loadingIndicator = false;
-					this.orderCreateData = response.data.data;
-					this.orderCreateMessage = response.data.message;
-					this.showOrderCreateModal= true;
-				}).catch((error) => {
-					console.log(error);
-					this.loadingIndicator = false;
-					this.orderCreateData = response.error.data;
-					this.showOrderCreateModal=true;
-				});
-			},
-		}
-		,
-		computed: {
-			deliveryAddress() {
+			}
+			const formRef = Vue.ref(null);
+			const showTimePicker = Vue.ref(false);
+			const showDeliveryAddressFields = Vue.ref(true);
+			const loadingIndicator = Vue.ref(false);
+			const orderCreateMessage = Vue.ref("");
+			const orderCreateData = Vue.ref("");
+			const showOrderCreateModal = Vue.ref(false);
+
+			const deliveryAddress = () => {
 				let address = "";
-				if (this.input_locality) {
-					address += this.input_locality;
+				if (formRef.value.model.city) {
+					address += formRef.value.model.city;
 				};
-				if (this.input_street) {
-					address += ", " + this.input_street + " ул.";
+				if (formRef.value.model.street) {
+					address += ", " + formRef.value.model.street + " ул.";
 				};
-				if (this.input_house) {
-					address += ", д " + this.input_house;
+				if (formRef.value.model.house) {
+					address += ", д " + formRef.value.model.house;
 				};
-				if (this.input_apartments) {
-					address += ", кв " + this.input_apartments;
+				if (formRef.value.model.apartments) {
+					address += ", кв " + formRef.value.model.apartments;
 				};
-				if (this.input_porch) {
-					address += ", подъезд " + this.input_porch;
+				if (formRef.value.model.porch) {
+					address += ", подъезд " + formRef.value.model.porch;
 				};
-				if (this.input_floor) {
-					address += ", этаж " + this.input_floor;
+				if (formRef.value.model.floor) {
+					address += ", этаж " + formRef.value.model.floor;
 				};
 				if (address != "") {
-					address += "."
+					address += ".";
 				};
 				return address;
-			},
-		},
-		directives: {
-			phone: {
-				mounted(el) {
-					function replaceNumberForInput(value) {
-						let val = ''
-						//const x = value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/)
-						val = value.replace(/\D/g, '')
+			};
 
-				
-						//if (!x[2] && x[1] !== '') {
-						//	val = x[1] === '8' ? x[1] : '8' + x[1]
-						//} else {
-						//	val = !x[3] ? x[1] + x[2] : x[1] + '(' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '')
-						//}
-				
-						return val
-					};
-					function replaceNumberForPaste(value) {
-						const r = value.replace(/\D/g, '')
-						let val = r
-						//if (val.charAt(0) === '7') {
-						//  val = '8' + val.slice(1)
-						//}
-						return replaceNumberForInput(val)
-					};
-					el.oninput = function(e) {
-						if (!e.isTrusted) {
-							return
+			const sendOrder = (data) => {
+				axios.defaults.xsrfCookieName = 'csrftoken'
+				axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+				loadingIndicator.value = true;
+				orderCreateData.value = "";
+				orderCreateMessage.value = "";
+				showOrderCreateModal.value = false;
+				setTimeout(() => {
+					axios({
+						method: 'post',
+						url: '/api/v1/order/',
+						data: data,
+					}).then((response) => {
+						orderCreateData.value = response.data.data;
+						orderCreateMessage.value = response.data.message;
+						showOrderCreateModal.value = true;
+					}).catch((error) => {
+						console.log(error);
+						if (error.data.error) {
+							orderCreateData.value = error.data.error;
+						} else {
+							orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
 						}
-						this.value = replaceNumberForInput(this.value)
-					};
-					el.onpaste = function() {
-						setTimeout(() => {
-							const pasteVal = el.value
-							this.value = replaceNumberForPaste(pasteVal)
-						})
-					};
+						showOrderCreateModal.value = true;
+					}).finally(() => {
+						loadingIndicator.value = false;
+					});
+				}, 500);
+				
+			};
+
+			const createNewOrder = (e) => {
+				e.preventDefault();
+				formRef.value?.validate(
+					(errors) => {
+						if (!errors) {
+							let data = {
+								"orderType": formRef.value.model.radioDeliveryValue,
+								"first_name": formRef.value.model.name,
+								"phone": formRef.value.model.phone,
+								"cookTimeType": formRef.value.model.radioDeliveryTimeValue,
+								"items": [{
+									"good_id": "{{ good_slug }}",
+									"quantity": formRef.value.model.quantity,
+									"price": "{{ good_price }}",
+									"summ": Number("{{ good_price }}") * Number(formRef.value.model.quantity),
+								}],
+								"comment": formRef.value.model.comment
+							};
+							if (formRef.value.model.radioDeliveryValue == "1") {
+								data["address"] = deliveryAddress();
+							} else if (formRef.value.model.radioDeliveryValue == "2") {
+								data["pickupType"] = formRef.value.model.radioSelfPickupType;
+							};
+							if (formRef.value.model.radioDeliveryTimeValue == "2") {
+								formRef.value.model.timePickerValue
+									? data["cookTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
+									: data["cookTime"] = null;
+							};
+							sendOrder({
+								"data": data,
+							});
+						} else {
+							console.log("Validation error:", error);
+						}
+					}
+				);
+			};
+
+			return {
+				themeOverrides,
+				formRef,	
+				showTimePicker,
+				showDeliveryAddressFields,
+				orderCreateMessage,
+				orderCreateData,
+				loadingIndicator,
+				showOrderCreateModal,
+				createNewOrder,
+				size: Vue.ref("medium"),
+				onlyAllowNumber: (value) => !value || /^\d+$/.test(value),
+				model: Vue.ref({
+					name: null,
+					phone: null,
+					city: "Белгород",
+					street: null,
+					house: null,
+					apartments: null,
+					porch: null,
+					floor: null,
+					radioDeliveryValue: "1",
+					radioDeliveryTimeValue: "1",
+					timePickerValue: null,
+					radioSelfPickupType: "2",
+					quantity: "1",
+					comment: "",
+				}),
+				rules: {
+					name: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Введите имя",
+					},
+					phone: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Введите номер телефона"
+					},
+					city: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Введите населенный пункт",
+					},
+					street: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Введите улицу",
+					},
+					house: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Введите номер дома",
+					},
+					radioGroupValue: {
+						trigger: 'change',
+						message: 'Выберите тип доставки',
+					},
+					radioDeliveryTimeValue: {
+						trigger: 'change',
+						message: 'Выберите время доставки',
+					},
+					timePickerValue: {
+						trigger: ["blur", "change"],
+						message: "Выберите время доставки",
+					},
+					radioSelfPickupType: {
+						trigger: 'change',
+						message: "Выберите тип самовывоза",
+					},
+					quantity: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Укажите количество"
+					},
+					comment: {
+						required: true,
+						trigger: ["blur", "input"],
+						message: "Ваши пожелания к заказу",
+					},
 				}
 			}
 		},
+		delimiters: ["${", "}$"]
 	  }
-	Vue.createApp(OrderForm).mount('#order_form')
+	Vue.createApp(OrderForm).use(naive).mount('#order_form')
 </script>	
 {% endblock %}
