@@ -679,7 +679,7 @@ class OrderView(APIView):
 			clear_cart(request)
 			return JsonResponse(
 				data={
-					'data': 'Заказ {} от {} успешно создан!'.format(order.order_number, order.date.strftime("%d-%m-%y %H:%m")),
+					'data': 'Заказ {} от {} успешно создан!'.format(order.order_number, order.date.strftime("%d-%m-%Y")),
 					'message': 'В ближайшее время с Вами свяжется наш сотрудник для уточнения деталей.'
 				},
 				status=200
