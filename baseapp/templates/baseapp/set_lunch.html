@@ -362,7 +362,7 @@
 								"items": [{
 									"good_id": "{{ good_slug }}",
 									"quantity": formRef.value.model.quantity,
-									"price": "{{ good_price }}",
+									"price": Number("{{ good_price }}"),
 									"summ": Number("{{ good_price }}") * Number(formRef.value.model.quantity),
 								}],
 								"comment": formRef.value.model.comment
