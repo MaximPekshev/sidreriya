@@ -446,7 +446,7 @@
 							if (formRef.value.model.radioDeliveryTimeValue == "2") {
 								formRef.value.model.timePickerValue
 									? data["cookTime"] = new Date(formRef.value.model.timePickerValue).toLocaleTimeString('ru-RU', { hour12: false })
-									: data["cookTime"] = null;
+									: data["cookTime"] = new Date().toLocaleTimeString('ru-RU', { hour12: false });
 							};
 							sendOrder({
 								"data": data,
