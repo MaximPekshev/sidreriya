@@ -676,7 +676,10 @@ class OrderView(APIView):
 			# Отправляем письмо сотрудникам бара
 			send_mail_on_bar(order.id)
 			# Очищаем корзину пользователя
-			clear_cart(request)
+			try:
+				clear_cart(request)
+			except:
+				pass	
 			return JsonResponse(
 				data={
 					'data': 'Заказ {} от {} успешно создан!'.format(order.order_number, order.date.strftime("%d-%m-%Y")),
