@@ -635,6 +635,10 @@ def handle_order(order, user):
 		# Заполняем основные поля заказа
 		orderObject.first_name = order.get("first_name")
 		orderObject.phone = order.get("phone")
+		if order.get("email"):
+			orderObject.email = order.get("email")
+		if order.get("comment"):
+			orderObject.comment = order.get("comment")
 		# Обработка времени приготовления
 		cookTimeType = order.get("cookTimeType")
 		if cookTimeType == "1":
@@ -672,9 +676,15 @@ class OrderView(APIView):
 			order = handle_order(order=data, user=request.user)
 			# Если указан email — отправляем письмо покупателю
 			if order.email:
-				send_mail_to_buyer(order.id, order.email)
+				try:
+					send_mail_to_buyer(order.id, order.email)
+				except:
+					logger.error({"order_error": "Не удалось отправить письмо клиенту"})	
 			# Отправляем письмо сотрудникам бара
-			send_mail_on_bar(order.id)
+			try:
+				send_mail_on_bar(order.id)
+			except:
+				logger.error({"order_error": "Не удалось отправить письмо сотрудникам бара"})
 			# Очищаем корзину пользователя
 			try:
 				clear_cart(request)
