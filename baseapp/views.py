@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.db.models import Q
 import datetime
+from decouple import config
 
 
 from goodapp.models import (
@@ -81,6 +82,7 @@ class SetLunchView(View):
 			'set_lunch': Set_Lunch.objects.filter(date=now).first(),
 			'good_slug': Good.objects.filter(name="Дружеский обед").first().slug,
 			'good_price': Good.objects.filter(name="Дружеский обед").first().price,
+			'YM_ID': config('YM_ID', default=''),
 		}
 		return  render(request, 'baseapp/set_lunch.html', context)
 

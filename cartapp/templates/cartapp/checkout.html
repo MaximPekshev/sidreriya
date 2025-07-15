@@ -426,6 +426,17 @@
 						orderCreateData.value = response.data.data;
 						orderCreateMessage.value = response.data.message;
 						//showOrderCreateModal.value = true;
+						if (typeof window !== 'undefined' && typeof window.ym !== 'undefined') {
+							window.ym("{{ YM_ID }}", 'reachGoal', 'lunch_order', {
+								order_price: Number("{{ cart.summ }}"),
+								currency: 'RUB',
+							})
+						} else {
+							console.log('sendMetrik', 'lunch_order', {
+								order_price: Number("{{ cart.summ }}"),
+								currency: 'RUB',
+							})
+						}
 					}).catch((error) => {
 						console.log(error);
 						if (error.data.error) {
