@@ -46,7 +46,7 @@
 					</ol>
 				</div> {% endcomment %}
 				{% comment %} баннер - сокращенное время работы {% endcomment %}
-				<div class="row" v-if="orderCreateMessage"> 
+				{% comment %} <div class="row" v-if="orderCreateMessage"> 
 					<div class="col-xs-12 col-md-6 col-md-offset-3">
 						<div class="white-popup" style="width: auto;">
 							<div class="kt-popup-newsletter">
@@ -58,11 +58,10 @@
 									<a style="padding-top: 7px; margin-left: 0px;" href={% url 'baseapp:index' %} class="button primary col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">ОК</a>
 								</div>
 							</div>
-							{% comment %} <a href={% url 'baseapp:index' %} title="Close (Esc)" type="button" class="mfp-close" style="color: #666666;">×</a> {% endcomment %}
 						</div>
 					</div>
-				</div> 
-				<div class="row" v-else>
+				</div>  {% endcomment %}
+				<div class="row">
 					<div class="col-sm-6">
 						<div class="block-form order-review">
 							<h3 class="form-heading">Ваш заказ</h3>
@@ -294,7 +293,7 @@
 				</div>
 			</div>	
 		</div>
-		{% comment %} <transition name="orderCreateResponseModal">
+		<transition name="orderCreateResponseModal">
 			<div v-show="showOrderCreateModal" v-cloak>
 				<div class="modal-mask">
 					<div class="modal-wrapper">
@@ -319,7 +318,7 @@
 					</div>
 				</div>
 			</div>
-		</transition> {% endcomment %}
+		</transition>
 	</n-config-provider>
 </div>
 {% endblock %}
@@ -352,7 +351,7 @@
 			const loadingIndicator = Vue.ref(false);
 			const orderCreateMessage = Vue.ref("");
 			const orderCreateData = Vue.ref("");
-			//const showOrderCreateModal = Vue.ref(false);
+			const showOrderCreateModal = Vue.ref(false);
 
 			const getOrderItemsObject = () => {
 				let order_table = document.getElementById("order_table");
@@ -416,7 +415,7 @@
 				loadingIndicator.value = true;
 				orderCreateData.value = "";
 				orderCreateMessage.value = "";
-				//showOrderCreateModal.value = false;
+				showOrderCreateModal.value = false;
 				setTimeout(() => {
 					axios({
 						method: 'post',
@@ -425,7 +424,7 @@
 					}).then((response) => {
 						orderCreateData.value = response.data.data;
 						orderCreateMessage.value = response.data.message;
-						//showOrderCreateModal.value = true;
+						showOrderCreateModal.value = true;
 						if (typeof window !== 'undefined' && typeof window.ym !== 'undefined') {
 							window.ym("{{ YM_ID }}", 'reachGoal', 'dishes_order', {
 								order_price: Number("{{ cart.summ }}"),
@@ -444,7 +443,7 @@
 						} else {
 							orderCreateData.value = "Произошла ошибка на сервере, мы уже работаем над ее устранением!";
 						}
-						//showOrderCreateModal.value = true;
+						showOrderCreateModal.value = true;
 					}).finally(() => {
 						loadingIndicator.value = false;
 					});
@@ -494,7 +493,7 @@
 				orderCreateData,
 				createNewOrder,
 				loadingIndicator,
-				//showOrderCreateModal,
+				showOrderCreateModal,
 				size: Vue.ref("medium"),
 				onlyAllowNumber: (value) => !value || /^\d+$/.test(value),
 				model: Vue.ref({
