@@ -21,7 +21,7 @@ def json_goods_list_from_page_object_list(request, page_object_list):
             'old_price': int(item.old_price) if item.old_price else None,
             'discount_price': int(discount_price) if discount_price else None,
             'img': imgObj.images.url if imgObj else None, 
-            'categoryName': item.category.name,
+            'categoryName': item.category.name if item.category else None,
             'is_vine': item.is_vine,
             'is_cidre': item.is_cidre,
             'in_barrel': item.in_barrel,

@@ -58,7 +58,7 @@ class Good(models.Model):
 		if self.is_cidre:	
 			s = self.price - self.price*Decimal(0.25)
 		else:
-			if self.category.name == "Сертификаты" or self.name == 'Дружеский обед':
+			if (self.category and self.category.name == "Сертификаты") or self.name == 'Дружеский обед':
 				s = self.price
 			else:
 				s = self.price - self.price*Decimal(0.2)
