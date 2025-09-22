@@ -18,7 +18,7 @@ app_name = "baseapp"
 
 urlpatterns = [
 	path('', IndexView.as_view(), name='index'),
-	path('delivery/', DeliveryView.as_view(), name='delivery'),
+	path('delivery-info/', DeliveryView.as_view(), name='delivery'),
 	path('atmosphere/', 	AtmosphereView.as_view(), name='atmosphere'),
 	path('about-us/', 		AboutUsView.as_view(), name='about_us'),
 	path('promo/', 			PromoView.as_view(), name='promo'),
