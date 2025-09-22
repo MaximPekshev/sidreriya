@@ -1,6 +1,18 @@
 {% extends 'baseapp/base.html' %}
 
 {% load static %}
+
+{% block head_meta %}
+	<title>О нас — Сидрерия в Белгороде | Гастробар и магазин сидра</title>
+	<meta name="description" content="Сидрерия в Белгороде — гастробар и магазин сидра. Узнайте нашу историю, философию и почему гости выбирают нас. Большой выбор сидра, кухня и уютная атмосфера.">
+	<link rel="canonical" href="https://sidreriyabelgorod.ru/about-us/">
+	<meta property="og:title" content="О нас — Сидрерия в Белгороде">
+	<meta property="og:description" content="Узнайте историю гастробара «Сидрерия» в Белгороде. Атмосфера, кухня, сидр, команда и философия заведения.">
+	<meta property="og:url" content="https://sidreriyabelgorod.ru/about-us/">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://sidreriyabelgorod.ru/static/static/images/atmo/atmo4.jpg">
+{% endblock %}
+
 {% block social %}
 {{ block.super }}
 {% endblock %}
@@ -22,7 +34,7 @@
 							<img src="{% static 'images/banners/about_1.jpg' %}" alt="Первая Сидрерия в Белгороде">
 						</div>
 						<div class="post-info">
-							<h3 class="post-title"><a>Сидрерия – это место для любителей и ценителей сидра и не только.</a></h3>
+							<h1 class="post-title"><a>Сидрерия – это место для любителей и ценителей сидра и не только.</a></h1>
 							<div class="blog-content">
 								<p>На наших полочках мы заботливо собрали более 180 видов сидра со всего мира.</p>
 								<blockquote>Несмотря на то, что Сидрерия – это про сидр, большое внимание мы уделяем кухне. Аппетитные, необычные закуски, нестандартные сочетания вкусов, мясо собственного вяления и еще много всего, что мы предлагаем как самостоятельную еду или как спутник к бокалу ароматного сидра.</blockquote>

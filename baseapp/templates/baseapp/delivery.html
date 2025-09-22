@@ -2,6 +2,17 @@
 
 {% load static %}
 
+{% block head_meta %}
+	<title>Доставка еды и сидра в Белгороде — Сидрерияа</title>
+	<meta name="description" content="Условия доставки в Сидрерии: бесплатная доставка по Белгороду от 900 ₽, самовывоз с акциями. Быстрая доставка сидра и блюд по городу.">
+	<link rel="canonical" href="https://sidreriyabelgorod.ru/delivery-info/">
+	<meta property="og:title" content="Доставка в Сидрерии — Белгород">
+	<meta property="og:description" content="Закажите доставку сидра и блюд из Сидрерии. Бесплатно от 900 ₽. Самовывоз со скидками. Быстро и удобно по Белгороду.">
+	<meta property="og:url" content="https://sidreriyabelgorod.ru/delivery-info/">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://sidreriyabelgorod.ru/static/static/images/atmo/atmo4.jpg">
+{% endblock %}
+
 {% block social %}
 {{ block.super }}
 {% endblock %}
@@ -19,6 +30,7 @@
 			<div class="col-sm-7 col-md-8 main-content">
 				<div class="blog-single">
 					<div class="post-item">
+						<h1 style="font-size: 36px; text-align: center;">Доставка из Сидрерии</h1>
 						<div class="post-thumb">
 							<img src="{% static 'images/banners/delivery2.jpg' %}" alt="Доставка из Сидрерии">
 						</div>
@@ -34,7 +46,12 @@
 								<p>- А в Северный? Разумное? Новосадовый?</p>
 								<blockquote>- Привезем в любую точку - стоимость рассчитаем индивидуально в зависимости от вашего адреса.</blockquote>
 								<p>- Как можно оформить заказ</p>
-								<blockquote>- Заказ можно оформить на сайте. После оформления наши бармены с Вами свяжутся для уточнения деталей<br>- Также Ваши заявки принимаем согласно графику работы заведения по телефону 412-416.<br>- За 30 минут до закрытия заведения прием заказов прекращается!</blockquote>
+								<blockquote>
+									- Заказ можно оформить на <a href="{% url 'show_catalog' %}">сайте</a>
+									. После оформления наши бармены с Вами свяжутся для уточнения деталей<br>
+									- Также Ваши заявки принимаем согласно графику работы заведения по телефону <a href="tel:+74722412416">412-416</a>.
+									<br>- За 30 минут до закрытия заведения прием заказов прекращается!
+								</blockquote>
 							</div>
 						</div>
 						<div class="comments-area">

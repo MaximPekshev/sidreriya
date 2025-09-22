@@ -3,12 +3,18 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8">
-	<meta name="description" content="{% block meta_description %} {% endblock %}">
+	{% block head_meta %}
+	<title>Сидрерия — гастробар и бар с сидром в Белгороде</title>
+	<meta name="description" content="Сидрерия в Белгороде — гастробар с уютной атмосферой, авторской кухней и большим выбором сидра. Завтраки, ланчи, ужины и доставка по городу.">
+	<link rel="canonical" href="{{ request.build_absolute_uri }}">
+	<meta property="og:title" content="Сидрерия — гастробар в Белгороде">
+	<meta property="og:description" content="Сидрерия предлагает уютную атмосферу, авторскую кухню, десятки сортов сидра и напитков. Завтраки, обеды, ужины, доставка и подарочные сертификаты.">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://sidreriyabelgorod.ru/static/static/images/atmo/atmo4.jpg">
+	{% endblock %}
 
 	<meta name="yandex-verification" content="d10ee683ed2d864c" />
-
-	<title>{% block title %}Гастробар "Сидрерия"{% endblock %}</title>
-
 	<!-- Yandex.Metrika counter -->
 	<script type="text/javascript" >
 		(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};

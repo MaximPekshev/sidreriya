@@ -1,10 +1,23 @@
 {% extends 'baseapp/base.html' %}
 
 {% load static %}
-
-{% block meta_description %}{% if good.meta_description %}{{ good.meta_description }}{% else %} {{good.description|slice:"230" }}{% endif %}. Гастробар Сидрерия.{% endblock %}
-
-{% block title %}{% if good.meta_name %}{{ good.meta_name }}{% else %}{{ good.name }}{% if good.name_en %} / {{ good.name_en }}{% endif %}{% endif %}. Гастробар Сидрерия.{% endblock %}
+{% block head_meta %}
+	{% if good.meta_name %}
+		<title>{{ good.meta_name }}</title>
+	{% else %}
+	<title>Купить {{good.name}} в Белгороде | Сидрерия | Доставка</title>
+	{% endif %}
+	{% if good.meta_description %}
+		<meta name="description" content="{{ good.meta_description }}">
+	{% else %}
+		<meta name="description" content="{{ good.description|slice:"210" }}... Доставка по Белгороду. Свежесть, качество, вкус. Закажите онлайн!">
+	{% endif %}
+	<meta property="og:title" content="Купить {{good.name}} в Белгороде | Сидрерия">
+	<meta property="og:description" content="{{ good.description|slice:"210"}}">
+	<meta property="og:image" content="https://{{ request.get_host }}{{ good.main_image.images.url }}">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:type" content="product">
+{% endblock %}
 
 {% block social %}
 {% endblock %}

@@ -2,11 +2,16 @@
 
 {% load static %}
 
-{% block meta_description %}
-Гастробар Сидрерия. Еда, сидр, музыка. Место для любителей и ценителей сидра и не только. Собственная служба доставки. 
+{% block head_meta %}
+<title>Сидрерия — гастробар и бар с сидром в Белгороде</title>
+<meta name="description" content="Сидрерия в Белгороде — гастробар с уютной атмосферой, авторской кухней и большим выбором сидра. Завтраки, ланчи, ужины и доставка по городу.">
+<link rel="canonical" href="https://sidreriyabelgorod.ru/">
+<meta property="og:title" content="Сидрерия — гастробар в Белгороде">
+<meta property="og:description" content="Сидрерия предлагает уютную атмосферу, авторскую кухню, десятки сортов сидра и напитков. Завтраки, обеды, ужины, доставка и подарочные сертификаты.">
+<meta property="og:url" content="https://sidreriyabelgorod.ru/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://sidreriyabelgorod.ru/static/static/images/atmo/atmo4.jpg">
 {% endblock %}
-
-{% block title %}Первая Сидрерия в Белгороде{% endblock %}
 
 {% block content %}
 <div id="indexApp">
@@ -62,7 +67,7 @@
 						<div class="inner">
 							<span data-animate="fadeInDown" class="caption subtitle">бесплатная доставка обедов из Сидрерии!</span>
 							<h2 data-animate="zoomIn" class="caption title">От 3-х обедов<br>привезём<br>БЕСПЛАТНО</h2>
-							<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:promo' %}">Подробнее...</a>
+							<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:set_lunch' %}">Подробнее...</a>
 						</div>
 					</div>
 				</div>

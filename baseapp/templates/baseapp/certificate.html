@@ -1,10 +1,22 @@
 {% extends 'baseapp/base.html' %}
 
+{% load static %}
+
+{% block head_meta %}
+	<title>Подарочные сертификаты — Сидрерия Белгород</title>
+	<meta name="description" content="Подарочный сертификат Сидрерии — лучший подарок в Белгороде. Сертификаты на ужин, дегустацию и атмосферный вечер. Выберите номинал и подарите эмоции.">
+	<link rel="canonical" href="https://sidreriyabelgorod.ru/certificate/">
+
+	<meta property="og:title" content="Подарочные сертификаты — Сидрерия Белгород">
+	<meta property="og:description" content="Идеальный подарок в Белгороде — подарочный сертификат Сидрерии. Сертификаты на ужин, дегустацию и атмосферный вечер.">
+	<meta property="og:url" content="https://sidreriyabelgorod.ru/certificate/">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://sidreriyabelgorod.ru/static/static/images/atmo/atmo4.jpg">
+{% endblock %}
+
 {% block social %}
 {{ block.super }}
 {% endblock %}
-
-{% load static %}
 
 {% block content %}
 <div class="main-container right-sidebar style3 margin-bottom-30" id="certificateApp">

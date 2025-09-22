@@ -52,14 +52,6 @@ class AboutUsView(View):
 	def get(self, request):
 		return  render(request, 'baseapp/about_us.html')
 
-class PromoView(View):
-
-	def get(self, request):
-		context = {
-			'set_lunch': Good.objects.filter(name="Дружеский обед").first(),
-		}
-		return  render(request, 'baseapp/promo_obedy.html', context)
-
 class SetLunchView(View):
 
 	def get(self, request):
@@ -85,11 +77,6 @@ class SetLunchView(View):
 			'YM_ID': config('YM_ID', default=''),
 		}
 		return  render(request, 'baseapp/set_lunch.html', context)
-
-class GiftBoxesView(View):
-
-	def get(self, request):
-		return  render(request, 'baseapp/gift_boxes.html')
 
 class BreakfastView(View):
 

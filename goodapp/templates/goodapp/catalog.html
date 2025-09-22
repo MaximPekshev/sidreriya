@@ -2,6 +2,38 @@
 
 {% load static %}
 
+{% block head_meta %}
+{% if subcategories %}
+	<title>Меню Сидрерии — Белгород | Блюда и напитки | Доставка</title>
+	<meta name="description" content="Меню Сидрерии в Белгороде: завтраки, обеденные сеты, закуски, горячие блюда, десерты и более 20 сортов сидра. Авторская кухня и доставка по городу.">
+	<link rel="canonical" href="https://sidreriyabelgorod.ru/catalog/category/4127154760/">
+	<meta property="og:title" content="Меню Сидрерии — Белгород">
+	<meta property="og:description" content="Завтраки, ланчи, горячие блюда, закуски, десерты и сидр. Ознакомьтесь с меню гастробара Сидрерия в Белгороде. Доставка и самовывоз.">
+	<meta property="og:url" content="https://sidreriyabelgorod.ru/catalog/category/4127154760/">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://sidreriyabelgorod.ru/static/images/atmo/atmo4.jpg">
+{% elif not subcategories and category %}
+	<title>Купить {{ category.name }} в Белгороде | Сидрерия</title>
+	<meta name="description" content="{{ category.name }} в Сидрерии Белгорода. Большой выбор, свежие напитки и блюда. Закажите онлайн с доставкой или самовывозом.">
+	<link rel="canonical" href="{{ request.build_absolute_uri }}">
+	<meta property="og:title" content="{{ category.name }} — Сидрерия Белгород">
+	<meta property="og:description" content="Большой выбор {{ category.name }} в Сидрерии Белгорода. Закажите онлайн с доставкой или самовывозом.">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://{{ request.get_host }}{{ category.picture.url }}">
+{% else %}
+	<title>Купить Сидр, Вино в Белгороде | Сидрерия</title>
+	<meta name="description" content="Сидр, Вино в Сидрерии Белгорода. Большой выбор, свежие напитки и блюда.">
+	<link rel="canonical" href="{{ request.build_absolute_uri }}">
+	<meta property="og:title" content="Сидр, Вино — Сидрерия Белгород">
+	<meta property="og:description" content="Большой выбор Сидр, Вино в Сидрерии Белгорода.">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="https://sidreriyabelgorod.ru/static/images/atmo/atmo4.jpg">
+{% endif %}
+
+{% endblock %}
+
 {% block social %}
 {% endblock %}
 
