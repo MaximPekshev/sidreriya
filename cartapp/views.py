@@ -1,4 +1,5 @@
 from django.views.generic import View
+from decouple import config
 
 from cartapp.services import (
 	cart_object,
@@ -16,7 +17,6 @@ from decimal import Decimal
 import datetime
 
 from cartapp.models import (
-    Cart, 
     Cart_Item,
 	cart_calculate_summ
 )
@@ -133,6 +133,7 @@ def cart_checkout(request):
 		'min_time': min_time,
 		'max_time': max_time,
 		'now_active': now_active,
+		'YM_ID': config('YM_ID', default=''),
 		}
 
 
