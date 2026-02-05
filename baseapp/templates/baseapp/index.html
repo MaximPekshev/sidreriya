@@ -18,12 +18,13 @@
 	<n-config-provider :theme-overrides="themeOverrides">
 		<!-- Home slide-->
 		<div class="kt_home_slide slide-home2 slide-home3 nav-center nav-style1" data-nav="true"  data-autoplay="true" data-loop="true" data-responsive='{"0":{"items":"1","nav":false},"768":{"items":"1","nav":false},"992":{"items":"1"}}'>
-			<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner.jpg' %}" data-height="543"  data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+			<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner_3.jpg' %}" data-height="543"  data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+				<div class="item-slide-overlay"></div>
 				<div class="content-slide">
 					<div class="container container-slide">
 						<div class="inner">
 							<span data-animate="fadeInDown" class="caption subtitle">актуальные предложения</span>
-							<h2 data-animate="zoomIn" class="caption title">-25% НА ВЕСЬ СИДР<br>-20% НА ОСНОВНОЕ МЕНЮ</h2>
+							<h2 data-animate="zoomIn" class="caption title">-15% НА ВЕСЬ СИДР<br>-10% НА ОСНОВНОЕ МЕНЮ</h2>
 							<a data-animate="fadeInDown" class="caption link" href="{% url 'baseapp:delivery' %}">Подробнее...</a>
 						</div>
 					</div>
@@ -62,6 +63,7 @@
 			{% comment %} баннер - сокращенное время работы {% endcomment %}
 			
 			<div class="item-slide" data-background="{% static 'images/banners/sidreriya_banner2.jpg' %}" data-height="543" data-reponsive='{"320":300,"400":480,"768":400,"1024":543}'>
+				<div class="item-slide-overlay"></div>
 				<div class="content-slide">
 					<div class="container container-slide">
 						<div class="inner">

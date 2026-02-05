@@ -9695,11 +9695,6 @@ RESPONSIVE
         text-align: center;
     }
 
-    .slide-home3 .inner{
-        background: rgba(0,0,0,.1);
-        /*backdrop-filter: grayscale(1) contrast(1) blur(1px);*/
-        backdrop-filter: contrast(1) blur(1px);
-    }
 
     .slide-home2 .content-slide .subtitle{
         font-size: 25px;
@@ -10224,12 +10219,11 @@ RESPONSIVE
     }
 
     .block-banner-text .content{
-       /* left: 15px!important;
-        right: 15px!important;*/
         text-align: center!important;
     }
     .slide-home2 .content-slide .title{
-        margin-bottom: 0;
+        margin-top: 30px;
+        margin-bottom: 30px;
     }
     .single-product .summary{
         padding: 10px;

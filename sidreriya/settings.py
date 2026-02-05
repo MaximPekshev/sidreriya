@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'music_week_app',
     'rest_framework',
     'api_app',
+    'API',
 ]
 
 MIDDLEWARE = [

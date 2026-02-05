@@ -1,4 +1,5 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpRequest, JsonResponse
 from django.views.generic import View
 from django.shortcuts import (
 	render, 
@@ -129,3 +130,16 @@ class CustomPasswordChangeView(PasswordChangeView):
 
 def account_password_change_succes(request):
 	return render(request, 'authapp/change_password_succes.html')
+
+
+# API V2 Views will be here
+from .serializers import PinSerializer
+class PinView(View):
+	def post(self, request: HttpRequest) -> JsonResponse:
+		serializer = PinSerializer(data=request.POST)
+		if serializer.is_valid():
+			# Process the valid data
+			buyer = Buyer.objects.get(user__id=request.user.id)
+			
+			return JsonResponse({'message': 'PIN code sent successfully'})
+		return JsonResponse({'errors': serializer.errors}, status=400)
