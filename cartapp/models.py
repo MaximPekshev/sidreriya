@@ -35,12 +35,12 @@ class Cart_Item(models.Model):
 	def discount_price(self):
 
 		if self.good.is_cidre:	
-			s = self.price - self.price*Decimal(0.25)
+			s = self.price - self.price*Decimal(0.15)
 		else:
 			if self.good.category.name == "Сертификаты" or self.good.name == 'Дружеский обед' or self.good.category.name == "Куличи" or self.good.category.name == "Вареники":
 				s = self.price
 			else:
-				s = self.price - self.price*Decimal(0.2)
+				s = self.price - self.price*Decimal(0.1)
 
 		return s.quantize(Decimal("1"))
 

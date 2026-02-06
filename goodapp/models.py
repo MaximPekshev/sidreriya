@@ -56,12 +56,12 @@ class Good(models.Model):
 
 	def discount_price(self):
 		if self.is_cidre:	
-			s = self.price - self.price*Decimal(0.25)
+			s = self.price - self.price*Decimal(0.15)
 		else:
 			if (self.category and self.category.name == "Сертификаты") or self.name == 'Дружеский обед':
 				s = self.price
 			else:
-				s = self.price - self.price*Decimal(0.2)
+				s = self.price - self.price*Decimal(0.1)
 		return s.quantize(Decimal("1"))
 
 	class Meta:

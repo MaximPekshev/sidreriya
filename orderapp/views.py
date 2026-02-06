@@ -74,13 +74,13 @@ def send_mail_on_bar(order_id):
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span> {5}</span></strong></td>
 					</tr>
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">С собой</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {10}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span> {10}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	
@@ -155,13 +155,13 @@ def send_mail_to_buyer(order_id, buyer_email):
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">Итого</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {5}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span> {5}</span></strong></td>
 					</tr>
 					<tr >
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<td style="border-bottom: 1px solid #ececec; padding: 14px 0;"></td>
 						<th style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;">С собой</th>
-						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span>&#8381 {6}</span></strong></td>
+						<td style="text-align: center; border-bottom: 1px solid #ececec; padding: 14px 0;"><strong><span> {6}</span></strong></td>
 					</tr>
 				</tfoot>
 			</table>	
