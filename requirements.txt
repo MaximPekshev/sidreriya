@@ -1,4 +1,4 @@
-Django==3.1.2
+Django==4.2.26
 xlrd==1.2.0
 Pillow
 djangorestframework
