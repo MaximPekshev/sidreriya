@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from goodapp.views import sitemap_xml_view
 admin.autodiscover()
 
 urlpatterns = [
 	path('', include('baseapp.urls')),
+    path('sitemap.xml', sitemap_xml_view, name='sitemap_xml'),
 	path('catalog/', include('goodapp.urls')),
     path('accounts/', include('authapp.urls')),
     path('cart/', include('cartapp.urls')),

@@ -117,6 +117,7 @@ class Category(models.Model):
 	picture				= models.ImageField(upload_to=get_image_name, verbose_name='Изображение 370x334', default=None, null=True, blank=True)
 
 	rank				= models.DecimalField(verbose_name='Порядок', max_digits=6, decimal_places=0, blank=True, null=True)
+	history = HistoricalRecords()
 
 
 	def __str__(self):

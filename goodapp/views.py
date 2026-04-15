@@ -2,6 +2,7 @@ from django.shortcuts import (
     render, 
     get_object_or_404
 )
+from django.http import HttpResponse
 from django.views.generic import View
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -19,13 +20,28 @@ from goodapp.models import (
 )
 from goodapp.services import (
 	json_goods_list_from_page_object_list,
-	json_good_from_object
+	json_good_from_object,
+	build_sitemap_xml,
 )
 from baseapp.models import (
     Menu,
 	BarMenu,
 )
 from filterapp.models import PropertiesFilter
+
+
+def sitemap_xml_view(request):
+	static_paths = [
+		"/",
+		"/delivery-info/",
+		"/atmosphere/",
+		"/about-us/",
+		"/lunch-set/",
+		"/breakfasts/",
+		"/certificate/",
+	]
+	xml_content = build_sitemap_xml(static_paths=static_paths, base_url="https://sidreriyabelgorod.ru")
+	return HttpResponse(xml_content, content_type="application/xml; charset=utf-8")
 
 
 def filters(goods, categories_name = [], manufacturers_name = [], active_filters = None):
