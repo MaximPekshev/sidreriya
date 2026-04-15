@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = [
 	path('', include('baseapp.urls')),
-    path('sitemap.xml', sitemap_xml_view, name='sitemap_xml'),
+    path('sitemap', sitemap_xml_view, name='sitemap_xml'),
 	path('catalog/', include('goodapp.urls')),
     path('accounts/', include('authapp.urls')),
     path('cart/', include('cartapp.urls')),
