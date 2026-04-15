@@ -4,6 +4,7 @@ Disallow: /accounts
 Disallow: /cart
 Disallow: /order
 Disallow: /wishlist
+Disallow: /sitemap
 
 Disallow: /*?q=
 Disallow: /*&page=
