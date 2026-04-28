@@ -31,7 +31,7 @@ from filterapp.models import PropertiesFilter
 
 
 def sitemap_xml_view(request):
-	static_paths = [
+	static_paths = [+
 		"/",
 		"/delivery-info/",
 		"/atmosphere/",
