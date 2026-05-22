@@ -265,51 +265,7 @@ class Set_Lunch(models.Model):
 	class Meta:
 		
 		verbose_name = 'Комплексный обед'
-		verbose_name_plural = 'Комплексные обеды'
-
-# Модель для меню комплексного обеда с выбором товаров
-class Set_Meal(models.Model):
-
-	title 	= models.CharField(max_length=150, verbose_name='Наименование', blank=True)
-	date	= models.DateField(unique=True ,auto_now=False, auto_now_add=False)
-
-	class Meta:
-		
-		verbose_name = 'Комплексный обед с товарами'
-		verbose_name_plural = 'Комплексные обеды с товарами'
-
-# Модель для первых блюд комплексного обеда с выбором товаров
-class First_Course(models.Model):
-
-	set_meal = models.ForeignKey('Set_Meal', verbose_name='Комплексный обед', on_delete=models.CASCADE, default=None, null=True, blank=True)
-	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE, blank=True, null=True)
-	available = models.BooleanField(verbose_name='В наличии', default=True)
-
-	class Meta:
-		verbose_name = 'Первое блюдо'
-		verbose_name_plural = 'Первые блюда'
-
-# Модель для вторых блюд комплексного обеда с выбором товаров
-class Second_Course(models.Model):
-
-	set_meal = models.ForeignKey('Set_Meal', verbose_name='Комплексный обед', on_delete=models.CASCADE, default=None, null=True, blank=True)
-	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
-	available = models.BooleanField(verbose_name='В наличии', default=True)
-
-	class Meta:
-		verbose_name = 'Второе блюдо'
-		verbose_name_plural = 'Вторые блюда'
-
-# Модель для третьих блюд комплексного обеда с выбором товаров
-class Third_Course(models.Model):
-
-	set_meal = models.ForeignKey('Set_Meal', verbose_name='Комплексный обед', on_delete=models.CASCADE, default=None, null=True, blank=True)
-	good = models.ForeignKey('Good', verbose_name='Товар', on_delete=models.CASCADE)
-	available = models.BooleanField(verbose_name='В наличии', default=True)
-
-	class Meta:
-		verbose_name = 'Третье блюдо'
-		verbose_name_plural = 'Третьи блюда'			
+		verbose_name_plural = 'Комплексные обеды'		
 
 class Bestseller(models.Model):
 

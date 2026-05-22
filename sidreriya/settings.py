@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api_app',
     'API',
+    'lunch_set_app.apps.LunchSetAppConfig',
 ]
 
 MIDDLEWARE = [
