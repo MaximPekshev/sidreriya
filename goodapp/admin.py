@@ -16,10 +16,6 @@ from goodapp.models import (
 	Category,
 	In_Barrels,
 	Set_Lunch,
-	Set_Meal,
-	First_Course,
-	Second_Course,
-	Third_Course
 )
 
 
@@ -163,44 +159,6 @@ class In_BarrelsAdmin(admin.ModelAdmin):
 		return super(In_BarrelsAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 	
 admin.site.register(In_Barrels, In_BarrelsAdmin)
-
-class First_Course_Form(forms.ModelForm):
-	def __init__(self, *args, **kwargs):
-		super(First_Course_Form, self).__init__(*args, **kwargs)
-		self.fields['good'].queryset = Good.objects.filter(category__name="Первое блюдо")
-
-class Second_Course_Form(forms.ModelForm):
-	def __init__(self, *args, **kwargs):
-		super(Second_Course_Form, self).__init__(*args, **kwargs)
-		self.fields['good'].queryset = Good.objects.filter(category__name="Второе блюдо")
-
-class Third_Course_Form(forms.ModelForm):
-	def __init__(self, *args, **kwargs):
-		super(Third_Course_Form, self).__init__(*args, **kwargs)
-		self.fields['good'].queryset = Good.objects.filter(category__name="Третье блюдо")
-
-class First_CourseInline(admin.TabularInline):
-	form = First_Course_Form
-	model = First_Course
-	extra = 0
-
-class Second_CourseInline(admin.TabularInline):
-	form = Second_Course_Form
-	model = Second_Course
-	extra = 0
-
-class Third_CourseInline(admin.TabularInline):
-	form = Third_Course_Form
-	model = Third_Course
-	extra = 0
-
-class Set_MealAdmin(admin.ModelAdmin):
-	list_display = (
-					'date',
-					)
-	inlines 	 = [First_CourseInline, Second_CourseInline, Third_CourseInline]
-
-admin.site.register(Set_Meal, Set_MealAdmin)
 
 class Set_LunchAdmin(admin.ModelAdmin):
 	list_display = (
