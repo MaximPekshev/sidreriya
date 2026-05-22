@@ -21,7 +21,7 @@ urlpatterns = [
 	path('atmosphere/', 	AtmosphereView.as_view(), name='atmosphere'),
 	path('about-us/', 		AboutUsView.as_view(), name='about_us'),
 	path('lunch-set/', 		SetLunchView.as_view(), name='set_lunch'),
-    path('lunch-set-info/', 	LunchSetView.as_view(), name='lunch_set_info'),
+    # path('lunch-set-info/', 	LunchSetView.as_view(), name='lunch_set_info'),
 	path('breakfasts/', 	BreakfastView.as_view(), name='breakfasts'),
 	path('certificate/', 	CertificateView.as_view(), name='сertificate'),
 ]
