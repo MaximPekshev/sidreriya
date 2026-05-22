@@ -1,8 +1,11 @@
+import os
+
+from django.conf import settings
 from django.shortcuts import (
     render, 
     get_object_or_404
 )
-from django.http import HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.views.generic import View
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -31,7 +34,7 @@ from filterapp.models import PropertiesFilter
 
 
 def sitemap_xml_view(request):
-	static_paths = [+
+	static_paths = [
 		"/",
 		"/delivery-info/",
 		"/atmosphere/",
@@ -40,8 +43,18 @@ def sitemap_xml_view(request):
 		"/breakfasts/",
 		"/certificate/",
 	]
-	xml_content = build_sitemap_xml(static_paths=static_paths, base_url="https://sidreriyabelgorod.ru")
+	xml_content = build_sitemap_xml(
+		static_paths=static_paths,
+		base_url="https://sidreriyabelgorod.ru",
+	)
 	return HttpResponse(xml_content, content_type="application/xml; charset=utf-8")
+
+
+def sitemap_file_view(request):
+	sitemap_path = os.path.join(settings.BASE_DIR, "sitemap.xml")
+	if not os.path.exists(sitemap_path):
+		raise Http404("sitemap.xml not found")
+	return FileResponse(open(sitemap_path, "rb"), content_type="application/xml; charset=utf-8")
 
 
 def filters(goods, categories_name = [], manufacturers_name = [], active_filters = None):
