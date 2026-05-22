@@ -1,0 +1,35 @@
+.lunch_set_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.lunch_set_dish {
+    width: 30%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.dish_image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    max-width: fit-content;
+}
+
+.lunch_set_dish_info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-radio {
+    color: #444444;
+    margin: 0 !important;
+}
+
+.dish_label {
+    margin: 0 !important;
+    font-size: 18px;
+    color: #444444;
+}
