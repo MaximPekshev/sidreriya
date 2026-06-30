@@ -145,9 +145,9 @@ def build_sitemap_xml(
 
     Returns raw XML string ready to be saved to file or returned in HTTP response.
     """
-    site_url = (base_url or getattr(settings, "SITE_URL", "https://sidreriya.ru")).strip()
+    site_url = (base_url or getattr(settings, "SITE_URL", "https://sidreriyabelgorod.ru")).strip()
     if not site_url:
-        site_url = "https://sidreriya.ru"
+        site_url = "https://sidreriyabelgorod.ru"
 
     static_paths = static_paths or ["/"]
 
