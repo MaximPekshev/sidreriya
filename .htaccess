@@ -1,3 +1,4 @@
+#RKN
 RewriteEngine On
-RewriteCond %{HTTP_HOST} ^www.sidreriyabelgorod.ru$ [NC]
-RewriteRule ^(.*)$ http://sidreriyabelgorod.ru/$1 [R=301,L]
+RewriteCond %{REQUEST_URI} /delivery/ [NC]
+RewriteRule (.*) /404.html [R=301,L]
